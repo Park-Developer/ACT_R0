@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <script src="{{url_for('static', filename='monitoring.js')}}"></script> <!-- .JS Link -->
+
+  <h1>{% block title %}Monitoring{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  <form method="post">
+    <label>COIN INFO : {{coin_info}}</label>
+
+  </form>
+
+{% endblock %}
