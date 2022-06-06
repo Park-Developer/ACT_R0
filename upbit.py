@@ -8,7 +8,7 @@ print(ticker)
 # 현재 가격 조회
 price=pyupbit.get_current_price("KRW-BTC")
 print(price)
-
+print("asdf", type(price))
 # 과거 데이터 조회
 df = pyupbit.get_ohlcv("KRW-BTC", interval="minute5")
 print(df)
