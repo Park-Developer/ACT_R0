@@ -1,0 +1,7 @@
+type	ty	타입	String	ticker : 현재가
+code	cd	마켓 코드 (ex. KRW-BTC)	String
+opening_price	op	시가	Double
+high_price	hp	고가	Double
+low_price	lp	저가	Double
+trade_price	tp	현재가	Double
+prev_closing_price	pcp	전일 종가	Double
