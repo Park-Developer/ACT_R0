@@ -158,7 +158,7 @@ async def upbit_ws_client(ring_buffer:RingBuffer):
             ring_buffer.enque(cur_price)
             print("Buffer Size : ", ring_buffer.no)
 
-            if ring_buffer.is_full():
+            if ring_buffer.is_full(): # 링 버퍼가 가득차면 Plot 그리기
                 ring_buffer.dump()
                 ring_buffer.plot_single_graph()
                 break
