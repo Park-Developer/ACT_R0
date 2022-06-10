@@ -9,7 +9,7 @@ print(ticker)
 df = pyupbit.get_ohlcv("KRW-BTC",)
 
 '''
-print(df)
+print(df)asd
 print("========================")
 print(df["close"])
 print("size",df["close"].shape[0])
@@ -19,7 +19,6 @@ print(df["close"][0])
 
 def make_movingAvg(coin_ticker:str,period:int, count:int)->dict:
     '''
-
     :param period:이평선 계산 기준 Ex) 5 : 5일 이동평균선
     :param count: 전체 조사 기간
     :return: movingAvg_info

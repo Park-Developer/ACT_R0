@@ -1,17 +1,36 @@
 {% extends 'base.html' %}
 
-{% block header %}
-  <script src="{{url_for('static', filename='monitoring.js')}}"></script>
-  <script>
 
-  </script>
-  <h1>{% block title %}Monitoring{% endblock %}</h1>
+{% block header %}
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="{{url_for('static', filename='monitoring.js')}}"></script>
+
+
+    <script>
+    $SCRIPT_ROOT = {{ request.script_root|tojson }}; <!--sets a global variable to the prefix to the root of the application.-->
+    </script>
+
+
+    <h1>{% block title %}Monitoring{% endblock %}</h1>
 {% endblock %}
 
 {% block content %}
   <form method="post">
     <label>COIN INFO : {{coin_info}}</label>
-
   </form>
+
+<h1>jQuery Example</h1>
+
+<p><input type=text size=5 name=a> +
+   <input type=text size=5 name=b> =
+   <span id=result>?</span>
+
+<p><a href=# id=calculate>calculate server side</a>
+  <h1>CANMCA</h1>
+
+
+<canvas id="myChart" width="400" height="400"></canvas>
+
 
 {% endblock %}

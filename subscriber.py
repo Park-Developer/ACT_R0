@@ -32,7 +32,7 @@ async def upbit_ws_client():
             await asyncio.sleep(1)
             data = json.loads(data)
             cur_price=data["tp"]
-
+            print(data)
 
 async def main():
     await upbit_ws_client()
