@@ -14,11 +14,15 @@
    <div class="TARGET_LIST">
        <h1 class="TARGET_LIST">Target Coin List</h1>
 
-       {% set coin_ticker_idx = 0 %} <!-- Jinja counter variable -->
+       {% set coin_number = namespace(value=0) %}               {# loop count #}
 
        {% for coin_ticker in trading_info["UPBIT_PART"]["TARGET_COIN"] %}
-           {% set coin_ticker_idx = coin_ticker_idx + 1 %}  <!-- count++ -->
-           <li class="{{coin_ticker}}_idx">{{coin_ticker}} <label class="{{coin_ticker}}_state">Ready</label> <button class="{{coin_ticker}}_Btn">show</button></li>
+           <li class="{{coin_ticker}} coin_{{loop.index}}">
+               {{coin_ticker}}
+               <label class="{{coin_ticker}} coin_{{loop.index}}_state">Ready</label>
+               <button class="{{coin_ticker}} coin_{{loop.index}}_Btn">show</button>
+           </li>
+           {% set coin_number.value = coin_number.value + 1 %}  {# loop count++ #}
        {% endfor %}
 
    </div>
@@ -28,7 +32,9 @@
 
     <!--  전역변수 설정  -->
     <script>
-    $SCRIPT_ROOT = {{ request.script_root|tojson }}; <!--sets a global variable to the prefix to the root of the application.-->
+        $SCRIPT_ROOT = {{ request.script_root|tojson }}; <!--sets a global variable to the prefix to the root of the application.-->
+        let COIN_NUMBER="{{coin_number.value}}";
+        let DEFAULT_TICKER="{{trading_info["UPBIT_PART"]["TARGET_COIN"][0]}}";   <!--default 선정기준 : 첫 번째 Target 코인 -->
 
     </script>
     <!--   전역변수 설정   -->

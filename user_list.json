@@ -1,0 +1,15 @@
+{
+  "parkwonho94@gmail.com": {
+    "username": "master",
+    "tier": "Gold",
+    "password": "wonho123",
+    "login_state":"ON"
+  },
+
+  "gnvid35@naver.com": {
+    "username": "manager",
+    "tier": "Silver",
+    "password": "mnes586",
+     "login_state":"OFF"
+  }
+}
