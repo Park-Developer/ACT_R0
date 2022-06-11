@@ -1,14 +1,10 @@
+import config
 import json
 import logging
 from telegram import Update
 from telegram.ext import ApplicationBuilder, CallbackContext, CommandHandler
 
-# USER INFO SETTING
-with open('./user_config.json', 'r') as f:
-    USER_INFO=json.load(f)
-    print(json.dumps(USER_INFO["TELEGRAM_PART"]["TELEGRAM_API"]))
-
-TELEGRAM_BOT_API=USER_INFO["TELEGRAM_PART"]["TELEGRAM_API"]
+TELEGRAM_BOT_API=config.TELEGRAM_API # USER_INFO["TELEGRAM_PART"]["TELEGRAM_API"]
 
 # This part is for setting up logging module
 logging.basicConfig(

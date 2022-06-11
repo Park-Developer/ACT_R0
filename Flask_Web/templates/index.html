@@ -1,17 +1,14 @@
 {% extends 'base.html' %}
 
-
+<!--[ --- HEADER --- ]-->
 {% block header %}
-
-
-
-<script>
-$SCRIPT_ROOT = {{ request.script_root|tojson }}; <!--sets a global variable to the prefix to the root of the application.-->
-</script>
-
-<h1>{% block title %}Monitoring{% endblock %}</h1>
+    <h1>{% block title %}Home{% endblock %}</h1>
 {% endblock %}
 
+<!--[ --- BODY --- ]-->
 {% block content %}
+    <script>
+    $SCRIPT_ROOT = {{ request.script_root|tojson }}; <!--sets a global variable to the prefix to the root of the application.-->
+    </script>
 
 {% endblock %}

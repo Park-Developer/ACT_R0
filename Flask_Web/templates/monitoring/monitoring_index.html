@@ -1,36 +1,38 @@
 {% extends 'base.html' %}
 
-
 {% block header %}
-
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-    <script src="{{url_for('static', filename='monitoring.js')}}"></script>
-
-
-    <script>
-    $SCRIPT_ROOT = {{ request.script_root|tojson }}; <!--sets a global variable to the prefix to the root of the application.-->
-    </script>
-
-
     <h1>{% block title %}Monitoring{% endblock %}</h1>
 {% endblock %}
 
+<!--[ BODY ]-->
 {% block content %}
-  <form method="post">
-    <label>COIN INFO : {{coin_info}}</label>
-  </form>
-
-<h1>jQuery Example</h1>
-
-<p><input type=text size=5 name=a> +
-   <input type=text size=5 name=b> =
-   <span id=result>?</span>
 
 <p><a href=# id=calculate>calculate server side</a>
+
   <h1>CANMCA</h1>
 
+   <div class="TARGET_LIST">
+       <h1 class="TARGET_LIST">Target Coin List</h1>
 
-<canvas id="myChart" width="400" height="400"></canvas>
+       {% set coin_ticker_idx = 0 %} <!-- Jinja counter variable -->
 
+       {% for coin_ticker in trading_info["UPBIT_PART"]["TARGET_COIN"] %}
+           {% set coin_ticker_idx = coin_ticker_idx + 1 %}  <!-- count++ -->
+           <li class="{{coin_ticker}}_idx">{{coin_ticker}} <label class="{{coin_ticker}}_state">Ready</label> <button class="{{coin_ticker}}_Btn">show</button></li>
+       {% endfor %}
+
+   </div>
+
+    <!--  그래프 설정  -->
+    <canvas id="myChart" width="400" height="400"></canvas>
+
+    <!--  전역변수 설정  -->
+    <script>
+    $SCRIPT_ROOT = {{ request.script_root|tojson }}; <!--sets a global variable to the prefix to the root of the application.-->
+
+    </script>
+    <!--   전역변수 설정   -->
+
+    <script src="{{url_for('static', filename='monitoring.js')}}"></script>
 
 {% endblock %}

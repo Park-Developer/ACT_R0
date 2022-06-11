@@ -1,11 +1,9 @@
 console.log("Monitoring ON!");
-
-
-
-
+// [BUTTON EVENT FUNCTION]
+//console.log($TARGET_COIN_LIST[1]);
 
 // [CHART BEGIN]____________________________________________________________________
-document.addEventListener("DOMContentLoaded", function(){
+//document.addEventListener("DOMContentLoaded", function(){
     let monitoring_time=1500 // 모니터팅 시간
     let view_func="get_curPrice" // View Function 이름
     //let coint_ticker="KRW-BTC"  // Coin ticker 정보
@@ -56,7 +54,7 @@ console.log("Current Address", document.location.href+get_current_priceFunc );
 
 // target 코인만큼 setinverval 하는 기능 구현
 setInterval(function() {
-    $.getJSON($SCRIPT_ROOT + view_func,
+    $.getJSON($SCRIPT_ROOT + view_func, // Request URL Function
     {
         coin_ticker: "KRW-BTC",
         //b: $('input[name="b"]').val()
@@ -80,4 +78,4 @@ setInterval(function() {
 // [UPBIT API END]____________________________________________________________________
 
 
-});
+//});

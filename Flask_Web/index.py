@@ -6,6 +6,6 @@ from flask import (
 bp = Blueprint('index', __name__)  # /monitoring/ ~\
 
 @bp.route('/') # Index Page
-def index():
+def home():
     return render_template('index.html')
 

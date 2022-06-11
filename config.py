@@ -12,7 +12,8 @@ coin_ticker={   # coin ticker : coin name
 with open('./user_config.json', 'r') as f:
     BOT_INFO = json.load(f)
 
+
 TELEGRAM_API=BOT_INFO["TELEGRAM_PART"]["TELEGRAM_API"]
 
 if __name__=="__main__":
-    print(coin_ticker)
+    print(BOT_INFO)
