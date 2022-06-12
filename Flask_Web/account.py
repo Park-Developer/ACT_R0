@@ -38,12 +38,14 @@ def account_index():
 
         flash(error)
     '''
-    user_id = session.get('user_id')
+    user_info = session.get('user_id') # SESSION USER_ID {'access_code': '7U852X89', 'email': 'parkwonho94@gmail.com', 'password': 'wonho123', 'username': 'master'}
 
-    if user_id==None:
+    print("SESSION USER_ID",user_info)
+
+    if user_info==None:
         return render_template('auth/login.html') # user_id가 없는 경우 login.html retrun
     else:
-        return render_template('auth/account.html')
+        return render_template('auth/account.html',user_info=user_info) # login 상태인 경우
 
 @bp.route('/login', methods=('GET', 'POST'))
 def account_login():

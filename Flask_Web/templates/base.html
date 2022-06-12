@@ -4,15 +4,41 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.8.0/chart.min.js"></script>
+    <script src="{{url_for('static', filename='calc_tool.js')}}"></script>
 
     <nav>
-      <h1>Auto Coin Trader_R0</h1>
-      <ul>
-          <li><a href="{{ url_for('index.home') }}">Home</a></li>
-          <li><a href="{{ url_for('account.account_index') }}">Account</a></li>
-          <li><a href="{{ url_for('monitoring.index') }}">Monitoring</a></li>
-          <li><a href="{{ url_for('qna.index') }}">Q&A</a></li>
-      </ul>
+      <div class="nav_menu">
+        <h1>Auto Coin Trader_R0</h1>
+        <ul>
+            <li><a href="{{ url_for('index.home') }}">Home</a></li>
+            <li><a href="{{ url_for('account.account_index') }}">Account</a></li>
+            <li><a href="{{ url_for('setting.index') }}">Setting</a></li>
+            <li><a href="{{ url_for('monitoring.index') }}">Monitoring</a></li>
+            <li><a href="{{ url_for('qna.index') }}">Q&A</a></li>
+        </ul>
+      </div>
+
+      <div class="today_time">
+        <label>Today : </label><span class="today_time__val"></span>
+      </div>
+
+      <script>
+        let interval_time=1000; // 1 sec
+        setInterval(function(){
+          let today = new Date();
+
+          let year = today.getFullYear(); // 년도
+          let month = today.getMonth() + 1;  // 월
+          let date = today.getDate();  // 날짜
+          let day = today.getDay();  // 요일
+
+          let hours = today.getHours(); // 시
+          let minutes = today.getMinutes();  // 분
+          let seconds = today.getSeconds();  // 초
+
+          $('.today_time__val').text(year.toString()+'.'+(month).toString()+'.'+date.toString()+'  '+hours.toString()+":"+minutes.toString()+":"+seconds.toString());
+        },interval_time);
+      </script>
     </nav>
 
     <section class="content">
@@ -20,11 +46,11 @@
         {% block header %}
 
         {% endblock %}
+
       </header>
 
       {% block content %}
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
-        <canvas id="line-chart" width="300" height="250"></canvas>
+
 
       {% endblock %}
     </section>

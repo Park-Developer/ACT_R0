@@ -16,6 +16,17 @@ print("size",df["close"].shape[0])
 print("========================")
 print(df["close"][0])
 '''
+def calc_average(coin_ticker:str, count:int)->int:
+    # 종가기준 평균값 반환
+    if count==0:
+        print("ERROR!!")
+        return -9999
+    else:
+        df = pyupbit.get_ohlcv(coin_ticker, count=count)
+        close_df = df["close"]  # 종가 반환
+
+        return sum(close_df.values)/count
+
 
 def make_movingAvg(coin_ticker:str,period:int, count:int)->dict:
     '''

@@ -7,12 +7,9 @@
 <!--[ BODY ]-->
 {% block content %}
 
-<p><a href=# id=calculate>calculate server side</a>
-
-  <h1>CANMCA</h1>
-
+<section>
    <div class="TARGET_LIST">
-       <h1 class="TARGET_LIST">Target Coin List</h1>
+       <h1 class="TARGET_LIST__header">Target Coin List</h1>
 
        {% set coin_number = namespace(value=0) %}               {# loop count #}
 
@@ -26,10 +23,36 @@
        {% endfor %}
 
    </div>
+</section>
 
-    <!--  그래프 설정  -->
-    <canvas id="myChart" width="400" height="400"></canvas>
+<section>
+   <div class="TARGET_MONITORING">
+     <h1 class="TARGET_MONITORING__header">Target Coin Realtime Graph</h1>
 
+     <div>
+       <label class="TARGET_MONITORING__time">모니터링 시간 : </label> <span class="TARGET_MONITORING__time__val"></span>
+     </div>
+
+     <div>
+       <label class="TARGET_MONITORING__curPrice">현재 가격 : </label> <span class="TARGET_MONITORING__curPrice__val"></span>
+     </div>
+
+     <div>
+       <label class="TARGET_MONITORING__avgPrice">평균 가격 : </label> <span class="TARGET_MONITORING__avgPrice__val"></span>
+     </div>
+
+     <div>
+       <label class="TARGET_MONITORING__maxPrice">최고 가격: </label> <span class="TARGET_MONITORING__maxPrice__val"></span>
+     </div>
+
+     <div>
+       <label class="TARGET_MONITORING__minPrice">최저 가격: </label> <span class="TARGET_MONITORING__minPrice__val"></span>
+     </div>
+     <!--  그래프 설정  -->
+     <canvas id="myChart" width="400" height="400"></canvas>
+   </div>
+
+</section>
     <!--  전역변수 설정  -->
     <script>
         $SCRIPT_ROOT = {{ request.script_root|tojson }}; <!--sets a global variable to the prefix to the root of the application.-->
