@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+
+{% block header %}
+ <link rel="stylesheet" href="{{ url_for('static', filename='account.css') }}">
+
+  <h1>{% block title %}Account{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+
+<section class="PROFILE_PART">
+    <h1>Profile</h1>
+
+    <div class="PROFILE">
+        <div class="PROFILE_IMG">
+            <img src="{{url_for('static', filename='profile.png')}}"  width="200" height="200" alt="My Image">
+        </div>
+
+        <div class="PROFILE_PERSONAL">
+            <!-- 1. Username -->
+            <div>
+                <label>1. Username : </label> <span>asdasd</span>
+            </div>
+
+            <!-- 2. Email -->
+            <div>
+                <label>2. E-mail : </label> <span>asdasd</span>
+            </div>
+
+            <!-- 3. Tier -->
+            <div>
+                <label>3. Tier : </label> <span>asdasd</span>
+            </div>
+
+            <!-- 4. Reference -->
+            <div>
+                <label>4. Reference : </label> <span>asdasd</span>
+            </div>
+        </div>
+    </div>
+
+    <form method="post" action="logout">
+        <input type="submit" value="Log Out">
+    </form>
+</section>
+
+
+<section class="PERFORMANCE_PART">
+<h1>Performance</h1>
+
+    <h2>계좌 정보</h2>
+    <div class="ACCOUNT_DISPLAY">
+        <!-- 통장 잔액 -->
+        <div>
+            <label>통장 잔액 : </label> <span>asdasd</span>
+        </div>
+
+        <!-- 원금 -->
+        <div>
+            <label>원금 : </label> <span>asdasd</span>
+        </div>
+
+        <!-- 거래 금액 -->
+        <div>
+            <label>거래 금액 : </label> <span>asdasd</span>
+        </div>
+
+        <!-- 출금가능한 금액 -->
+        <div>
+            <label>출금가능한 금액 : </label> <span>asdasd</span>
+        </div>
+    </div>
+
+    <h2>거래 실적</h2>
+    <div class="TRADING_DISPLAY">
+        <!-- 오늘 정보 -->
+        <div>
+            <label>Today : </label> <span>asdasd</span>
+        </div>
+
+        <!-- 지난 실적 -->
+        <div>
+            <label>History : </label> <span>asdasd</span>
+        </div>
+    </div>
+</section>
+
+
+<section class="LOG_PART">
+    <h1>Trading Log</h1>
+    <P>: 최근 10개의 거래 기록</P>
+</section>
+{% endblock %}

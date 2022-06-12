@@ -3,12 +3,25 @@
 <!--[ --- HEADER --- ]-->
 {% block header %}
     <h1>{% block title %}Home{% endblock %}</h1>
+
+    <script>
+        $SCRIPT_ROOT = {{ request.script_root|tojson }}; <!--sets a global variable to the prefix to the root of the application.-->
+    </script>
 {% endblock %}
 
 <!--[ --- BODY --- ]-->
 {% block content %}
-    <script>
-    $SCRIPT_ROOT = {{ request.script_root|tojson }}; <!--sets a global variable to the prefix to the root of the application.-->
-    </script>
+<section class="INTRODUCTION">
+
+</section>
+
+<section class="FORUM">
+
+</section>
+
+
+<section class="Ranking">
+
+</section>
 
 {% endblock %}

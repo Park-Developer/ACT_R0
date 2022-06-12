@@ -41,4 +41,6 @@ def create_app(test_config=None):
     from . import monitoring
     app.register_blueprint(monitoring.bp)
 
+    from . import qna
+    app.register_blueprint(qna.bp)
     return app

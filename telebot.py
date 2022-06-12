@@ -56,21 +56,26 @@ async def ACT_Check(update: Update, context: CallbackContext.DEFAULT_TYPE):
     )
 
 # Web Login CMD
-async def ACT_Web_Login(update: Update, context: CallbackContext.DEFAULT_TYPE):
-    user_email = context.args[0]
-    print("input username", user_email)
-    # Access Code 생성
-    is_accessible, code, user_name=bot_cmd.ACT_Web_Login(user_email)
-
-    if is_accessible == True:
-        code_list_addr=config.ACCOUNT_CHECK_METHOD["ACCESS_CODE_ADDRESS"]
-        code_lifetime=config.ACCOUNT_CHECK_METHOD["CODE_INFO"]["code_lifetime"]
-
-        basic_tool.update_loginCode(code_list_addr,code_lifetime,user_name,code) # Access Code Update
-
-        login_msg = "Hello "+ user_name +"! \n\n*code* : " + code
+async def ACT_Web_Login(update: Update, context: CallbackContext.DEFAULT_TYPE): # 수정필
+    print("args",context.args,type(context.args))
+    if len(context.args)==0: # args가 없는 경우
+        print("asd",context.args)
+        login_msg="Invalid command format\nPlease command in the following format\n\nACT_Web_Login email@ACT_R0.com"
     else:
-        login_msg = code # error code
+        user_email = context.args[0]
+        print("input username", user_email)
+        # Access Code 생성
+        is_accessible, code, user_name=bot_cmd.ACT_Web_Login(user_email)
+
+        if is_accessible == True:
+            code_list_addr=config.ACCOUNT_CHECK_METHOD["ACCESS_CODE_ADDRESS"]
+            code_lifetime=config.ACCOUNT_CHECK_METHOD["CODE_INFO"]["code_lifetime"]
+
+            basic_tool.update_loginCode(code_list_addr,code_lifetime,user_name,code) # Access Code Update
+
+            login_msg = "Hello "+ user_name +"! \n\n*code* : " + code
+        else:
+            login_msg = code # error code
 
     await context.bot.send_message(
         chat_id=update.effective_chat.id,

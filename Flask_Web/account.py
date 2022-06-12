@@ -1,10 +1,13 @@
 import functools
 
+import basic_tool
 import config
 import web_tool
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, session, url_for
 )
+
+
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from Flask_Web.db import get_db
@@ -13,8 +16,6 @@ bp = Blueprint('account', __name__, url_prefix='/account')
 
 @bp.route('/', methods=('GET', 'POST'))
 def account_index():
-    is_loginOK=web_tool # 로그인 여부
-
     ''' DB 관련 나줃에
     if request.method == 'POST':
         username = request.form['username']
@@ -37,6 +38,15 @@ def account_index():
 
         flash(error)
     '''
+    user_id = session.get('user_id')
+
+    if user_id==None:
+        return render_template('auth/login.html') # user_id가 없는 경우 login.html retrun
+    else:
+        return render_template('auth/account.html')
+
+@bp.route('/login', methods=('GET', 'POST'))
+def account_login():
     if request.method == 'POST':
         check_data = {
             "data_type": config.ACCOUNT_CHECK_METHOD["CHECK_DATA_TYPE"],
@@ -49,18 +59,26 @@ def account_index():
             "password" : request.form['password'],
             "access_code" : request.form['access_code']
         }
-
+        session_info={}
         if web_tool.check_account(input_info,check_data)==True: # 인증 성공
             print("CHEKC SUCCESS!!!")
+            is_in_user, username=basic_tool.check_username(check_data["user_list_address"],input_info["email"])
+            if is_in_user==True:
+                session_info.update(input_info)
+                session_info["username"]=username
+
+                session['user_id']=session_info # 입력받은 유저 정보
+                return render_template('auth/account.html')
+            else:
+                flash("Abnormal User Error!")
+
         else: # 인증 실패
             flash("User Identification Fail!")
             print("CHEKC FAIL!!!")
 
+    return render_template('auth/login.html')
 
-
-
-    return render_template('auth/login.html',is_loginOK=is_loginOK)
-
+'''
 @bp.before_app_request
 def load_logged_in_user():
     user_id = session.get('user_id')
@@ -71,11 +89,13 @@ def load_logged_in_user():
         g.user = get_db().execute(
             'SELECT * FROM user WHERE id = ?', (user_id,)
         ).fetchone()
-
-@bp.route('/logout')
+'''
+@bp.route('/logout', methods=('GET', 'POST'))
 def logout():
     session.clear()
-    return redirect(url_for('index'))
+    return redirect(url_for('account.account_index'))
+    #return render_template('auth/account.html')
+
 
 def login_required(view):
     @functools.wraps(view)
