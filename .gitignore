@@ -1,5 +1,5 @@
 # User Information
-user_config.json
+*.json
 note.txt
 
 # Byte-compiled / optimized / DLL files
