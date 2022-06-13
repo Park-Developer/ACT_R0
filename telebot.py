@@ -62,16 +62,15 @@ async def ACT_Web_Login(update: Update, context: CallbackContext.DEFAULT_TYPE): 
         print("asd",context.args)
         login_msg="Invalid command format\nPlease command in the following format\n\nACT_Web_Login email@ACT_R0.com"
     else:
-        user_email = context.args[0]
-        print("input username", user_email)
+        user_email = context.args[0] # input user email
+
         # Access Code 생성
         is_accessible, code, user_name=bot_cmd.ACT_Web_Login(user_email)
 
         if is_accessible == True:
-            code_list_addr=config.ACCOUNT_CHECK_METHOD["ACCESS_CODE_ADDRESS"]
-            code_lifetime=config.ACCOUNT_CHECK_METHOD["CODE_INFO"]["code_lifetime"]
+            user_list_addr=config.ACCOUNT_CHECK_METHOD["USER_LIST_ADDRESS"]
 
-            basic_tool.update_loginCode(code_list_addr,code_lifetime,user_name,code) # Access Code Update
+            basic_tool.update_loginCode(code,user_email,user_list_addr) # Access Code Update
 
             login_msg = "Hello "+ user_name +"! \n\n*code* : " + code
         else:

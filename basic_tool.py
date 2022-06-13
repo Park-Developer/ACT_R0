@@ -2,7 +2,7 @@ import random
 import config
 import json
 import time
-
+import upbit_tool
 
 def is_timeOver(generation_time:str, code_lifetime:int)->bool:   # format : "2022-06-12 02:04:46"
     # [today time info]
@@ -33,37 +33,88 @@ def is_timeOver(generation_time:str, code_lifetime:int)->bool:   # format : "202
 
     # 시간이 다르면 Over로 판단
     if time_hour!=today_hour:
+        print("time_hour",time_hour)
+        print("today_hour",today_hour)
         return True
     else:
         record_info_SEC = (time_min*60) + (time_sec)
         today_info_SEC=(today_min*60) + (today_sec)
 
+        print("record_info_SEC",record_info_SEC)
+        print("today_info_SEC=",today_info_SEC)
         if (today_info_SEC-record_info_SEC)> code_lifetime:
             return True
         else:
             return False
 
-def check_username(userlist_addr:str,user_email:str)->str:
+def check_username(userlist_addr:str,user_email:str)->str: # email로 user가 있는지 확인
     with open(userlist_addr, 'r') as f:
         user_list = json.load(f)
 
-    print("user list ", user_list)
-
-    if user_email in user_list:
+    if user_email in user_list: # email 검색
         print("check username")
-        return True, user_list[user_email]["username"]
+        return True, user_list[user_email]["PERSONAL_PART"]["username"]
     else:
         return False, "Not Exist User"
 
 
-def update_loginCode(code_addr:str,code_lifetime:int,user:str,code:str)->None:
+def get_static_userInfo(email:str,data_addr:str,read_method:str)->dict:
+    if read_method=="JSON": # json파일에서 정보 가져오기
+        with open(data_addr, 'r') as f:
+            user_list = json.load(f)
+
+        static_info=user_list[email]
+
+        return static_info
+
+    else:
+        print("Not Yet - get_static_userInfo")
+        pass
+
+
+def get_dynamic_userInfo(email:str,data_addr:str,read_method:str)->dict:
+    if read_method == "JSON":  # json파일에서 정보 가져오기
+        with open(data_addr, 'r') as f:
+            user_list = json.load(f)
+
+        static_info = user_list[email]
+    else:
+        print("Not Yet - get_dynamic_userInfo")
+
+    access_key=static_info["UPBIT_PART"]["ACCESS_KEY"]
+    secret_key = static_info["UPBIT_PART"]["SECRET_KEY"]
+
+    cash_info, coin_info= upbit_tool.get_balanceInfo(access_key, secret_key)
+
+    dynamic_info = {}
+
+    dynamic_info["UPDATE_TIME"]=time.strftime('%Y-%m-%d %H:%M:%S') # update time record
+    dynamic_info["CURRENT_CASH_BALANCE"]=cash_info  # 보유한 현금 정보(dict)
+    dynamic_info["CURRENT_COIN_LIST"]=coin_info  # 보유한 코인 정보(list)
+
+    return dynamic_info
+
+def get_userInfo(email:str,data_addr:str,read_method:str)->dict:
+    # user info = static user info + dynamic user info
+
+    # (1) Get Static User Info
+    user_info=get_static_userInfo(email,data_addr,read_method)
+
+    # (2) Update Dynamic User Info
+    user_info["DYNAMIC_PART"]=get_dynamic_userInfo(email,data_addr,read_method)
+
+    return user_info
+
+
+def update_loginCode(code:str,user_email:str,user_list_addr:str)->None:
     # (1) read access code list
-    with open(code_addr, 'r') as f:
-        access_code_list = json.load(f)
+    with open(user_list_addr, 'r') as f:
+        user_list = json.load(f)
 
     # (2) reset code with lifetime
-    life_end_list=[]
-    for user_name,code_info in access_code_list.items():
+
+    ''' # 유효성 평가 작업
+    for user_email,user_info in user_list.items():
         # JSON format check
         if ("code" in code_info and "generation_time" in code_info):
             generation_time=code_info["generation_time"]
@@ -72,17 +123,14 @@ def update_loginCode(code_addr:str,code_lifetime:int,user:str,code:str)->None:
 
     for user_name in life_end_list:
         del access_code_list[user_name] # 해당 username 삭제
+    '''
 
-    # (3) write code
-    access_code_list["UPDATE_INFO"]=time.strftime('%Y-%m-%d %H:%M:%S') # 파일 수정 정보 기록
+    # (3) update access code & JSON update
+    user_list[user_email]["TELEGRAM_PART"]["ACCESS_CODE"]["code"]=code
+    user_list[user_email]["TELEGRAM_PART"]["ACCESS_CODE"]["generation_time"]=time.strftime('%Y-%m-%d %H:%M:%S')
 
-    access_code_list[user] = {
-        "code":code,
-        "generation_time":time.strftime('%Y-%m-%d %H:%M:%S')
-    }
-
-    with open(code_addr, 'w') as f:
-        json.dump(access_code_list, f,indent=2)
+    with open(user_list_addr, 'w') as f:
+        json.dump(user_list_addr, f,indent=2)
 
 
 def gen_loginCode(code_info: dict) -> str:

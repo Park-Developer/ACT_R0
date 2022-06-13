@@ -1,5 +1,5 @@
 import functools
-
+import upbit_tool
 import basic_tool
 import config
 import web_tool
@@ -38,7 +38,9 @@ def account_index():
 
         flash(error)
     '''
-    user_info = session.get('user_id') # SESSION USER_ID {'access_code': '7U852X89', 'email': 'parkwonho94@gmail.com', 'password': 'wonho123', 'username': 'master'}
+
+    # SESSION GET
+    user_info = web_tool.session_get(session_var=config.ACCOUNT_CHECK_METHOD["SESSION_VARIABLE"])  # SESSION USER_ID {'access_code': '7U852X89', 'email': 'parkwonho94@gmail.com', 'password': 'wonho123', 'username': 'master'}
 
     print("SESSION USER_ID",user_info)
 
@@ -50,29 +52,31 @@ def account_index():
 @bp.route('/login', methods=('GET', 'POST'))
 def account_login():
     if request.method == 'POST':
+        # Server Storing Data For Check
         check_data = {
             "data_type": config.ACCOUNT_CHECK_METHOD["CHECK_DATA_TYPE"],
             "user_list_address": config.ACCOUNT_CHECK_METHOD["USER_LIST_ADDRESS"],
-            "access_code_address": config.ACCOUNT_CHECK_METHOD["ACCESS_CODE_ADDRESS"]
         }
 
+        # User Input Data
         input_info={
             "email" :request.form['email'],
             "password" : request.form['password'],
             "access_code" : request.form['access_code']
         }
-        session_info={}
+
         if web_tool.check_account(input_info,check_data)==True: # 인증 성공
             print("CHEKC SUCCESS!!!")
-            is_in_user, username=basic_tool.check_username(check_data["user_list_address"],input_info["email"])
-            if is_in_user==True:
-                session_info.update(input_info)
-                session_info["username"]=username
+            # [1] Get User Info(static user info + dynamic user info)
+            user_info=basic_tool.get_userInfo(email=input_info["email"],
+                                              data_addr=config.ACCOUNT_CHECK_METHOD["USER_LIST_ADDRESS"],
+                                              read_method="JSON"
+                                              )
 
-                session['user_id']=session_info # 입력받은 유저 정보
-                return render_template('auth/account.html')
-            else:
-                flash("Abnormal User Error!")
+            # [2] SESSION Update
+            web_tool.session_update(session_var=config.ACCOUNT_CHECK_METHOD["SESSION_VARIABLE"], session_data=user_info)
+
+            return render_template('auth/account.html',user_info=user_info)
 
         else: # 인증 실패
             flash("User Identification Fail!")
@@ -94,9 +98,9 @@ def load_logged_in_user():
 '''
 @bp.route('/logout', methods=('GET', 'POST'))
 def logout():
-    session.clear()
+    web_tool.session_clear()
+
     return redirect(url_for('account.account_index'))
-    #return render_template('auth/account.html')
 
 
 def login_required(view):

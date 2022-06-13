@@ -9,8 +9,7 @@ nav { background: lightgray; align-items: center; padding: 0 0.5rem; }
   display: flex;
 }
 .today_time{
-    margin-right:auto;
-    margin-left: 0;
+text-align: right;
 }
 
 nav h1 { flex: auto; margin: 0; }

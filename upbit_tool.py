@@ -2,20 +2,6 @@ import pyupbit
 import pandas
 import numpy
 
-ticker =pyupbit.get_tickers()
-print(ticker)
-
-# 과거 데이터 조회
-df = pyupbit.get_ohlcv("KRW-BTC",)
-
-'''
-print(df)asd
-print("========================")
-print(df["close"])
-print("size",df["close"].shape[0])
-print("========================")
-print(df["close"][0])
-'''
 def calc_average(coin_ticker:str, count:int)->int:
     # 종가기준 평균값 반환
     if count==0:
@@ -46,6 +32,21 @@ def make_movingAvg(coin_ticker:str,period:int, count:int)->dict:
     print("[Moving Average] => coin ticker : {0}, period : {1}, count : {2}".format(coin_ticker,period,count))
 
     return movingAvg_info
+
+
+def get_balanceInfo(access_key:str, secret_key:str)->tuple:
+    upbit=pyupbit.Upbit(access_key,secret_key)
+    balance=upbit.get_balances()
+
+    if balance==[]: # 계좌에 아무것도 없는 경우
+        print("Nothing balance!")
+        return {}
+
+
+    cash_info=balance[0]    # 보유한 현금 정보(dict)
+    coin_info=balance[1:]   # 보유한 코인 정보(list)
+
+    return cash_info, coin_info # dict, list
 
 if __name__=="__main__":
 

@@ -1,15 +1,69 @@
 {
   "parkwonho94@gmail.com": {
-    "username": "master",
-    "tier": "Gold",
-    "password": "wonho123",
-    "login_state":"ON"
+     "PERSONAL_PART": {
+        "email": "parkwonho94@gmail.com",
+        "password": "wonho123",
+        "username": "master",
+        "tier":"Gold",
+        "login_state": "Off",
+        "profile_img_addr": "/static/profile.png"
+    },
+    "TELEGRAM_PART":{
+      "TELEGRAM_API":"5466224479:AAFpiynhWMiA0UzNSkGPBgXy8T8VTTIokqs",
+      "ACCESS_CODE": {
+        "code": "7U852X89",
+        "generation_time": "2022-06-14 1:59:11"
+      }
+    },
+
+    "UPBIT_PART": {
+      "ACCESS_KEY":"InJd0c63bEGg8TE2lC16vuruckFNEFhMwBFVdYxC",
+      "SECRET_KEY": "P8yLpw2CcKPuwipLexYOXTfowgJ3mqcMCmsxkxfO",
+      "ALLOWED_IP" : {"IP_1":"119.64.45.3",
+                      "IP_2":"192.168.219.102",
+                      "IP_3":"127.0.0.1"},
+      "TARGET_COIN" : ["KRW-ADA", "KRW-SOL", "KRW-XRP", "KRW-WAVES"]
+
+    },
+
+    "DYNAMIC_PART": {
+      "UPDATE_TIME": "",
+      "CURRENT_CASH_BALANCE" : "",
+      "CURRENT_COIN_LIST" : {}
+    },
+
+    "WEB_PART": {
+
+    }
   },
 
   "gnvid35@naver.com": {
-    "username": "manager",
-    "tier": "Silver",
-    "password": "mnes586",
-     "login_state":"OFF"
+     "PERSONAL_PART": {
+        "email": "gnvid35@naver.com",
+        "password": "asd497",
+        "username": "huner",
+        "tier":"sIlver",
+        "login_state": "Off"
+    },
+    "TELEGRAM_PART":{
+      "TELEGRAM_API":"5466224479:AAFpiynhWMiA0UzNSkGPBgXy8T8VTTIokqs",
+      "ACCESS_CODE": {
+        "code": "asd",
+        "generation_time": "None"
+      }
+    },
+
+    "UPBIT_PART": {
+      "ACCESS_KEY":"InJd0c63bEGg8TE2lC16vuruckFNEFhMwBFVdYxC",
+      "SECRET_KEY": "P8yLpw2CcKPuwipLexYOXTfowgJ3mqcMCmsxkxfO",
+      "ALLOWED_IP" : {"IP_1":"119.64.45.3",
+                      "IP_2":"192.168.219.102",
+                      "IP_3":"127.0.0.1"},
+      "TARGET_COIN" : ["KRW-ADA", "KRW-SOL", "KRW-XRP", "KRW-WAVES"]
+
+    },
+    "WEB_PART": {
+
+    }
   }
 }

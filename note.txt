@@ -1,33 +1,15 @@
-type	ty	타입	String	ticker : 현재가
-code	cd	마켓 코드 (ex. KRW-BTC)	String
-opening_price	op	시가	Double
-high_price	hp	고가	Double
-low_price	lp	저가	Double
-trade_price	tp	현재가	Double
-prev_closing_price	pcp	전일 종가	Double
+{
+  "parkwonho94@gmail.com": {
+    "username": "master",
+    "tier": "Gold",
+    "password": "wonho123",
+    "login_state":"ON"
+  },
 
-
-   type: 'line',
-    data: {
-        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-        datasets: [{
-            label: '# of Votes',
-            data: [12, 19, 3, 5, 2, 3],
-            backgroundColor: [
-                'rgba(255, 99, 132, 0.2)',
-                'rgba(54, 162, 235, 0.2)',
-                'rgba(255, 206, 86, 0.2)',
-                'rgba(75, 192, 192, 0.2)',
-                'rgba(153, 102, 255, 0.2)',
-                'rgba(255, 159, 64, 0.2)'
-            ],
-            borderColor: [
-                'rgba(255, 99, 132, 1)',
-                'rgba(54, 162, 235, 1)',
-                'rgba(255, 206, 86, 1)',
-                'rgba(75, 192, 192, 1)',
-                'rgba(153, 102, 255, 1)',
-                'rgba(255, 159, 64, 1)'
-            ],
-            borderWidth: 1
-        }]
+  "gnvid35@naver.com": {
+    "username": "manager",
+    "tier": "Silver",
+    "password": "mnes586",
+     "login_state":"OFF"
+  }
+}

@@ -1,6 +1,6 @@
 import json
 
-# COIN INFORMATION
+# [COIN INFORMATION]
 COIN_TICKER={   # coin ticker : coin name
     "KRW-ADA":"에이다",
     "KRW-SOL":"솔리나",
@@ -8,8 +8,8 @@ COIN_TICKER={   # coin ticker : coin name
     "KRW-WAVES":"웨이브",
 }
 
-# Config USER_INFO File(.JSON) Load
-with open('./user_config.json', 'r') as f:
+# [Config USER_INFO File(.JSON) Load]
+with open('./user_config.json', 'r') as f: # 이거 없애기
     BOT_INFO = json.load(f)
 
 
@@ -19,16 +19,19 @@ USER_EMAIL=BOT_INFO["PERSONAL_PART"]["email"]
 USER_PASSWORD=BOT_INFO["PERSONAL_PART"]["password"]
 USER_NAME=BOT_INFO["PERSONAL_PART"]["username"]
 
-# WEB INFORMATION
+UPBIT_ACCESS_KEY=BOT_INFO["UPBIT_PART"]["ACCESS_KEY"]
+UPBIT_SECRET_KEY=BOT_INFO["UPBIT_PART"]["SECRET_KEY"]
+
+# [WEB INFORMATION]
 ACCOUNT_CHECK_METHOD={
     "USER_LIST_ADDRESS":"./user_list.json",
     "CHECK_DATA_TYPE":"local_file", # account 확인하는 방법
-    "ACCESS_CODE_ADDRESS":"./access_code.json",
     "CODE_INFO":{
         "code_method": 0,
         "code_length": 8,
         "code_lifetime":180, # Unit : sec
-    }
+    },
+    "SESSION_VARIABLE":"user_email"
 }
 
 if __name__=="__main__":

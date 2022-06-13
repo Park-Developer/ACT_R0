@@ -1,10 +1,13 @@
 {% extends 'base.html' %}
 
 {% block header %}
-  <h1>{% block title %}Log In{% endblock %}</h1>
+  <h1>{% block title %}Account{% endblock %}</h1>
 {% endblock %}
 
 {% block content %}
+<section class="LOGIN_PART">
+  <h1>Login</h1>
+
   <form method="post" action="login">
     <label for="email">Email</label>
     <input name="email" id="email" required>
@@ -19,10 +22,20 @@
     <input type="submit" value="Log In">
   </form>
 
-  <form>
-     <input type="submit" value="Register">
-  </form>
+</section>
 
+<section class="REGISTER_PART">
+  <h1>Register</h1>
+  <p>If you want to sign up, email me in the following form</p>
+
+  <label>Email</label>
+  <p>daniel_p@kakao.com</p>
+
+  <label>Form</label>
+  <p>name</p>
+  <p>email</p>
+  <p>job</p>
+</section>
 
 
 {% endblock %}
