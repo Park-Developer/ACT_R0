@@ -23,6 +23,11 @@ let CHART_INFO={
   first_moving_average_count : 20, // 첫번째 이평선 계산 기준
 }
 
+// [Button 설정]
+let BUTTON_SET={
+  clicked_btn_Class: "clicked_btn_style",
+  unclicked_btn_Class: "unclicked_btn_style",
+}
 
 
 // [전역 변수 설정]
@@ -87,19 +92,43 @@ const myChart = new Chart(ctx, {
     }
 }); // chart setting
 
+function change_clicked_Style(btn_cls_name, clicked_style_cls){
+    let clicked_btn=document.querySelector(btn_cls_name);
+
+    clicked_btn.classList.add(clicked_style_cls); // add click style
+
+}
+
+function change_Unclicked_Style(btn_cls_name, clicked_style_cls){
+    let unclicked_btn=document.querySelector(btn_cls_name);
+
+    unclicked_btn.classList.remove(clicked_style_cls); // remove click style
+
+}
+
 
 // [BUTTON EVENT FUNCTION BEGIN]
 let Btn_click=function(event){
     let Btn_ClsList=event.target.classList; // <button class="{{coin_ticker}} coin_{{loop.index}}_Btn">show</button>
 
-    let coin_ticker=Btn_ClsList[0];
+    let coin_ticker=Btn_ClsList[0]; // new click
     let btn_idx=parseInt(Btn_ClsList[1].split('_')[1]);
 
     console.log("debug",btn_idx,coin_ticker,"  click!");
 
-    // [1] Change Coin
+    // [1] Change Coin(= Button Change)
+    past_clicked_Btn_ticker=ACTIVATED_COIN_TICKER
+    past_clicked_Btn_idx=ACTIVATED_BTN_NUMBER
+
     ACTIVATED_COIN_TICKER=coin_ticker;
     ACTIVATED_BTN_NUMBER=btn_idx;
+
+    let unclicked_Btn_cls="."+"coin_"+past_clicked_Btn_idx+"_Btn"; // Past clicked Button
+    let clicked_Btn_cls="."+"coin_"+btn_idx+"_Btn";
+
+    // Now clicked Button
+    change_clicked_Style(btn_cls_name=clicked_Btn_cls,clicked_style_cls=BUTTON_SET.clicked_btn_Class);
+    change_Unclicked_Style(btn_cls_name=unclicked_Btn_cls,clicked_style_cls=BUTTON_SET.clicked_btn_Class);
 
     // [2] Change Chart
     // [2-1] chart name change

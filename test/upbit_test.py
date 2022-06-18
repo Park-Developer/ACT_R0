@@ -1,6 +1,7 @@
 import pyupbit
 import pandas
 import numpy
+import config
 
 def get_balanceInfo(upbit_key:dict)->tuple:
     access_key=upbit_key["access_key"]
@@ -21,8 +22,8 @@ def get_balanceInfo(upbit_key:dict)->tuple:
 
 if __name__=="__main__":
     upbit_key={
-        "access_key":'InJd0c63bEGg8TE2lC16vuruckFNEFhMwBFVdYxC',
-        "secret_key":'P8yLpw2CcKPuwipLexYOXTfowgJ3mqcMCmsxkxfO'
+        "access_key":config.UPBIT_ACCESS_KEY,
+        "secret_key":config.UPBIT_SECRET_KEY
     }
 
     a,b=get_balanceInfo(upbit_key)

@@ -1,0 +1,9 @@
+.clicked_btn_style{
+  background-color: red;
+    color:green;
+}
+
+.unclicked_btn_style{
+  background-color: gray;
+  color:blue;
+}

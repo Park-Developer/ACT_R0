@@ -4,10 +4,10 @@ from flask import (
 )
 
 
-#app = Flask(__name__)
-bp = Blueprint('qna', __name__, url_prefix='/QnA')  # /monitoring/ ~\
+
+bp = Blueprint('manage', __name__, url_prefix='/manage')  # /monitoring/ ~\
 
 # [Index]
 @bp.route('/')
 def index():
-    return render_template('qna.html')
+    return render_template('manage.html')

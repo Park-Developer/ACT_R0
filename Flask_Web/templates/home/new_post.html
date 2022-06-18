@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}New Post{% endblock %}</h1>
+{% endblock %}
+
+
+{% block content %}
+  <form class="new_post" method="post" action="new_post/save">
+
+     <label for="post_type">Title</label>
+     <select name="Forum_Filter" id="post_type">
+       <option value="A">A</option>
+       <option value="B">B</option>
+       <option value="C">C</option>
+       <option value="D">D</option>
+     </select>
+
+      <label for="title">Title</label>
+      <input name="title" id="title" required>
+
+      <label for="body">Body</label>
+      <textarea name="body" id="body" required>...</textarea>
+
+      <div>
+        <input type="submit" value="Save">
+      </div>
+  </form>
+
+  <form>
+      <input type="submit" value="Cancel">
+  </form>
+{% endblock %}

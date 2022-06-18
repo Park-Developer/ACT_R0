@@ -1,6 +1,8 @@
 # User Information
 *.json
 note.txt
+test/
+dev_note.md
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

@@ -1,6 +1,6 @@
 import logging
 import logging
-from telegram import Update
+from telegram import Update,Bot
 from telegram.ext import ApplicationBuilder, CallbackContext, CommandHandler
 # This part is for setting up logging module
 import bot_cmd
@@ -18,6 +18,7 @@ application = ApplicationBuilder().token('1395535281:AAF2bNWr5YVhPhMreL-PU58qEQM
 # This application alone doesn't do anything. To add functionality, we do two things.
 # First, we define a function that should process a specific type of updates
 async def start(update: Update, context: CallbackContext.DEFAULT_TYPE):
+    print("user_ud",update.effective_chat.id)
     await context.bot.send_message(
         chat_id=update.effective_chat.id,
         text="I'm a bot, please talk to me!"
@@ -60,7 +61,7 @@ async def ACT_Web_Login(update: Update, context: CallbackContext.DEFAULT_TYPE): 
     print("args",context.args,type(context.args))
     if len(context.args)==0: # args가 없는 경우
         print("asd",context.args)
-        login_msg="Invalid command format\nPlease command in the following format\n\nACT_Web_Login email@ACT_R0.com"
+        login_msg="HELDASD"#"Invalid command format\nPlease command in the following format\n\nACT_Web_Login email@ACT_R0.com"
     else:
         user_email = context.args[0] # input user email
 
@@ -95,4 +96,5 @@ if __name__ == '__main__':
     web_login_handler = CommandHandler('ACT_Web_Login', ACT_Web_Login)
     application.add_handler(web_login_handler)
 
+    # Run the bot until the user presses Ctrl-C
     application.run_polling()
