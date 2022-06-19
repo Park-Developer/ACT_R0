@@ -5,13 +5,25 @@ from werkzeug.exceptions import abort
 from werkzeug.security import check_password_hash, generate_password_hash
 
 # from Flask_Web.auth import login_required # 개발 필
+import web_tool
 from Flask_Web.db import get_db
 
 bp = Blueprint('index', __name__)  # /monitoring/ ~\
 
-@bp.route('/new_post') # Index Page
+@bp.route('/view_post')
+def view_post():
+    post_viewInfo={ # get data from URL parameter at index.html
+        "post_title":request.args.get("title"),
+        "post_created":request.args.get("created"),
+        "post_author_id":request.args.get("author_id"),
+        "post_index":request.args.get("index")
+    }
+
+    return render_template('home/view_post.html',post_viewInfo=post_viewInfo)
+
+@bp.route('/new_post')
 def new_post():
-    print("PSTO JEW") #
+    print("PSTO JEW") #debug
     return render_template('home/new_post.html')
 
 @bp.route('/debug') # Index Page
@@ -86,9 +98,7 @@ def home():
 
         # users(db에 저장된 모든 post)
         posts = db.execute(
-            'SELECT p.id, title, body, created, author_id, username'
-            ' FROM post p JOIN user u ON p.author_id = u.id'
-            ' ORDER BY created DESC'
+            'SELECT * FROM post'  # post table에서 모든 post 불러오기
         ).fetchall()
 
     return render_template('index.html',posts=posts, users=users)
@@ -96,7 +106,7 @@ def home():
 
 @bp.route('/new_post/save', methods=('GET', 'POST'))
 #@login_required
-def new_pos_save():
+def new_post_save():
     if request.method == 'POST':
         title = request.form['title']
         body = request.form['body']
@@ -109,10 +119,14 @@ def new_pos_save():
             flash(error)
         else:
             db = get_db()
+            # writer 권한 검사
+            author_id=web_tool.check_auth()
+
+            # post DB에 정보 삽입
             db.execute(
-                'INSERT INTO post (title, body)'
-                ' VALUES (?, ?)',
-                (title, body)
+                'INSERT INTO post (title, body,author_id)'
+                ' VALUES (?, ?, ?)',
+                (title, body, author_id)
             )
             db.commit()
             return redirect(url_for('index.home'))

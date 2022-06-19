@@ -1,5 +1,8 @@
 import json
 
+# [SYSTEM SETTING]
+ACT_MODE = "development" # 개발(관리자) 모드
+
 # [COIN INFORMATION]
 COIN_TICKER={   # coin ticker : coin name
     "KRW-ADA":"에이다",

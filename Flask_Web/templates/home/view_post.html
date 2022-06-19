@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}View Post{% endblock %}</h1>
+{% endblock %}
+
+
+{% block content %}
+  <!-- HEADER PART -->
+  <section class="VIEW_POST_HEADER">
+    <h1 class="VIEW_POST_HEADER__head">Post</h1>
+
+    <form>
+        <input type="submit" value="Modification">
+    </form>
+
+    <div class="VIEW_POST_HEADER__info">
+      <!--(1) header label section-->
+      <label class="HEADER__header_index header_label">No</label>
+      <label class="HEADER__header_title header_label">Title</label>
+      <label class="HEADER__header_info header_label">Info</label>
+
+      <!--(2) header data section-->
+      <span class="HEADER__info_index">{{post_viewInfo["post_index"]}}</span>
+      <span class="HEADER__info_title">{{post_viewInfo["post_title"]}}</span>
+      <span class="HEADER__info_author_id">{{post_viewInfo["post_author_id"]}}</span>
+      <span class="HEADER__info_created">{{post_viewInfo["post_created"]}}</span>
+    </div>
+  </section>
+
+  <!-- BODY PART -->
+  <section class="VIEW_POST_BODY">
+    <h1 class="VIEW_POST_BODY__head">Content</h1>
+
+    <div class="VIEW_POST_BODY__content">
+
+    </div>
+
+  </section>
+
+  <!--Button Part-->
+  <section class="VIEW_POST_BUTTON">
+    <div class="POST_BUTTON_LIKE">
+      <form>
+          <input type="submit" value="Like">
+      </form>
+
+      <form>
+          <input type="submit" value="Dislike">
+      </form>
+    </div>
+
+    <div class="POST_BUTTON_BACK">
+      <form>
+          <input type="submit" value="Back">
+      </form>
+    </div>
+  </section>
+{% endblock %}

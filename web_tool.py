@@ -5,6 +5,11 @@ from flask import (
 import basic_tool
 import config
 
+def check_auth(user_id=None)->str:
+    if user_id==None:
+        if config.ACT_MODE=="development":
+            return "master"
+
 
 def session_update(session_var:str,session_data:dict)->None:
     session[session_var] = session_data

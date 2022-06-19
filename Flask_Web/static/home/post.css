@@ -1,0 +1,67 @@
+/*
+post header의 경우
+2X6 형태를 가지고 있음
+
+난 입력하는 것마저 귀찮다! 그럴 때는 그냥 grid-column 속성 하나에 다 때려써도(?) 됩니다.
+
+예를 들어, grid-column: 2/ 5; 는 start가 2고 end가 5입니다.
+
+grid-column: 3 / span 3; 이면 라인 3에서 시작해서 3칸을 차지하겠죠?
+https://nykim.work/59
+
+grid-row:
+*/
+.VIEW_POST_HEADER__info {
+	display: grid;
+	grid-template-columns: repeat(6, 1fr); /* Columns : 6 */
+  grid-template-rows: repeat(3, 1fr); /* Rows : 2 */
+}
+
+/* [HEADER LABEL PART]____________________ */
+.HEADER__header_index{
+  grid-column: 1/span 1;
+  grid-row: 1/1;
+}
+
+.HEADER__header_title{
+  grid-column: 2/span 4;
+  grid-row: 1/1;
+}
+
+.HEADER__header_info{
+  grid-column: 6/span 1;
+  grid-row: 1/1;
+}
+
+.header_label{ /* => 공통 적용 항목 */
+text-align: center;
+	font-weight: bold;
+background-color: lightblue;
+}
+
+/* [HEADER DATA PART]____________________*/
+.HEADER__info_index{
+  grid-column: 1/span 1;
+  grid-row: 2/span 2;
+  text-align: center;
+}
+
+.HEADER__info_title{
+  grid-column: 2/span 4;
+  grid-row: 2/span 2;
+}
+
+.HEADER__info_author_id{
+  grid-column: 6/span 1;
+  grid-row: 2/span 1;
+}
+
+.HEADER__info_created{
+  grid-column: 6/span 1;
+  grid-row: 3/span 1;
+}
+
+/* [BUTTON PART]____________________*/
+.POST_BUTTON_LIKE{
+  display:flex;
+}
