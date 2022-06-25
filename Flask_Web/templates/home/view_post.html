@@ -8,7 +8,7 @@
 {% block content %}
   <!-- HEADER PART -->
   <section class="VIEW_POST_HEADER">
-    <h1 class="VIEW_POST_HEADER__head">Post</h1>
+    <h1 class="VIEW_POST_HEADER__head section_header_style">Post</h1>
 
     <form>
         <input type="submit" value="Modification">
@@ -21,10 +21,10 @@
       <label class="HEADER__header_info header_label">Info</label>
 
       <!--(2) header data section-->
-      <span class="HEADER__info_index">{{post_viewInfo["post_index"]}}</span>
-      <span class="HEADER__info_title">{{post_viewInfo["post_title"]}}</span>
-      <span class="HEADER__info_author_id">{{post_viewInfo["post_author_id"]}}</span>
-      <span class="HEADER__info_created">{{post_viewInfo["post_created"]}}</span>
+      <span class="HEADER__info_index">{{post['id']}}</span>
+      <span class="HEADER__info_title">{{post['title']}}</span>
+      <span class="HEADER__info_author_id">Author : {{post['author_id']}}</span>
+      <span class="HEADER__info_created">Date : {{post['created']}}</span>
     </div>
   </section>
 
@@ -33,7 +33,9 @@
     <h1 class="VIEW_POST_BODY__head">Content</h1>
 
     <div class="VIEW_POST_BODY__content">
-
+      <p>
+        {{post['body']}}
+      </p>
     </div>
 
   </section>
@@ -41,19 +43,12 @@
   <!--Button Part-->
   <section class="VIEW_POST_BUTTON">
     <div class="POST_BUTTON_LIKE">
-      <form>
-          <input type="submit" value="Like">
-      </form>
-
-      <form>
-          <input type="submit" value="Dislike">
-      </form>
+      <button type="button">Like</button>
+      <button type="button">Dislike</button>
     </div>
 
     <div class="POST_BUTTON_BACK">
-      <form class="back_post" method="post" action="/">
-          <input type="submit" value="Back">
-      </form>
+      <button type="button" onclick="location.href='/'">Back</button>
     </div>
   </section>
 {% endblock %}

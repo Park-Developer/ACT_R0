@@ -10,6 +10,7 @@ from Flask_Web.db import get_db
 # [SYSTEM GLOBAL VARIABLE SETTING]
 CONFIG_JSON_ADDRESS="./config.json"
 ACT_MODE = "development" # 개발(관리자) 모드
+MASTER_MODE=False
 
 # [LOGGER SETTING]
 class CustomFormatter(logging.Formatter): # Handler 출력형식 지정
@@ -93,6 +94,7 @@ class Master(ACT_CONFIG): # CHIlD1 CLASS
         self.current_cash_balance=self.Master_info["VOLATILE_PART"]["CURRENT_CASH_BALANCE"]
         self.current_coin_list=self.Master_info["VOLATILE_PART"]["CURRENT_COIN_LIST"]
 
+
     def get_master_info(self):
         result=(
             self.USER_EMAIL,
@@ -135,7 +137,7 @@ class Service(ACT_CONFIG): # CHIlD1 CLASS
             self.session_variable=self.Servie_info["SESSION_VARIABLE"]
             self.data_info=self.Servie_info["CHECK_DATA_TYPE"]
         except  KeyError as key:
-            ACT_logger.error("cfg_err1 : Config JSON Load Error")
+            ACT_logger.error("cfg_err : Config JSON Load Error")
         else:
             ACT_logger.debug("config json load success")
     def show_config(self): # => overload 필요

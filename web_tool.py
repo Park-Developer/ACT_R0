@@ -5,6 +5,7 @@ from flask import (
 import basic_tool
 from Flask_Web.db import get_db
 
+
 from werkzeug.security import check_password_hash, generate_password_hash
 
 
@@ -17,6 +18,16 @@ def session_get(session_var:str)->dict:
 
 def session_clear()->None:
     session.clear()
+
+def get_login_username(session_var:str)->str:
+    user_info=session_get(session_var)
+    if user_info==None:
+        username="ERROR!"
+    else:
+        username=user_info["username"]
+
+    return username
+
 
 def set_loginState(is_login:bool,user_data_addr:str,login_user_name:str)->None:
     with open(user_data_addr, 'r') as f:

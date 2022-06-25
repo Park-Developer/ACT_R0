@@ -83,6 +83,10 @@ def logout():
     return redirect(url_for('account.account_index'))
 
 
+@bp.route('/manage', methods=('GET', 'POST'))
+def manage():
+    if request.method == 'GET':
+        return render_template('manage.html')
 
 '''
 [REGISTER]
@@ -126,4 +130,3 @@ def register_ok():
         flash(error)
 
         return redirect(url_for('index.home')) # Home으로 이동
-

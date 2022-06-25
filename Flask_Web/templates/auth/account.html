@@ -6,8 +6,26 @@
 
 {% block content %}
 
+{% if user_info['username']=="master" %}
+  <section class="SERVER_PART">
+
+    <h1 class="section_header_style">Server</h1>
+
+    <div>
+      <label>Server State</label> <span></span>
+    </div>
+
+    <div>
+      <form method=get>
+        <button type="button" onclick="location.href='manage'">Management</button>
+        <button type="button" onclick="location.href='statistics'">Statistics</button>
+      </form>
+    </div>
+  </section>
+{% endif %}
+
 <section class="PROFILE_PART">
-    <h1>Profile</h1>
+    <h1 class="section_header_style">Profile</h1>
 
     <div class="PROFILE">
         <div class="PROFILE_IMG">
@@ -44,7 +62,7 @@
 
 
 <section class="PERFORMANCE_PART">
-<h1>Performance</h1>
+<h1 class="section_header_style">Performance</h1>
 
     <h2>계좌 정보</h2>
     <div class="ACCOUNT_DISPLAY">
@@ -98,7 +116,7 @@
 
 
 <section class="LOG_PART">
-    <h1>Trading Log</h1>
+    <h1 class="section_header_style">Trading Log</h1>
     <P>: 최근 10개의 거래 기록</P>
 </section>
 {% endblock %}

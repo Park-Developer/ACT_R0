@@ -1,13 +1,9 @@
 import asyncio
 import telegram
 import json
-
-with open('./user_config.json', 'r') as f:
-    USER_INFO=json.load(f)
-    print(USER_INFO["TELEGRAM_PART"]["TELEGRAM_API"])
-
-
-
+from flask import (
+    Blueprint, flash, g, redirect, render_template, request, url_for
+)
 
 
 #bot = telegram.Bot(token=api_key)

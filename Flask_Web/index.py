@@ -26,16 +26,16 @@ def login_required(view):
 
 bp = Blueprint('index', __name__)  # /monitoring/ ~\
 
-@bp.route('/view_post')
-def view_post():
-    post_viewInfo={ # get data from URL parameter at index.html
-        "post_title":request.args.get("title"),
-        "post_created":request.args.get("created"),
-        "post_author_id":request.args.get("author_id"),
-        "post_index":request.args.get("index")
-    }
+@bp.route('/view_post/<int:id>', methods=('GET', 'POST'))
+@login_required
+def view_post(id):
+    if request.method == 'GET':
+        db = get_db()
+        post = db.execute(
+            f'SELECT * FROM post WHERE id={id}'  # post table에서 모든 post 불러오기
+        ).fetchone()
 
-    return render_template('home/view_post.html',post_viewInfo=post_viewInfo)
+    return render_template('home/view_post.html', post=post)
 
 @bp.route('/new_post')
 @login_required
@@ -96,10 +96,16 @@ def home():
 @login_required
 def new_post_save():
     if request.method == 'POST':
-        title = request.form['title']
-        body = request.form['body']
-        type=request.form['type']
-        author_id="asd"
+        print("new_post_SAbv")
+        print(request.form)
+        try:
+            title = request.form['title']
+            body = request.form['body']
+            type=request.form['type']
+            author_id=web_tool.get_login_username(session_var=service.session_variable)
+        except KeyError as key:
+            ACT_logger.error("key_err : request key error")
+
         error = None
 
         if not title:
@@ -109,8 +115,6 @@ def new_post_save():
             flash(error)
         else:
             db = get_db()
-            # writer 권한 검사
-            author_id=web_tool.check_auth()
 
             # post DB에 정보 삽입
             db.execute(
