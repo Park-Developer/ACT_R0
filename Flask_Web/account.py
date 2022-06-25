@@ -1,18 +1,19 @@
 import functools
-import upbit_tool
-import basic_tool
 import config
 import web_tool
 from flask import (
-    Blueprint, flash, g, redirect, render_template, request, session, url_for
+    Blueprint, flash, g, redirect, render_template, request, url_for
 )
+from Flask_Web import service
 
+from werkzeug.security import generate_password_hash
 
-from werkzeug.security import check_password_hash, generate_password_hash
-
+from config import ACT_logger
 from Flask_Web.db import get_db
+import template_tool
 
 bp = Blueprint('account', __name__, url_prefix='/account')
+
 
 @bp.route('/', methods=('GET', 'POST'))
 def account_index():
@@ -40,62 +41,41 @@ def account_index():
     '''
 
     # SESSION GET
-    user_info = web_tool.session_get(session_var=config.ACCOUNT_CHECK_METHOD["SESSION_VARIABLE"])  # SESSION USER_ID {'access_code': '7U852X89', 'email': 'parkwonho94@gmail.com', 'password': 'wonho123', 'username': 'master'}
 
-    print("SESSION USER_ID",user_info)
+    user_info = web_tool.session_get(session_var=service.session_variable)  # SESSION USER_ID {'access_code': '7U852X89', 'email': 'parkwonho94@gmail.com', 'password': 'wonho123', 'username': 'master'}
 
     if user_info==None:
         return render_template('auth/login.html') # user_id가 없는 경우 login.html retrun
     else:
+        print("lgoing")
+        print(user_info)
         return render_template('auth/account.html',user_info=user_info) # login 상태인 경우
 
 @bp.route('/login', methods=('GET', 'POST'))
 def account_login():
     if request.method == 'POST':
-        # Server Storing Data For Check
-        check_data = {
-            "data_type": config.ACCOUNT_CHECK_METHOD["CHECK_DATA_TYPE"],
-            "user_list_address": config.ACCOUNT_CHECK_METHOD["USER_LIST_ADDRESS"],
-        }
-
         # User Input Data
         input_info={
             "email" :request.form['email'],
             "password" : request.form['password'],
-            "access_code" : request.form['access_code']
+            "access_code" : request.form['access_code'] # 일단 비교안함
         }
+        print("saDWASDASDASDASD")
+        # Account Check
+        db = get_db()
+        is_confirmed, user_db=web_tool.check_account("user_list",input_info,db) # user 확인 성공
+        if is_confirmed==True:
+            user_info = template_tool.convert_DB_to_UserInfo(user_db)
+            web_tool.session_update(session_var=service.session_variable, session_data=user_info)
 
-        if web_tool.check_account(input_info,check_data)==True: # 인증 성공
-            print("CHEKC SUCCESS!!!")
-            # [1] Get User Info(static user info + dynamic user info)
-            user_info=basic_tool.get_userInfo(email=input_info["email"],
-                                              data_addr=config.ACCOUNT_CHECK_METHOD["USER_LIST_ADDRESS"],
-                                              read_method="JSON"
-                                              )
+            print("USERER",user_info)
+            return render_template('auth/account.html', user_info=user_info)
+        else:
+            return render_template('auth/login.html')
 
-            # [2] SESSION Update
-            web_tool.session_update(session_var=config.ACCOUNT_CHECK_METHOD["SESSION_VARIABLE"], session_data=user_info)
+    elif request.method == 'GET':
+        return render_template('auth/login.html')
 
-            return render_template('auth/account.html',user_info=user_info)
-
-        else: # 인증 실패
-            flash("User Identification Fail!")
-            print("CHEKC FAIL!!!")
-
-    return render_template('auth/login.html')
-
-'''
-@bp.before_app_request
-def load_logged_in_user():
-    user_id = session.get('user_id')
-
-    if user_id is None:
-        g.user = None
-    else:
-        g.user = get_db().execute(
-            'SELECT * FROM user WHERE id = ?', (user_id,)
-        ).fetchone()
-'''
 @bp.route('/logout', methods=('GET', 'POST'))
 def logout():
     web_tool.session_clear()
@@ -103,22 +83,24 @@ def logout():
     return redirect(url_for('account.account_index'))
 
 
-def login_required(view):
-    @functools.wraps(view)
-    def wrapped_view(**kwargs):
-        if g.user is None:
-            return redirect(url_for('auth.login'))
 
-        return view(**kwargs)
-
-    return wrapped_view
-
-
+'''
+[REGISTER]
+'''
 @bp.route('/register', methods=('GET', 'POST'))
 def register():
-    if request.method == 'POST':
+    return render_template('auth/register.html')
+
+@bp.route('/register/ok', methods=('GET', 'POST')) #
+def register_ok():
+    print("register ok")
+    if request.method == 'POST':  # for debug
         username = request.form['username']
+        email = request.form['email']
         password = request.form['password']
+        print("REGISTER")
+        print(username)
+        print(email)
         db = get_db()
         error = None
 
@@ -130,15 +112,18 @@ def register():
         if error is None:
             try:
                 db.execute(
-                    "INSERT INTO user (username, password) VALUES (?, ?)",
-                    (username, generate_password_hash(password)),
+                    "INSERT INTO user_list (username, password,email) VALUES (?,?, ?)",
+                    (username, generate_password_hash(password),email),
                 )
+
                 db.commit()
+
             except db.IntegrityError:
                 error = f"User {username} is already registered."
             else:
-                return redirect(url_for("auth.login"))
+                return redirect(url_for("index.home"))
 
         flash(error)
 
-    return render_template('auth/register.html')
+        return redirect(url_for('index.home')) # Home으로 이동
+

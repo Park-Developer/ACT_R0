@@ -7,6 +7,22 @@ from werkzeug.security import check_password_hash, generate_password_hash
 # from Flask_Web.auth import login_required # 개발 필
 import web_tool
 from Flask_Web.db import get_db
+from Flask_Web import service
+import functools
+from config import ACT_logger
+
+
+def login_required(view):
+    @functools.wraps(view)
+    def wrapped_view(**kwargs):
+        user_info= web_tool.session_get(session_var=service.session_variable)
+        print("user SESSON",user_info)
+        if user_info is None:
+            ACT_logger.error("login required action")
+            return redirect(url_for("account.account_login"))
+        return view(**kwargs)
+
+    return wrapped_view
 
 bp = Blueprint('index', __name__)  # /monitoring/ ~\
 
@@ -22,6 +38,7 @@ def view_post():
     return render_template('home/view_post.html',post_viewInfo=post_viewInfo)
 
 @bp.route('/new_post')
+@login_required
 def new_post():
     print("PSTO JEW") #debug
     return render_template('home/new_post.html')
@@ -58,41 +75,12 @@ def debug():
 
 @bp.route('/',methods=('GET','POST')) # Index Page
 def home():
-    # DEBUG -----------------------------------------------------------------------
-    if request.method=='POST': # for debug
-        username = request.form['username']
-        password = request.form['password']
-        db = get_db()
-        error = None
-        print("DB", db)
-        if not username:
-            error = 'Username is required.'
-        elif not password:
-            error = 'Password is required.'
-
-        if error is None:
-            try:
-                db.execute(
-                    "INSERT INTO user (username, password) VALUES (?, ?)",
-                    (username, generate_password_hash(password)),
-                )
-                db.commit()
-            except db.IntegrityError:
-                error = f"User {username} is already registered."
-            else:
-                return redirect(url_for("index.home"))
-
-        flash(error)
-
-        return redirect(url_for('index.home'))
-    # DEBUG -----------------------------------------------------------------------
-
     if request.method == 'GET':
         db = get_db() #  get_db returns a database connection, which is used to execute the commands read from the file.
 
         # users(db에 저장된 모든 user)
         users = db.execute(
-            'SELECT * FROM user' # user table에서 모든 user 불러오기
+            'SELECT * FROM user_list' # user table에서 모든 user 불러오기
         ).fetchall()
         print("users",users)
 
@@ -105,11 +93,13 @@ def home():
 
 
 @bp.route('/new_post/save', methods=('GET', 'POST'))
-#@login_required
+@login_required
 def new_post_save():
     if request.method == 'POST':
         title = request.form['title']
         body = request.form['body']
+        type=request.form['type']
+        author_id="asd"
         error = None
 
         if not title:
@@ -124,9 +114,9 @@ def new_post_save():
 
             # post DB에 정보 삽입
             db.execute(
-                'INSERT INTO post (title, body,author_id)'
-                ' VALUES (?, ?, ?)',
-                (title, body, author_id)
+                'INSERT INTO post (title, body,type,author_id)'
+                ' VALUES (?, ?, ?, ?)',
+                (title, body, type, author_id)
             )
             db.commit()
             return redirect(url_for('index.home'))

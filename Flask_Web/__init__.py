@@ -1,7 +1,10 @@
 import os
 
 from flask import Flask
+import config
 
+master = config.Master()
+service= config.Service()
 
 def create_app(test_config=None):
     # create and configure the app
@@ -29,6 +32,8 @@ def create_app(test_config=None):
     def hello():
         return 'Hello, World!'
 
+
+
     from . import index
     app.register_blueprint(index.bp)
 
@@ -50,4 +55,7 @@ def create_app(test_config=None):
     from . import setting
     app.register_blueprint(setting.bp)
 
+    from . import cli
+    cli.make_CLI(app) # CLI 생성
+    
     return app

@@ -5,11 +5,24 @@
 {% endblock %}
 
 {% block content %}
-  <form method="post">
+
+  <p>Welcome to ACT_R0</p>
+
+<form method="post" >
+    <label for="email">Email</label>
+    <input name="email" id="email" required>
+
     <label for="username">Username</label>
     <input name="username" id="username" required>
+
     <label for="password">Password</label>
     <input type="password" name="password" id="password" required>
-    <input type="submit" value="Register">
-  </form>
+
+    <div class="register_button">
+      <button type="submit"  formaction="register/ok">Confirm</button>
+      <button type="button" onclick="location.href='/'">Back</button>
+    </div>
+</form>
+
+
 {% endblock %}

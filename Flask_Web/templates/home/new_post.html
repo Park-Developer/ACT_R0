@@ -6,28 +6,25 @@
 
 
 {% block content %}
-  <form class="new_post" method="post" action="new_post/save">
+<form class="new_post" method="post" action="new_post/save">
 
-     <label for="post_type">New Post</label>
-     <select name="Forum_Filter" id="post_type">
-       <option value="A">A</option>
-       <option value="B">B</option>
-       <option value="C">C</option>
-       <option value="D">D</option>
-     </select>
+  <label for="title">Title</label>
+  <input name="title" id="title" required>
 
-      <label for="title">Title</label>
-      <input name="title" id="title" required>
+  <label for="post_type">Post Type</label>
+    <select name="Forum_Filter" id="post_type">
+      <option value="A">A</option>
+      <option value="B">B</option>
+      <option value="C">C</option>
+      <option value="D">D</option>
+    </select>
 
-      <label for="body">Body</label>
-      <textarea name="body" id="body" required>...</textarea>
+  <label for="body">Body</label>
+  <textarea name="body" id="body" required>...</textarea>
 
-      <div>
-        <input type="submit" value="Save">
-      </div>
-  </form>
-
-  <form>
-      <input type="submit" value="Cancel">
-  </form>
+  <div class="post_button">
+    <button type="submit">Save</button>
+    <button type="button" onclick="location.href='/'">Back</button>
+  </div>
+</form>
 {% endblock %}

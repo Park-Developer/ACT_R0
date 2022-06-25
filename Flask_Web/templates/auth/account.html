@@ -17,17 +17,17 @@
         <div class="PROFILE_PERSONAL">
             <!-- 1. Username -->
             <div>
-                <label class="PERSONAL__username">1. Username : </label> <span class="PERSONAL__username_data">{{user_info["PERSONAL_PART"]["username"]}}</span>
+                <label class="PERSONAL__username">1. Username : </label> <span class="PERSONAL__username_data">{{user_info["username"]}}</span>
             </div>
 
             <!-- 2. Email -->
             <div>
-                <label class="PERSONAL__email">2. E-mail : </label> <span class="PERSONAL__email_data">{{user_info["PERSONAL_PART"]["email"]}}</span>
+                <label class="PERSONAL__email">2. E-mail : </label> <span class="PERSONAL__email_data">{{user_info["email"]}}</span>
             </div>
 
             <!-- 3. Tier -->
             <div>
-                <label class="PERSONAL__tier">3. Tier : </label> <span class="PERSONAL__tier_data">{{user_info["PERSONAL_PART"]["tier"]}}</span>
+                <label class="PERSONAL__tier">3. Tier : </label> <span class="PERSONAL__tier_data">{{user_info["tier"]}}</span>
             </div>
 
             <!-- 4. Reference -->
@@ -53,11 +53,7 @@
             <label>Update Time : </label>
 
             <span class="DISPLAY__updatetime_val">
-              {% if user_info["DYNAMIC_PART"] %}
-                {{user_info["DYNAMIC_PART"]["UPDATE_TIME"]}}
-              {% else %}
-                No Data
-              {% endif %}
+
             </span>
         </div>
 
@@ -66,11 +62,7 @@
             <label>현금 현황 : </label>
 
             <span class="DISPLAY__cash_balance_val">
-              {% if user_info["DYNAMIC_PART"] %}
-                {{user_info["DYNAMIC_PART"]["CURRENT_CASH_BALANCE"]["balance"]}}
-              {% else %}
-                No Data
-              {% endif %}
+
             </span>
         </div>
 
@@ -79,31 +71,7 @@
             <label>코인 현황 : </label>
 
             <span class="DISPLAY__coin_balance_val">
-              {% if user_info["DYNAMIC_PART"] %}
-                <table class="DISPLAY__coin_balance_table">
-                  <tr>
-                    <th>Currency</th>
-                    <th>Balance</th>
-                    <th>Locked</th>
-                    <th>Avg_buy_price</th>
-                    <th>Avg_buy_price_modified</th>
-                    <th>Unit_currency</th>
-                  </tr>
 
-                  {% for coin in user_info["DYNAMIC_PART"]["CURRENT_COIN_LIST"] %}
-                    <tr>
-                      <td>{{coin["currency"]}}</td>
-                      <td>{{coin["balance"]}}</td>
-                      <td>{{coin["locked"]}}</td>
-                      <td>{{coin["avg_buy_price"]}}</td>
-                      <td>{{coin["avg_buy_price_modified"]}}</td>
-                      <td>{{coin["unit_currency"]}}</td>
-                    </tr>
-                  {% endfor %}
-                </table>
-              {% else %}
-                No Data
-              {% endif %}
             </span>
         </div>
 

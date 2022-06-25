@@ -33,6 +33,13 @@ nav ul li a, nav ul li span, header .action { display: block; padding: 0.5rem; }
 input.danger { color: #cc2f2e; }
 input[type=submit] { align-self: start; min-width: 10em; }
 
+/*
+USER DEFINED COMMON STYLE
+*/
 .section_header_style{
     color:red;
+}
+
+.section_table_header_style{
+  background-color: lightgreen;
 }

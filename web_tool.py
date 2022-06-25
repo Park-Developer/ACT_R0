@@ -3,12 +3,10 @@ from flask import (
     session
 )
 import basic_tool
-import config
+from Flask_Web.db import get_db
 
-def check_auth(user_id=None)->str:
-    if user_id==None:
-        if config.ACT_MODE=="development":
-            return "master"
+from werkzeug.security import check_password_hash, generate_password_hash
+
 
 
 def session_update(session_var:str,session_data:dict)->None:
@@ -32,7 +30,29 @@ def set_loginState(is_login:bool,user_data_addr:str,login_user_name:str)->None:
                 user_info["login_state"] = "OFF"
             break
 
+def check_account(db_table:str,user_input:dict,server_db)->bool: # code에 대한 검사는 빠져있음 ㅜ
+    user_input__email=user_input["email"]
+    user_input__pwd=user_input["password"]
 
+    # Excute SQL
+    user_db = server_db.execute(
+        f'SELECT * FROM {db_table} WHERE email = ?', (user_input__email,)
+    ).fetchone()
+
+    error=None
+
+    if user_db==None:
+        error="Incorrect useremail"
+    elif not check_password_hash(user_db['password'],user_input__pwd):
+        error = 'Incorrect password.'
+
+    if error== None:
+        return True, user_db
+    else:
+        return False, {}
+
+
+'''
 def check_account(input_info:dict,check_data:dict)->bool: # 이거 다시 설장 # check data 바꾸기
     if check_data["data_type"]=="local_file": # local file로 비교하는 경우
         # user info loop
@@ -64,7 +84,7 @@ def check_account(input_info:dict,check_data:dict)->bool: # 이거 다시 설장
         return False
     else: # ex) DB 비교
         pass
-
+'''
 if __name__ == '__main__':
     code_info = {
         "code_method": 0,

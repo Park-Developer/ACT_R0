@@ -15,32 +15,34 @@
 
 <!--[ --- BODY --- ]-->
 {% block content %}
-  <section class="INTRODUCTION">
-  </section>
-
-<section>
-    <h3>-----------------------DEBUG----------------------</h3>
-      <form method="post" >
-      <label for="username">Username</label>
-      <input name="username" id="username" required>
-      <label for="password">Password</label>
-      <input type="password" name="password" id="password" required>
-      <input type="submit" value="Register">
-      </form>
-    <h3>-----------------------DEBUG----------------------</h3>
-    </section>
+<section class="INTRODUCTION">
+</section>
 
 
-    <!--[ --- RANKING PART --- ]-->
-    <section class="Ranking">
-      <h1>User List</h1>
+<!--[ --- RANKING PART --- ]-->
+<section class="Ranking">
+  <h1 class="section_header_style USER__Header">User List</h1>
 
-      {% if users %} <!--User가 있는 경우-->
-        {% for user in users %}
-          <li>{{user['username']}}</li>
-        {% endfor %}
-      {% endif %}
-    </section>
+  <table class="User_list__table ">
+    <tr class="User_table__header section_table_header_style">
+      <th>Username</th>
+      <th>Tier</th>
+      <th>Performance</th>
+      <th>Profile</th>
+    </tr>
+
+    {% if users %} <!--User가 있는 경우-->
+      {% for user in users %}
+        <tr class="user_{{loop.index}}_row">
+          <td>{{user['username']}}</td>
+          <td>{{user['tier']}}</td>
+          <td>개발필</td>
+          <td>개발필</td>
+        </tr>
+      {% endfor %}
+    {% endif %}
+  </table>
+</section>
 
 
 <!-- FORUM PART -->
