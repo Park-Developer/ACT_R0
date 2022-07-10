@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1> {% block title %} Edit {% endblock %} </h1>
+{% endblock %}
+
+
+{% block content %}
+  <h1 class="EDIT_POST_HEADER__head section_header_style">Edit</h1>
+
+  <form class="edit_post" method="post" action="edit_save">
+
+    <label for="title">Title</label>
+    <input name="title" id="title" required value="{{post['title']}}">
+
+    <label for="type">Post Type</label>
+      <select name="type" id="type">
+        <!--Option 1-->
+        {% if post['type']=="A" %}
+          <option selected value="A">A</option>
+          <option value="B">B</option>
+          <option value="C">C</option>
+          <option value="D">D</option>
+        {% endif %}
+
+        <!--Option 2-->
+        {% if post['type']=="B" %}
+          <option selected value="B">B</option>
+          <option value="A">A</option>
+          <option value="C">C</option>
+          <option value="D">D</option>
+        {% endif %}
+
+        <!--Option 3-->
+        {% if post['type']=="C" %}
+          <option selected value="C">C</option>
+          <option value="B">B</option>
+          <option value="A">A</option>
+          <option value="D">D</option>
+        {% endif %}
+
+        <!--Option 4-->
+        {% if post['type']=="D" %}
+          <option selected value="D">D</option>
+          <option value="B">B</option>
+          <option value="C">C</option>
+          <option value="A">A</option>
+        {% endif %}
+      </select>
+
+    <label for="body">Body</label>
+    <textarea name="body" id="body" required>{{post['body']}}</textarea>
+
+    <div class="edit_button">
+      <button type="submit">Save</button>
+      <button type="button" onclick="location.href='/view_post/{{post['id']}}'">Cancel</button>
+    </div>
+  </form>
+{% endblock %}

@@ -1,44 +1,41 @@
 {% extends 'base.html' %}
 
 {% block header %}
-  <h1>{% block title %}View Post{% endblock %}</h1>
+  <h1>{% block title %} View {% endblock %} </h1>
 {% endblock %}
 
 
 {% block content %}
-  <!-- HEADER PART -->
-  <section class="VIEW_POST_HEADER">
     <h1 class="VIEW_POST_HEADER__head section_header_style">Post</h1>
 
-    <form>
-        <input type="submit" value="Modification">
-    </form>
+    <!-- Button -->
+      <button type="submit" onclick="location.href='./{{post['id']}}/edit_post'">Edit</button>
+      <button type="submit" onclick="location.href='./{{post['id']}}/delete_post'">Delete</button>
 
-    <div class="VIEW_POST_HEADER__info">
-      <!--(1) header label section-->
-      <label class="HEADER__header_index header_label">No</label>
-      <label class="HEADER__header_title header_label">Title</label>
-      <label class="HEADER__header_info header_label">Info</label>
 
-      <!--(2) header data section-->
-      <span class="HEADER__info_index">{{post['id']}}</span>
-      <span class="HEADER__info_title">{{post['title']}}</span>
-      <span class="HEADER__info_author_id">Author : {{post['author_id']}}</span>
-      <span class="HEADER__info_created">Date : {{post['created']}}</span>
-    </div>
-  </section>
+      <section class="EDIT_MODE">
+      <div class="VIEW_POST_HEADER__info">
+        <!--(1) header label section-->
+        <label class="HEADER__header_index header_label">No</label>
+        <label class="HEADER__header_title header_label">Title({{post['type']}})</label>
+        <label class="HEADER__header_info header_label">Info</label>
+        <!--(2) header data section-->
+        <span class="HEADER__info_index">{{post['id']}}</span>
+        <span class="HEADER__info_title">{{post['title']}}</span>
+        <span class="HEADER__info_author_id">Author : {{post['author_id']}}</span>
+        <span class="HEADER__info_created">Date : {{post['created']}}</span>
+      </div>
 
-  <!-- BODY PART -->
-  <section class="VIEW_POST_BODY">
-    <h1 class="VIEW_POST_BODY__head">Content</h1>
+      <h1 class="VIEW_POST_BODY__head">Content</h1>
 
-    <div class="VIEW_POST_BODY__content">
-      <p>
-        {{post['body']}}
-      </p>
-    </div>
+      <div class="VIEW_POST_BODY__content">
+        <p>
+          {{post['body']}}
+        </p>
+      </div>
+    </section>
 
-  </section>
+
 
   <!--Button Part-->
   <section class="VIEW_POST_BUTTON">

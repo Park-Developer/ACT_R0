@@ -3,12 +3,97 @@
 <!--[ --- HEADER --- ]-->
 {% block header %}
     <h1>{% block title %}Setting{% endblock %}</h1>
+
+    <!-- Javascript Load -->
+    <script src="{{url_for('static', filename='setting.js')}}"></script>
 {% endblock %}
 
 <!--[ --- BODY --- ]-->
 {% block content %}
 <section class="Setting">
-<h1>Setting</h1>
+<h1 class="section_header_style">Setting</h1>
+
+<form class="trading_setting" action="save">
+  {# ---------------------- SETTING STRATEGY ---------------------- #}
+  <div class="Setting_strategy">
+    <h5>Strategy Setting(Python)</h5>
+    {% set user_info=login_userDB %} {# user_info setting #}
+
+
+      <div>
+        <input type="checkbox" id="strategy1" name="strategy1" value="strategy1">
+        <label for="strategy1"> strategy1</label><br>
+      </div>
+
+      <div>
+        <input type="checkbox" id="strategy2" name="strategy2" value="strategy2">
+        <label for="strategy2"> strategy2</label><br>
+      </div>
+
+      <div>
+        <input type="checkbox" id="strategy3" name="strategy3" value="strategy3">
+        <label for="strategy3"> strategy3</label><br>
+      </div>
+
+      <div>
+        <input type="checkbox" id="strategy4" name="strategy4" value="strategy4">
+        <label for="strategy4"> strategy4</label><br>
+      </div>
+
+  </div>
+
+  {# ---------------------- SETTING COIN ---------------------- #}
+  <div class="Setting_coin">
+    <h5>Coin Setting(UPBIT)</h5>
+
+    {% set coin_list = user_info["target_coin"].split(',') %}
+
+      {% for coin in coin_list %}
+        <div>
+          <input type="checkbox" id={{coin}} name={{coin}} value={{coin}}>
+          <label for={{coin}}> {{coin}}</label><br>
+        </div>
+      {% endfor %}
+
+  </div>
+
+  {# ---------------------- SETTING TRADING RANGE ---------------------- #}
+  <div class="Setting_range">
+    <h5>Trading Range Setting</h5>
+
+    <div class="RANGE_INPUT"> {# 적적한 이름으로 변경하기 #}
+      <label for="range1">range1</label>
+      <input name="range1" id="range1" required>
+    </div>
+
+    <div class="TARGET_RETUN">
+      <label for="target_return">Target Return</label>
+      <select name="target_return" id="target_return">
+        <option value="5_percent">5%</option>
+        <option value="10_percent">10%</option>
+        <option value="15_percent">15%</option>
+        <option value="20_percent">20%</option>
+      </select>
+    </div>
+
+    <div class="LOWEST_LIMIT">
+      <label for="lowest_limit">lowest_limit</label>
+      <select name="lowest_limit" id="lowest_limit">
+        <option value="minus_5_percent">-5%</option>
+        <option value="minus_10_percent">-10%</option>
+        <option value="minus_15_percent">-15%</option>
+        <option value="minus_20_percent">-20%</option>
+      </select>
+    </div>
+  </div> <!--Setting_range-->
+
+
+  <div class="setting_button">
+    <button type="submit">Save</button>
+    <button type="button" onclick="location.href='/'">Cancel</button>
+  </div>
+
+</form>
 </section>
 
 

@@ -11,6 +11,9 @@
     <script>
         $SCRIPT_ROOT = {{ request.script_root|tojson }}; <!--sets a global variable to the prefix to the root of the application.-->
     </script>
+
+    <!-- Javascript Load -->
+    <script src="{{url_for('static', filename='post.js')}}"></script>
 {% endblock %}
 
 <!--[ --- BODY --- ]-->
@@ -31,37 +34,40 @@
       <th>Profile</th>
     </tr>
 
+    {% set count1 = namespace(value=0) %}
+
     {% if users %} <!--User가 있는 경우-->
-      {% for user in users %}
+      {% for user in users if count1.value<10 %} <!--표시되는 User 10명으로 제한-->
         <tr class="user_{{loop.index}}_row">
           <td>{{user['username']}}</td>
           <td>{{user['tier']}}</td>
           <td>개발필</td>
           <td>개발필</td>
         </tr>
+      {% set count1.value=count1.value+1 %}
       {% endfor %}
     {% endif %}
   </table>
 </section>
 
-
 <!-- FORUM PART -->
-  <section class="FORUM">
+  <section class="POST">
     <h1 class="section_header_style FORUM__Header">Post Lists</h1>
 
-    <div class="FORUM_button" >
-        <form class="FORUM_button__search" >
+    <div class="POST_button" >
+        <form class="Post_button__search" method="post" >
             <div style="display:flex">
             <!-- (1) Filter -->
-            <select name="Forum_Filter" id="Forum_Filter">
+            <select name="Post_Filter" id="Post_Filter">
               <option value="date">Date</option>
-              <option value="user">User</option>
+              <option value="type">Type</option>
               <option value="popular">Popular</option>
               <option value="review">Review</option>
             </select>
 
             <!-- (2) Find -->
-            <input type="text"> <button>Find</button>
+            <input name="Post_Filter_word" value="Search Title" class="post_find__input" type="text">
+            <button name="Post_Filter_btn" onclick="window.location.href='{{ url_for('post.find_post')}}';" type="submit" class="post_find__button">Find</button>
 
             <!-- (3) New -->
             <button type="button" onclick="location.href='new_post'">New</button>
@@ -69,10 +75,10 @@
         </form>
     </div>
 
-    <div class="FORUM_list">
+    <div class="POST_list">
       <hr> <!--구분선-->
 
-      <table class="FORUM_list__table">
+      <table class="POST_list__table">
         <!-- table header -->
         <tr class=list__table_header>
           <th>Date</th>
@@ -108,4 +114,5 @@
 
 
   </section>
+
 {% endblock %}

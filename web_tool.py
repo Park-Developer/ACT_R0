@@ -28,6 +28,15 @@ def get_login_username(session_var:str)->str:
 
     return username
 
+def get_loginUserInfo(user_email,server_db,db_table)->dict:
+    user_db = server_db.execute(
+        f'SELECT * FROM {db_table} WHERE email = ?', (user_email,)
+    ).fetchone()
+
+    if user_db==None:
+        print("find ERrior")
+    else:
+        return user_db
 
 def set_loginState(is_login:bool,user_data_addr:str,login_user_name:str)->None:
     with open(user_data_addr, 'r') as f:

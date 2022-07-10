@@ -49,6 +49,9 @@ def create_app(test_config=None):
     from . import qna
     app.register_blueprint(qna.bp)
 
+    from . import post
+    app.register_blueprint(post.bp)
+
     from . import manage
     app.register_blueprint(manage.bp)
 

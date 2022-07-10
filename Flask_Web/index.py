@@ -8,26 +8,15 @@ from werkzeug.security import check_password_hash, generate_password_hash
 import web_tool
 from Flask_Web.db import get_db
 from Flask_Web import service
-import functools
 from config import ACT_logger
 
+from . import login
 
-def login_required(view):
-    @functools.wraps(view)
-    def wrapped_view(**kwargs):
-        user_info= web_tool.session_get(session_var=service.session_variable)
-        print("user SESSON",user_info)
-        if user_info is None:
-            ACT_logger.error("login required action")
-            return redirect(url_for("account.account_login"))
-        return view(**kwargs)
-
-    return wrapped_view
 
 bp = Blueprint('index', __name__)  # /monitoring/ ~\
 
 @bp.route('/view_post/<int:id>', methods=('GET', 'POST'))
-@login_required
+@login.login_required
 def view_post(id):
     if request.method == 'GET':
         db = get_db()
@@ -38,7 +27,7 @@ def view_post(id):
     return render_template('home/view_post.html', post=post)
 
 @bp.route('/new_post')
-@login_required
+@login.login_required
 def new_post():
     print("PSTO JEW") #debug
     return render_template('home/new_post.html')
@@ -89,11 +78,27 @@ def home():
             'SELECT * FROM post'  # post table에서 모든 post 불러오기
         ).fetchall()
 
+    elif request.method == 'POST':
+        print("HOME PIST!!")
+        print(request.form)
+        db = get_db()  # get_db returns a database connection, which is used to execute the commands read from the file.
+
+        # users(db에 저장된 모든 user)
+        users = db.execute(
+            'SELECT * FROM user_list'  # user table에서 모든 user 불러오기
+        ).fetchall()
+
+
+        # users(db에 저장된 모든 post)
+        posts = db.execute(
+            'SELECT * FROM post'  # post table에서 모든 post 불러오기
+        ).fetchall()
+
     return render_template('index.html',posts=posts, users=users)
 
 
 @bp.route('/new_post/save', methods=('GET', 'POST'))
-@login_required
+@login.login_required
 def new_post_save():
     if request.method == 'POST':
         print("new_post_SAbv")
@@ -143,34 +148,6 @@ def get_post(id, check_author=True):
 
     return post
 
-
-@bp.route('/<int:id>/update', methods=('GET', 'POST'))
-#@login_required
-def update(id):
-    post = get_post(id)
-
-    if request.method == 'POST':
-        title = request.form['title']
-        body = request.form['body']
-        error = None
-
-        if not title:
-            error = 'Title is required.'
-
-        if error is not None:
-            flash(error)
-        else:
-            db = get_db()
-            db.execute(
-                'UPDATE post SET title = ?, body = ?'
-                ' WHERE id = ?',
-                (title, body, id)
-            )
-            db.commit()
-            return redirect(url_for('blog.index'))
-
-    return render_template('home/update.html', post=post)
-
 @bp.route('/<int:id>/delete', methods=('POST',))
 #@login_required
 def delete(id):
@@ -179,3 +156,4 @@ def delete(id):
     db.execute('DELETE FROM post WHERE id = ?', (id,))
     db.commit()
     return redirect(url_for('index.home'))
+
