@@ -22,3 +22,17 @@ def index():
     print("setting user")
     print(login_userInfo)
     return render_template('setting.html',login_userDB=login_userDB)
+
+@bp.route('/save')
+@login.login_required
+def save_setting():
+    login_userInfo=web_tool.session_get(session_var=service.session_variable)
+    login_userEmail=login_userInfo["email"]
+    server_db = get_db()
+    db_table="user_list"
+
+    login_userDB=web_tool.get_loginUserInfo(login_userEmail,server_db,db_table)
+
+    print("setting user")
+    print(login_userInfo)
+    return render_template('setting.html',login_userDB=login_userDB)

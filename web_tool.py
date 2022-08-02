@@ -5,7 +5,6 @@ from flask import (
 import basic_tool
 from Flask_Web.db import get_db
 
-
 from werkzeug.security import check_password_hash, generate_password_hash
 
 
@@ -28,6 +27,24 @@ def get_login_username(session_var:str)->str:
 
     return username
 
+def get_login_UserInfo(user_table,session_var):
+    '''
+    login user 정보를 access_code를 통해서 session에서 찾은 후, DB 데이터 반환
+    :param user_table:
+    :return:
+    '''
+
+    # [1] session으로부터 login user데이터 get
+    login_userInfo=session_get(session_var)
+    login_userAccessCode = login_userInfo["access_code"]
+
+    # [2] DB에서 User Data Get
+    db = get_db()
+    user_Info = db.execute(f"SELECT * FROM {user_table} WHERE access_code = ?", (login_userAccessCode,)).fetchone()
+
+    return user_Info
+
+''''
 def get_loginUserInfo(user_email,server_db,db_table)->dict:
     user_db = server_db.execute(
         f'SELECT * FROM {db_table} WHERE email = ?', (user_email,)
@@ -37,7 +54,7 @@ def get_loginUserInfo(user_email,server_db,db_table)->dict:
         print("find ERrior")
     else:
         return user_db
-
+'''
 def set_loginState(is_login:bool,user_data_addr:str,login_user_name:str)->None:
     with open(user_data_addr, 'r') as f:
         user_list = json.load(f)

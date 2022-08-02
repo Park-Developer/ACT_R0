@@ -59,6 +59,13 @@ class ACT_CONFIG: # SUPER CLASS
         with open(CONFIG_JSON_ADDRESS, 'r') as f:
             self.ACT_info = json.load(f)
 
+        if self.ACT_info["DEBUG_MODE"]==True: # (1) DEBUG MODE
+            self.DEBUG_MODE = True
+            ACT_logger.info("DEBUG MODE")
+        else:                                 # (2) SERVER MODE
+            self.DEBUG_MODE = False
+            ACT_logger.info("SERVER MODE")
+
     def show_config(self): # => overload 필요
         print("ACT CONFIG")
 
@@ -94,6 +101,17 @@ class Master(ACT_CONFIG): # CHIlD1 CLASS
         self.current_cash_balance=self.Master_info["VOLATILE_PART"]["CURRENT_CASH_BALANCE"]
         self.current_coin_list=self.Master_info["VOLATILE_PART"]["CURRENT_COIN_LIST"]
 
+        # [5] Post Part
+        if self.DEBUG_MODE == True: # debug mode인 경우
+            self.write_post="2"
+            self.view_post="1,2"
+            self.like_post="1"
+            self.dislike_post="2"
+        else:
+            self.write_post=self.Master_info["POST_PART"]["WRITE_POST"]
+            self.view_post=self.Master_info["POST_PART"]["VIEW_POST"]
+            self.like_post=self.Master_info["POST_PART"]["LIKE_POST"]
+            self.dislike_post=self.Master_info["POST_PART"]["DISLIKE_POST"]
 
     def get_master_info(self):
         result=(
@@ -112,7 +130,11 @@ class Master(ACT_CONFIG): # CHIlD1 CLASS
             self.TARGET_COIN,
             self.update_time,
             self.current_cash_balance,
-            self.current_coin_list
+            self.current_coin_list,
+            self.write_post,
+            self.view_post,
+            self.like_post,
+            self.dislike_post
         )
 
         return result

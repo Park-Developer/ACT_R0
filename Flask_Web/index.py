@@ -12,19 +12,51 @@ from config import ACT_logger
 
 from . import login
 
-
 bp = Blueprint('index', __name__)  # /monitoring/ ~\
 
+'''
+POST를 클릭했을때의 이동 URL 대응 함수
+'''
 @bp.route('/view_post/<int:id>', methods=('GET', 'POST'))
 @login.login_required
 def view_post(id):
     if request.method == 'GET':
         db = get_db()
+
+        # [1] Get Post Data
         post = db.execute(
             f'SELECT * FROM post WHERE id={id}'  # post table에서 모든 post 불러오기
         ).fetchone()
 
-    return render_template('home/view_post.html', post=post)
+        # [2] Get User Data
+        user_Info=web_tool.get_login_UserInfo(user_table="user_list",session_var=service.session_variable)
+
+        # User View Check
+        user_writeList=user_Info["write_post"].split(",")
+        user_likeList=user_Info["like_post"].split(",")
+        user_dislikeList=user_Info["dislike_post"].split(",")
+
+        User_postInfo={}
+        # (1) 작성여부 확인
+        if str(id) in user_writeList:
+            User_postInfo["is_writePost"] =True
+        else:
+            User_postInfo["is_writePost"] = False
+
+        # (2) like여부 확인
+        if str(id) in user_likeList:
+            User_postInfo["is_likePost"]=True
+        else:
+            User_postInfo["is_likePost"] = False
+
+        # (3) dislike여부 확인
+        if str(id) in user_dislikeList:
+            User_postInfo["is_dislikePost"] =True
+        else:
+            User_postInfo["is_dislikePost"] = False
+        print("User_postInfo",User_postInfo)
+
+    return render_template('home/view_post.html', post=post, User_postInfo=User_postInfo)
 
 @bp.route('/new_post')
 @login.login_required

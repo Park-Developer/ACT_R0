@@ -2,19 +2,19 @@
 
 {% block header %}
   <h1>{% block title %} View {% endblock %} </h1>
+
 {% endblock %}
 
 
 {% block content %}
-    <h1 class="VIEW_POST_HEADER__head section_header_style">Post</h1>
+  <h1 class="VIEW_POST_HEADER__head section_header_style">Post</h1>
 
-    <!-- Button -->
-      <button type="submit" onclick="location.href='./{{post['id']}}/edit_post'">Edit</button>
-      <button type="submit" onclick="location.href='./{{post['id']}}/delete_post'">Delete</button>
+  <button type="submit" onclick="location.href='./{{post['id']}}/edit_post'">Edit</button>
+  <button type="submit" onclick="location.href='./{{post['id']}}/delete_post'">Delete</button>
 
 
-      <section class="EDIT_MODE">
-      <div class="VIEW_POST_HEADER__info">
+  <section class="VIEW_POST_INFO">
+    <div class="VIEW_POST_HEADER__info">
         <!--(1) header label section-->
         <label class="HEADER__header_index header_label">No</label>
         <label class="HEADER__header_title header_label">Title({{post['type']}})</label>
@@ -24,28 +24,63 @@
         <span class="HEADER__info_title">{{post['title']}}</span>
         <span class="HEADER__info_author_id">Author : {{post['author_id']}}</span>
         <span class="HEADER__info_created">Date : {{post['created']}}</span>
-      </div>
-
-      <h1 class="VIEW_POST_BODY__head">Content</h1>
-
-      <div class="VIEW_POST_BODY__content">
-        <p>
-          {{post['body']}}
-        </p>
-      </div>
-    </section>
+    </div>
+  </section>
 
 
+  <section class="VIEW_POST_HITS">
+    <!-- (1) View Number-->
+    <label><i class="fa-solid fa-eye"></i></label> <span class="VIEW_POST_HITS__views">{{post['view_num']}}</span>
+
+    <!-- (2) Like Number-->
+    <label><i class="fa-solid fa-thumbs-up" style="color:blue" ></i></label> <span class="VIEW_POST_HITS__like">{{post['like_num']}}</span>
+
+    <!-- (3) Dislike Number-->
+    <label><i class="fa-solid fa-thumbs-down" style="color:red"></i></label> <span class="VIEW_POST_HITS__dislike">{{post['dislike_num']}}</span>
+  </section>
+
+
+  <section class="VIEW_POST_CONTENTS">
+    <h1 class="VIEW_POST_BODY__head">Content</h1>
+
+    <div class="VIEW_POST_BODY__content">
+      <p>
+        {{post['body']}}
+      </p>
+    </div>
+  </section>
 
   <!--Button Part-->
   <section class="VIEW_POST_BUTTON">
     <div class="POST_BUTTON_LIKE">
-      <button type="button">Like</button>
-      <button type="button">Dislike</button>
+
+      <!-- Button Property Setting according to userInfo -->
+      {% if User_postInfo["is_likePost"] %}
+          {% set like_btn_pty = "LIKE_Btn_property" %}
+      {% else %}
+          {% set like_btn_pty = "NORMAL_Btn_property" %}
+      {% endif %}
+
+      {% if User_postInfo["is_dislikePost"] %}
+          {% set dislike_btn_pty = "DISLIKE_Btn_property" %}
+      {% else %}
+          {% set dislike_btn_pty = "NORMAL_Btn_property" %}
+      {% endif %}
+
+      <form class="VIEW_POST_BUTTON__form" id="post_likeform">
+        <div>
+
+
+          <button form="post_likeform" class="VIEW_POST__like {{like_btn_pty}}" type="submit" formaction="./{{post['id']}}/like"><i class="fa-solid fa-thumbs-up"></i></button>
+          <button form="post_likeform" class="VIEW_POST__dislike {{dislike_btn_pty}}" type="submit" formaction="./{{post['id']}}/dislike"><i class="fa-solid fa-thumbs-down"></i></button>
+        </div>
+      </form>
     </div>
 
     <div class="POST_BUTTON_BACK">
-      <button type="button" onclick="location.href='/'">Back</button>
+      <button type="button" onclick="location.href='/'"><i class="fa-solid fa-arrow-left"></i> Back</button>
     </div>
   </section>
+
+
 {% endblock %}

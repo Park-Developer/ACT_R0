@@ -16,9 +16,9 @@ CREATE TABLE post (
   title TEXT NOT NULL,
   body TEXT NOT NULL,
   type TEXT NOT NULL,
-  view INTEGER,
-  like_num INTEGER,
-  dislike_num INTEGER,
+  view_num INTEGER DEFAULT 0,
+  like_num INTEGER DEFAULT 0,
+  dislike_num INTEGER DEFAULT 0,
   FOREIGN KEY (author_id) REFERENCES user_list (id)
 );
 
@@ -39,5 +39,9 @@ CREATE TABLE user_list (
   target_coin TEXT,
   balance_update_time TEXT DEFAULT CURRENT_TIMESTAMP,
   current_cash_balance TEXT,
-  current_coin_list TEXT
+  current_coin_list TEXT,
+  write_post TEXT,
+  view_post TEXT,
+  like_post TEXT,
+  dislike_post TEXT
 );

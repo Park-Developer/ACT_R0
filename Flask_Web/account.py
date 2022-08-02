@@ -60,7 +60,6 @@ def account_login():
             "password" : request.form['password'],
             "access_code" : request.form['access_code'] # 일단 비교안함
         }
-        print("saDWASDASDASDASD")
         # Account Check
         db = get_db()
         is_confirmed, user_db=web_tool.check_account("user_list",input_info,db) # user 확인 성공

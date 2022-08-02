@@ -20,8 +20,9 @@ def make_master_CLI(app):
             insert_sql_cmd=("INSERT INTO user_list "
                        "(email, username, password, tier, login_state,"
                        "profile_img_addr, telegram_api, access_code, access_code_time, upbit_access_key,"
-                       "upbit_secret_key, allowed_ip, target_coin, balance_update_time, current_cash_balance, current_coin_list) "
-                       "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)")
+                       "upbit_secret_key, allowed_ip, target_coin, balance_update_time, current_cash_balance, current_coin_list,"
+                       "write_post, view_post, like_post, dislike_post) "
+                       "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)")
 
             master_info=master.get_master_info()
 
@@ -44,6 +45,30 @@ def make_master_CLI(app):
             ACT_logger.debug("master info load to DB successfully(retry)")
         else:
             ACT_logger.debug("master info load to DB successfully")
+
+    @master_cli.command('test_post_upload')
+    def test_post_upload():
+        db=get_db()
+        try:
+            insert_sql_cmd=("INSERT INTO post "
+                       "(author_id , title, body, type, view_num, like_num, dislike_num) "
+                       "VALUES (?,?,?,?,?,?,?)")
+
+            # [REF] master id : 1
+            ''' <TEST CASE1> '''
+            test_post1_info=(1,"test_post1","이것은 테스트 포스트임\n아이구야","시황",1,1,0)
+
+            db.execute(insert_sql_cmd, test_post1_info)
+            db.commit()
+
+            ''' <TEST CASE2> '''
+            test_post2_info=(1,"test_post2","또다른 테스트 포스트임\n아이구야","일반",1,0,1)
+
+            db.execute(insert_sql_cmd, test_post2_info)
+            db.commit()
+
+        except db.IntegrityError:
+            ACT_logger.warning("cli_warn2 test_post already exists")
 
     app.cli.add_command(master_cli) # cli group 등록
 

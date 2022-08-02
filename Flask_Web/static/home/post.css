@@ -65,3 +65,16 @@ background-color: lightblue;
 .POST_BUTTON_LIKE{
   display:flex;
 }
+
+/* [POST PART] */
+.NORMAL_Btn_property{
+    background-color: yellow;
+}
+
+.LIKE_Btn_property{
+    background-color: blue;
+}
+
+.DISLIKE_Btn_property{
+    background-color: red;
+}
