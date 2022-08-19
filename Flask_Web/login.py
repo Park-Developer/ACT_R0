@@ -10,7 +10,7 @@ def login_required(view):
     @functools.wraps(view)
     def wrapped_view(**kwargs):
         user_info= web_tool.session_get(session_var=service.session_variable)
-        print("user SESSON",user_info)
+
         if user_info is None:
             ACT_logger.error("login required action")
             return redirect(url_for("account.account_login"))

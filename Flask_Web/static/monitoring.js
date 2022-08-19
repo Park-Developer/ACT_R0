@@ -1,9 +1,55 @@
 // [DOM 객체 선언]
-let monotoring_time_val_DOM=document.querySelector(".TARGET_MONITORING__time__val");
-let monotoring_curPrice_val_DOM=document.querySelector(".TARGET_MONITORING__curPrice__val");
-let monotoring_avgPrice_val_DOM=document.querySelector(".TARGET_MONITORING__avgPrice__val");
-let monotoring_maxPrice_val_DOM=document.querySelector(".TARGET_MONITORING__maxPrice__val");
-let monotoring_minPrice_val_DOM=document.querySelector(".TARGET_MONITORING__minPrice__val");
+let monitoring_time_val_DOM=document.querySelector(".TARGET_MONITORING__time__val");
+let monitoring_curPrice_val_DOM=document.querySelector(".TARGET_MONITORING__curPrice__val");
+let monitoring_avgPrice_val_DOM=document.querySelector(".TARGET_MONITORING__avgPrice__val");
+let monitoring_maxPrice_val_DOM=document.querySelector(".TARGET_MONITORING__maxPrice__val");
+let monitoring_minPrice_val_DOM=document.querySelector(".TARGET_MONITORING__minPrice__val");
+
+let monitoring_starttime_val_DOM=document.querySelector(".TARGET_MONITORING__startTime__val");
+let monitoring_endtime_val_DOM=document.querySelector(".TARGET_MONITORING__endTime__val");
+let monitoring_remaintime_val_DOM=document.querySelector(".TARGET_MONITORING__remainTime__val");
+
+
+
+/*
+--------------------------------- TEST ---------------------------------
+*/
+
+
+/*
+let testt=document.querySelector(".m_test");
+testt.textContent = "The End of Stream";
+
+var xhr = new XMLHttpRequest();
+xhr.open('GET', "http://127.0.0.1:5000/monitoring/test");
+xhr.responseType = 'json';
+xhr.onreadystatechange = function() {
+    //console.log(xhr.responseText);
+    //testt.textContent=xhr.response;
+    //console.log(xhr.responseText);
+
+    let jsonresp=JSON.parse(xhr.responseText);
+    console.log("json",jsonresp)
+
+    if (xhr.readyState == XMLHttpRequest.DONE) {
+
+      testt.textContent = xhr.responseText;
+      console.log(xhr.responseText)
+    }
+
+
+
+}
+
+xhr.send();
+*/
+
+/*
+--------------------------------- TEST ---------------------------------
+*/
+
+
+
 
 // [설정 변수]
 let CHART_INFO={
@@ -30,9 +76,8 @@ let BUTTON_SET={
 }
 
 
-// [전역 변수 설정]
-let ACTIVATED_BTN_NUMBER=1;
-let ACTIVATED_COIN_TICKER=DEFAULT_TICKER;
+// [Button Default 변수 설정]
+let ACTIVATED_COIN_TICKER=document.querySelector(".coin_monitoring_1_label").innerText;//"None";//DEFAULT_TICKER;
 
 
 // <Chart 관련 전역변수>
@@ -44,7 +89,7 @@ let record_time_list=[];
 let chart_time=0; // chart의 X축 변수(record time)
 
 // HTML 반영
-monotoring_time_val_DOM.innerHTML=CHART_INFO.monitoring_time.toString();
+monitoring_time_val_DOM.innerHTML=CHART_INFO.monitoring_time.toString();
 
 
 // [CHART GENERATION]
@@ -92,77 +137,60 @@ const myChart = new Chart(ctx, {
     }
 }); // chart setting
 
-function change_clicked_Style(btn_cls_name, clicked_style_cls){
-    let clicked_btn=document.querySelector(btn_cls_name);
-
-    clicked_btn.classList.add(clicked_style_cls); // add click style
-
-}
-
-function change_Unclicked_Style(btn_cls_name, clicked_style_cls){
-    let unclicked_btn=document.querySelector(btn_cls_name);
-
-    unclicked_btn.classList.remove(clicked_style_cls); // remove click style
-
-}
-
 
 // [BUTTON EVENT FUNCTION BEGIN]
 let Btn_click=function(event){
-    let Btn_ClsList=event.target.classList; // <button class="{{coin_ticker}} coin_{{loop.index}}_Btn">show</button>
+    // click한 버튼의 market 가져오기
+    let clicked_btn_market=document.querySelector(".clicked_monitoring_market").innerText;
 
-    let coin_ticker=Btn_ClsList[0]; // new click
-    let btn_idx=parseInt(Btn_ClsList[1].split('_')[1]);
-
-    console.log("debug",btn_idx,coin_ticker,"  click!");
-
-    // [1] Change Coin(= Button Change)
-    past_clicked_Btn_ticker=ACTIVATED_COIN_TICKER
-    past_clicked_Btn_idx=ACTIVATED_BTN_NUMBER
-
-    ACTIVATED_COIN_TICKER=coin_ticker;
-    ACTIVATED_BTN_NUMBER=btn_idx;
-
-    let unclicked_Btn_cls="."+"coin_"+past_clicked_Btn_idx+"_Btn"; // Past clicked Button
-    let clicked_Btn_cls="."+"coin_"+btn_idx+"_Btn";
-
-    // Now clicked Button
-    change_clicked_Style(btn_cls_name=clicked_Btn_cls,clicked_style_cls=BUTTON_SET.clicked_btn_Class);
-    change_Unclicked_Style(btn_cls_name=unclicked_Btn_cls,clicked_style_cls=BUTTON_SET.clicked_btn_Class);
+    console.log("debug clicked_btn_market",clicked_btn_market);
 
     // [2] Change Chart
     // [2-1] chart name change
-        myChart["data"]["datasets"][0]["label"]=ACTIVATED_COIN_TICKER;
-        myChart["data"]["datasets"][1]["label"]=ACTIVATED_COIN_TICKER+" - MV Avg("+CHART_INFO.first_moving_average_count.toString()+")"
+    myChart["data"]["datasets"][0]["label"]=clicked_btn_market;
+    myChart["data"]["datasets"][1]["label"]=clicked_btn_market+" - MV Avg("+CHART_INFO.first_moving_average_count.toString()+")"
     // [2-2] chart data change
-        record_time_list=[];
-        chart_time=0; // 이름바꾸자
+    record_time_list=[];
+    chart_time=0; // 이름바꾸자
 
-        cur_price_list=[];
-        moving_avg1_list=[]
-        moving_avg2_list=[]
+    cur_price_list=[];
+    moving_avg1_list=[]
+    moving_avg2_list=[]
 
-        myChart["data"]["labels"]=record_time_list;
-        myChart["data"]["datasets"][0]["data"]=cur_price_list; // 첫 번쨰 데이터
-        myChart["data"]["datasets"][1]["data"]=moving_avg1_list; // 두 번쨰 데이터
+    myChart["data"]["labels"]=record_time_list;
+    myChart["data"]["datasets"][0]["data"]=cur_price_list; // 첫 번쨰 데이터
+    myChart["data"]["datasets"][1]["data"]=moving_avg1_list; // 두 번쨰 데이터
 
     // [3] chart update
     myChart.update();
 }
 
 coin_btnList={}
-for(let btn_idx=1; btn_idx<=COIN_NUMBER;btn_idx++){
+
+console.log("LI TESTST-------------------------------",)
+let coin_monitoring_list_DOM=document.querySelector(".coin_monitoring_list");
+
+let coin_number=coin_monitoring_list_DOM.childElementCount;
+
+console.log("list num",coin_monitoring_list_DOM.childElementCount);
+console.log("LI TESTST-------------------------------",)
+
+for(let btn_idx=1; btn_idx<=coin_number;btn_idx++){
     //console.log("index" , btn_idx);
     let cls_name=".coin_"+btn_idx.toString()+"_Btn"; // class name (.) 주의
     //console.log("NAME",cls_name);
 
     // DOM Selection
-    coin_btnList["Coin_Btn"+btn_idx.toString()]=document.querySelector(cls_name);
+    // origin 20220814
+    //coin_btnList["Coin_Btn"+btn_idx.toString()]=document.querySelector(cls_name);
     // console.log("deg", document.querySelector(cls_name));
 
    // Click Event Setting
-   coin_btnList["Coin_Btn"+btn_idx.toString()].addEventListener("click",  Btn_click.bind(event));
+   //20220814
+   //coin_btnList["Coin_Btn"+btn_idx.toString()].addEventListener("click",  Btn_click.bind(event));
+   document.querySelector(cls_name).addEventListener("click",  Btn_click.bind(event));
 
+   console.log("event set!!")
 
 }
 
@@ -176,10 +204,12 @@ var get_current_priceFunc='load_coinInfo';
 
 console.log("Current Address", document.location.href+get_current_priceFunc );
 
-
 // The getJSON() method is used to get JSON data using an AJAX HTTP GET request.
 // 현재 가격 조회(Unit : 1 초)
 
+$.getJSON($SCRIPT_ROOT + "test",function(data){
+  console.log(data);
+})
 
 setInterval(function() {
     $.getJSON($SCRIPT_ROOT + CHART_INFO.view_func, // Request URL Function
@@ -196,8 +226,10 @@ setInterval(function() {
 
           // (2) Current Price Record
           cur_price_list.push(data);
-          monotoring_curPrice_val_DOM.innerHTML=data;
-          monotoring_avgPrice_val_DOM.innerHTML=get_AVG(cur_price_list);
+          monitoring_curPrice_val_DOM.innerHTML=data;
+          monitoring_avgPrice_val_DOM.innerHTML=get_AVG(cur_price_list);
+          monitoring_minPrice_val_DOM.innerHTML=Math.min(...cur_price_list);
+          monitoring_maxPrice_val_DOM.innerHTML=Math.max(...cur_price_list);
 
           // (3) Moving Averageg1 Record
           if(chart_time<CHART_INFO.first_moving_average_count){
@@ -216,4 +248,18 @@ setInterval(function() {
     })},
     CHART_INFO.monitoring_time
 );
+
+function init(){
+  /*  [Remain Time 계산 (Unit : Min) ]  */
+  let end_time=new Date(monitoring_endtime_val_DOM.innerText);
+
+  let today = new Date();
+  let difference=(end_time.getTime()-today.getTime())/(1000*60);
+
+  monitoring_remaintime_val_DOM.innerText=difference.toFixed(1)+" Min";
+}
+
+
+
+init();
 // [UPBIT API END]____________________________________________________________________

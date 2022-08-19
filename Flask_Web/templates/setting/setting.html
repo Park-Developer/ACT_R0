@@ -1,0 +1,334 @@
+{% extends 'base.html' %}
+
+<!--[ --- HEADER --- ]-->
+{% block header %}
+    <h1><i class="fa-solid fa-gear"></i> {% block title %}Setting{% endblock %}</h1>
+
+
+{% endblock %}
+
+<!--[ --- BODY --- ]-->
+{% block content %}
+
+<!-- CONSTANT SETTING -->
+{% set MAX_COIN_NUMBER=5 %}            {# config.json에서 5로 정의 #}
+
+
+{# ---------------------- [1] STRATEGY SETTING ---------------------- #}
+<section class="Strategy_Setting">
+  <h1 class="section_header_style"><i class="fa-solid fa-code"></i> Strategy Setting</h1>
+
+  <ul class="Setting_strategy__list">
+    <li class="Setting_strategy__1">
+      <a href="{{ url_for('setting.edit_strategy',strategy_id=1) }}">Strategy1</a>
+    </li>
+
+    <li class="Setting_strategy__2">
+      <a class="disabled_strategy_link" href="{{ url_for('setting.edit_strategy',strategy_id=3) }}">Strategy2</a>
+    </li>
+
+    <li class="Setting_strategy__3">
+      <a class="disabled_strategy_link" href="{{ url_for('setting.edit_strategy',strategy_id=2) }}">Strategy3</a>
+    </li>
+
+    <li class="Setting_strategy__4">
+      <a class="disabled_strategy_link" href="{{ url_for('setting.edit_strategy',strategy_id=4) }}">Strategy4</a>
+    </li>
+  </ul>
+</section>
+
+
+{# ---------------------- [2] SETTING MODE CHECK---------------------- #}
+<section class="Setting_Mode_Check">
+  {% set setcount=namespace(value=0) %}
+
+  {% for coin_idx in range(MAX_COIN_NUMBER) %}
+    {% if setting_coin_list["target_coin"+(loop.index)|string]==True %}
+        {% set setcount.value=setcount.value+1 %}
+
+    {% endif %}
+  {% endfor %}
+
+  {% if setcount.value>0 %} <!-- setting mode인 경우 -->
+    {% set Setting_Mode=true %}
+
+    {% set setting_btn_deactivate="disabled" %} <!-- Button attribute setting -->
+  {% else %}
+    {% set Setting_Mode=false %}
+
+    {% set setting_btn_deactivate="" %}  <!-- Button attribute setting -->
+  {% endif %}
+</section>
+
+
+{# ---------------------- [3] COIN TRADING SETTING ---------------------- #}
+<section class="Coin_Trading_Setting">
+  <h1 class="section_header_style"><i class="fa-brands fa-btc"></i> Coin Trading Setting</h1>
+
+  <table class="Coin_Trading_Setting_Table table_style">
+    <!-- [Coin Setting Table Head] -->
+    <tr class="trading_table_head table_hearder_style">
+      <th>Coin List</th>
+      <th>Period</th>
+      <th>Strategy</th>
+      <th>Principal</th>
+
+      <th>Bid Unit</th>
+      <th>Bid Installment</th>
+      <th>Ask Unit</th>
+      <th>Ask Installment</th>
+
+      <th>Target Earning</th>
+      <th>Loss Limit</th>
+      <th>Auto Tunning</th>
+      <th>Alarm</th>
+      <th>Mode</th>
+      <th>State</th>
+      <th>Setting</th>
+    </tr>
+
+    <!-- [Coin Setting Table Body] -->
+    {% for coin_idx in range(MAX_COIN_NUMBER) %}
+      {% if Setting_Mode==true and setting_coin_list["target_coin"+(loop.index)|string]==True %} {# 특정 코인을 설정하는 경우(setting mode) = Save 버튼 표시 #}
+        <form id="trading_setting_form" class="trading_setting_form" action="/setting/coin/{{loop.index}}/save" method="post">
+          <tr class="trading_table_row{{loop.index}} coin_setting_value">
+            <!-- (1) Coin Market -->
+            <td class="trading_table_row{{loop.index}}__name">
+              <select class="setting_required_para" name="market" id="market">
+                <option selected value="Required">Required</option>
+
+                {% for market in market_list %}
+                  <option style="color:black"value="{{market}}">{{market}}</option>
+                {% endfor %}
+              </select>
+            </td>
+
+            <!-- (2) Trading Period -->
+            <td class="trading_table_row{{loop.index}}__period">
+              <select class="setting_required_para" name="period" id="period">
+                <option selected value="Required">Required</option>
+
+                <option value="1 Hour">1 Hour</option>
+                <option value="10 Hour">10 Hour</option>
+                <option value="1 Day">1 Day</option>
+                <option value="1 Week">1 Week</option>
+              </select>
+            </td>
+
+            <!-- (3) Strategy Setting -->
+            <td class="trading_table_row{{loop.index}}__strategy">
+              <select class="setting_required_para" name="strategy" id="strategy">
+                <option selected value="Required">Required</option>
+
+                <option value="Strategy1">Strategy1</option>
+                <option value="Strategy2">Strategy2</option>
+                <option value="Strategy3">Strategy3</option>
+                <option value="Strategy4">Strategy4</option>
+              </select>
+            </td>
+
+            <!-- (4) Principal -->
+            <td class="trading_table_row{{loop.index}}__principal ">
+                <input class="setting_input" required name="principal" id="principal" maxlength="7" size="7" placeholder="Required">
+            </td>
+
+            <!-- (5) Bid Unit -->
+            <td class="trading_table_row{{loop.index}}__bid_unit setting_input">
+                <input class="setting_input" name="bid_unit" id="bid_unit" maxlength="7" size="7" placeholder="Required">
+            </td>
+
+            <!-- (6) Bid Installment -->
+            <td class="trading_table_row{{loop.index}}__bid_installment ">
+              <select name="bid_installment" id="bid_installment">
+                <option selected value="1">1</option>
+
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+              </select>
+            </td>
+
+            <!-- (7) Ask Unit -->
+            <td class="trading_table_row{{loop.index}}__ask_unit ">
+                <input class="setting_input" name="ask_unit" id="askunit" maxlength="7" size="7" placeholder="Required">
+            </td>
+
+            <!-- (8) Ask Installment -->
+            <td class="trading_table_row{{loop.index}}__ask_installment">
+              <select name="ask_installment" id="ask_installment">
+                <option selected value="1">1</option>
+
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+              </select>
+            </td>
+
+            <!-- (9) Target Earnings -->
+            <td class="trading_table_row{{loop.index}}__earning">
+              <select name="target_earning" id="target_earning">
+                <option selected value="5%">5%</option>
+
+                <option value="10%">10%</option>
+                <option value="15%">15%</option>
+                <option value="20%">20%</option>
+              </select>
+            </td>
+
+            <!-- (10) Loss Limit -->
+            <td class="trading_table_row{{loop.index}}__loss">
+              <select name="loss_limit" id="loss_limit">
+                <option selected value="-5%">-5%</option>
+
+                <option value="-10%">-10%</option>
+                <option value="-15%">-15%</option>
+                <option value="-20%">-20%</option>
+              </select>
+            </td>
+
+            <!-- (11) Auto Tunning -->
+            <td class="trading_table_row{{loop.index}}__tunning">
+              <select name="auto_tunning" id="auto_tunning">
+                <option selected value="Off">Off</option>
+
+                <option value="On">On</option>
+              </select>
+            </td>
+
+            <!-- (12) Alarm -->
+            <td class="trading_table_row{{loop.index}}__alarm">
+              <select name="alarm" id="alarm">
+                <option selected value="None">None</option>
+
+                <option value="Telegram">Telegram</option>
+                <option value="PC">PC</option>
+              </select>
+            </td>
+
+            <!-- (13) Trading Mode -->
+            <td class="trading_table_row{{loop.index}}__mode">
+              <select class="setting_required_para" name="mode" id="mode">
+                <option selected value="Ready" style="color:red">Ready</option>
+
+                <option value="Run" style="color:blue">Run</option>
+                <option value="Simulation" style="color:green">Simulation</option>
+              </select>
+            </td>
+
+            <!-- (14) Trading State -->
+            <td class="trading_table_row{{loop.index}}__state">Idle</td>
+
+            <!-- (15) Trading Button -->
+            <td class="trading_table_row{{loop.index}}__setting">
+              <button class="coin_save__btn" type="submit">Save</button>
+              <button onclick="location.href='/setting'" class="coin_cancel__btn" type="button">Cancel</button>
+            </td>
+
+          </tr>
+        </form>
+      {% else %}
+
+          <tr class="unconfigured_coin coin_setting coin_setting_value">
+
+             {% if  login_userDB["target_coin"+(loop.index)|string]["market"] %}
+               <td class="trading_table_row{{loop.index}}__name"> {{login_userDB["target_coin"+(loop.index)|string]["market"]}} </td>
+               <td class="trading_table_row{{loop.index}}__period"> {{login_userDB["target_coin"+(loop.index)|string]["period"]}} </td>
+               <td class="trading_table_row{{loop.index}}__strategy"> {{login_userDB["target_coin"+(loop.index)|string]["strategy"]}} </td>
+               <td class="trading_table_row{{loop.index}}__principal"> {{login_userDB["target_coin"+(loop.index)|string]["principal"]}} </td>
+
+               <td class="trading_table_row{{loop.index}}__bid_unit"> {{login_userDB["target_coin"+(loop.index)|string]["bid_unit"]}} </td>
+               <td class="trading_table_row{{loop.index}}__bid_installment"> {{login_userDB["target_coin"+(loop.index)|string]["bid_installment"]}} </td>
+               <td class="trading_table_row{{loop.index}}__ask_unit"> {{login_userDB["target_coin"+(loop.index)|string]["ask_unit"]}} </td>
+               <td class="trading_table_row{{loop.index}}__ask_installment"> {{login_userDB["target_coin"+(loop.index)|string]["ask_installment"]}} </td>
+
+               <td class="trading_table_row{{loop.index}}__earning"> {{login_userDB["target_coin"+(loop.index)|string]["target_earning"]}} </td>
+               <td class="trading_table_row{{loop.index}}__loss"> {{login_userDB["target_coin"+(loop.index)|string]["loss_limit"]}} </td>
+               <td class="trading_table_row{{loop.index}}__tunning"> {{login_userDB["target_coin"+(loop.index)|string]["auto_tunning"]}} </td>
+               <td class="trading_table_row{{loop.index}}__alarm"> {{login_userDB["target_coin"+(loop.index)|string]["alarm"]}} </td>
+               <td class="trading_table_row{{loop.index}}__mode"> {{login_userDB["target_coin"+(loop.index)|string]["mode"]}} </td>
+               <td class="trading_table_row{{loop.index}}__state"> {{login_userDB["target_coin"+(loop.index)|string]["state"]}} </td>
+             {% else %}
+               <td class="trading_table_row{{loop.index}}__name"> - </td>
+               <td class="trading_table_row{{loop.index}}__period"> - </td>
+               <td class="trading_table_row{{loop.index}}__strategy"> - </td>
+               <td class="trading_table_row{{loop.index}}__principal"> - </td>
+
+               <td class="trading_table_row{{loop.index}}__bid_unit"> - </td>
+               <td class="trading_table_row{{loop.index}}__bid_installment"> - </td>
+               <td class="trading_table_row{{loop.index}}__ask_unit"> - </td>
+               <td class="trading_table_row{{loop.index}}__ask_installment"> - </td>
+
+               <td class="trading_table_row{{loop.index}}__earning"> - </td>
+               <td class="trading_table_row{{loop.index}}__loss"> - </td>
+               <td class="trading_table_row{{loop.index}}__tunning"> - </td>
+               <td class="trading_table_row{{loop.index}}__alarm"> - </td>
+               <td class="trading_table_row{{loop.index}}__mode"> - </td>
+               <td class="trading_table_row{{loop.index}}__state"> - </td>
+             {% endif %}
+
+             <td class="trading_table_row{{loop.index}}__setting">
+                 <button {{setting_btn_deactivate}} onclick="location.href='/setting/coin/{{loop.index}}'" class="coin_setting__btn" type="button">Setting</button>
+
+                 <!-- BackTesting Button -->
+                 {% if login_userDB["target_coin"+(loop.index)|string]["mode"]=="Simulation" %}
+                    <button {{setting_btn_deactivate}} onclick="location.href='/backtest/target_{{loop.index}}/setting'" class="coin_backtest__btn" type="button">Backtest</button>
+                 {% endif %}
+
+                 {% if  login_userDB["target_coin"+(loop.index)|string]["market"] %} <!-- setting이 된 상태 -->
+                    <!-- Delete Button -->
+                    <button {{setting_btn_deactivate}} class="coin_delete__btn" type="button">Delete</button>
+
+                    <!-- Trading Stop 여부 -->
+                    {% if login_userDB["target_coin"+(loop.index)|string]["is_tradingStop"]=="False" %}
+                      <button {{setting_btn_deactivate}} onclick="location.href='/setting/coin/{{loop.index}}/stop'" class="coin_stop__btn" type="button">Stop</button>
+                    {% else %}
+                      <button {{setting_btn_deactivate}} onclick="location.href='/setting/coin/{{loop.index}}/restart'" class="coin_restart__btn" type="button">Restart</button>
+                    {% endif %}
+                  {% endif %}
+             </td>
+           </tr>
+
+      {% endif %}
+    {% endfor %}
+
+  </table>
+</section>
+
+
+{# ---------------------- [4] Help ---------------------- #}
+<section>
+  <h1 class="section_header_style"><i class="fa-solid fa-book-open"></i> Reference</h1>
+
+  <ul>
+    <li>Period : </li>
+    <li>Strategy : </li>
+    <li>Principal : </li>
+    <li>Bid Unit : </li>
+    <li>Bid Installment : </li>
+    <li>Ask Unit : </li>
+    <li>Ask Installment : </li>
+    <li>Target Earning : </li>
+    <li>Loss Limit : </li>
+    <li>Auto Tunning : </li>
+    <li>Alarm : </li>
+    <li>Mode : </li>
+    <li>State : </li>
+  </ul>
+</section>
+
+
+{# ---------------------- [5] JS Script ---------------------- #}
+<!-- Javascript Load -->
+<script src="{{url_for('static', filename='setting.js')}}"></script>
+
+<script>
+
+let SERVER_SETTING_DOM=document.querySelector(".server_setting_link");
+
+{% if login_userDB['username']=="master" %}
+  SERVER_SETTING_DOM.style.display = "block";
+{% endif %}
+
+</script>
+
+{% endblock %}

@@ -1,1 +1,127 @@
-crate는 없어도될듯?
+{
+  'target_coin_list': ['WAVES'],
+
+  'target_coin_number': 1,
+
+  'KRW_balance': '9410.0535',
+
+  'WAVES': {
+    'currency': 'WAVES',
+    'balance': '1',
+    'locked': '0',
+    'avg_buy_price': '6310',
+    'avg_buy_price_modified': False,
+    'unit_currency': 'KRW'
+  }
+}
+
+target_coin1 TEXT,
+target_coin2 TEXT,
+target_coin3 TEXT,
+target_coin4 TEXT,
+target_coin5 TEXT,
+balance_update_time TEXT DEFAULT CURRENT_TIMESTAMP,
+current_cash_balance TEXT,
+
+
+
+from datetime import datetime, timedelta
+
+def get_kst_Time():
+    now_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+    # datetime 값으로 변환
+    utc_time_format = datetime.strptime(now_time, "%Y-%m-%d %H:%M:%S")
+
+    # KST 시간을 구하기 위해 +9시간
+    kst_time_format = utc_time_format + timedelta(hours=9)
+
+    # 일자 + 시간 문자열로 변환
+    return kst_time_format.strftime("%Y-%m-%d %H:%M:%S")
+
+
+def calc_timeGap(start_time:str,end_time:str,time_format)->str:
+    time_1 = datetime.strptime(start_time,time_format)
+    time_2 = datetime.strptime(end_time,time_format)
+
+    time_interval = time_2 - time_1
+
+    return time_interval
+
+time_format="%Y-%m-%d %H:%M:%S"
+time_1 = '2022-08-10 22:10:49'
+time_2 = '2022-08-13 23:12:49'
+
+test=calc_timeGap(time_1,time_2,time_format)
+print(test.seconds)
+
+What's AJAX?
+AJAX stands for Asynchronous JavaScript And XML. In a nutshell, it is the use of the XMLHttpRequest object to communicate with servers. It can send and receive information in various formats, including JSON, XML, HTML, and text files. AJAX's most appealing characteristic is its "asynchronous" nature, which means it can communicate with the server, exchange data, and update the page without having to refresh the page.
+
+The two major features of AJAX allow you to do the following:
+
+Make requests to the server without reloading the page
+Receive and work with data from the server
+
+
+XMLHttpRequest
+XMLHttpRequest (XHR) objects are used to interact with servers. You can retrieve data from a URL without having to do a full page refresh. This enables a Web page to update just part of a page without disrupting what the user is doing.
+
+XMLHttpRequest is used heavily in AJAX programming.
+
+
+
+
+20220812 02:48
+let testt=document.querySelector(".m_test");
+testt.textContent = "The End of Stream";
+
+var xhr = new XMLHttpRequest();
+xhr.open('GET', "http://127.0.0.1:5000/monitoring/test");
+
+xhr.onreadystatechange = function() {
+
+    //testt.textContent= xhr.responseText;
+
+    //console.log(xhr.responseText);
+    if (xhr.readyState == XMLHttpRequest.DONE) {
+        /*alert("The End of Stream");*/
+      testt.textContent = xhr.responseText;
+      console.log(xhr.responseText)
+    }
+    //xhr.onreadystatechange = function() {
+    //    testt.textContent = xhr.responseText;
+    //    console.log(xhr.responseText)
+    //}
+
+
+}
+
+xhr.send();
+
+
+
+Failed to open a WebSocket connection: invalid Connection header: keep-alive.
+
+You cannot access a WebSocket server directly with a browser. You need a WebSocket client.
+
+[week]
+import requests
+
+url = "https://api.upbit.com/v1/candles/weeks?market=KRW-BTC&count=1"
+
+headers = {"Accept": "application/json"}
+
+response = requests.get(url, headers=headers)
+
+print(response.text)
+
+[month]
+url = "https://api.upbit.com/v1/candles/months?market=KRW-BTC&count=1"
+
+headers = {"Accept": "application/json"}
+
+response = requests.get(url, headers=headers)
+
+print(response.text)
+\\\

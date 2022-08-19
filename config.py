@@ -11,6 +11,8 @@ from Flask_Web.db import get_db
 CONFIG_JSON_ADDRESS="./config.json"
 ACT_MODE = "development" # 개발(관리자) 모드
 MASTER_MODE=False
+TIME_FORMAT="%Y-%m-%d-%H-%M-%S"
+SESSION_VARIABLE="user_email"
 
 # [LOGGER SETTING]
 class CustomFormatter(logging.Formatter): # Handler 출력형식 지정
@@ -94,12 +96,16 @@ class Master(ACT_CONFIG): # CHIlD1 CLASS
         self.UPBIT_ACCESS_KEY = self.Master_info["UPBIT_PART"]["ACCESS_KEY"]
         self.UPBIT_SECRET_KEY = self.Master_info["UPBIT_PART"]["SECRET_KEY"]
         self.ALLOWED_IP = self.Master_info["UPBIT_PART"]["ALLOWED_IP"]
-        self.TARGET_COIN = self.Master_info["UPBIT_PART"]["TARGET_COIN"]
 
         # [4] Volatile Part
         self.update_time=self.Master_info["VOLATILE_PART"]["UPDATE_TIME"]
         self.current_cash_balance=self.Master_info["VOLATILE_PART"]["CURRENT_CASH_BALANCE"]
-        self.current_coin_list=self.Master_info["VOLATILE_PART"]["CURRENT_COIN_LIST"]
+
+        self.TARGET_COIN_1 = self.Master_info["VOLATILE_PART"]["TARGET_COIN_1"] # 사용자 지정 변수
+        self.TARGET_COIN_2 = self.Master_info["VOLATILE_PART"]["TARGET_COIN_2"]  # 사용자 지정 변수
+        self.TARGET_COIN_3 = self.Master_info["VOLATILE_PART"]["TARGET_COIN_3"]  # 사용자 지정 변수
+        self.TARGET_COIN_4 = self.Master_info["VOLATILE_PART"]["TARGET_COIN_4"]  # 사용자 지정 변수
+        self.TARGET_COIN_5 = self.Master_info["VOLATILE_PART"]["TARGET_COIN_5"]  # 사용자 지정 변수
 
         # [5] Post Part
         if self.DEBUG_MODE == True: # debug mode인 경우
@@ -127,10 +133,8 @@ class Master(ACT_CONFIG): # CHIlD1 CLASS
             self.UPBIT_ACCESS_KEY,
             self.UPBIT_SECRET_KEY,
             self.ALLOWED_IP,
-            self.TARGET_COIN,
             self.update_time,
             self.current_cash_balance,
-            self.current_coin_list,
             self.write_post,
             self.view_post,
             self.like_post,

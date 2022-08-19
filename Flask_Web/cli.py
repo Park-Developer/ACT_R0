@@ -6,6 +6,45 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from Flask_Web import master
 from config import ACT_logger
 
+from Upbit_Trade.Strategy1 import Strategy
+
+def make_strategy_CLI(app):
+    strategy_cli=AppGroup("Strategy")
+
+    @strategy_cli.command("strategy1_info_upload")
+    def strategy1_info_upload():
+        db = get_db()
+        strategy1_obj=Strategy()
+
+        strategy1_introduction=strategy1_obj.intro_part
+        strategy1_para=strategy1_obj.para_reference
+
+        # sql qry command
+        insert_sql_cmd=("INSERT INTO strategy "
+                        "(name, introduction, code, link, version, developer, contributor, "
+                        "dynamic_ref,monitoring_time,dynamic_bid,minute_unit,dynamic_ask) "
+                        "VALUES (?,?,?,?,?,?,?,?,?,?,?,?)")
+
+        # strategy1 upload data
+        upload_data=(
+            strategy1_introduction["name"],
+            strategy1_introduction["introduction"],
+            "code test",
+            "link test",
+            strategy1_introduction["version"],
+            strategy1_introduction["developer"],
+            strategy1_introduction["contributor"],
+            strategy1_para["dynamic_ref"],
+            strategy1_para["monitoring_time"],
+            strategy1_para["dynamic_bid"],
+            strategy1_para["minute_unit"],
+            strategy1_para["dynamic_ask"]
+        )
+
+        db.execute(insert_sql_cmd, upload_data)
+        db.commit()
+
+    app.cli.add_command(strategy_cli)  # cli group 등록
 def make_master_CLI(app):
     master_cli=AppGroup('master') # CLI 그룹 생성
 
@@ -20,9 +59,9 @@ def make_master_CLI(app):
             insert_sql_cmd=("INSERT INTO user_list "
                        "(email, username, password, tier, login_state,"
                        "profile_img_addr, telegram_api, access_code, access_code_time, upbit_access_key,"
-                       "upbit_secret_key, allowed_ip, target_coin, balance_update_time, current_cash_balance, current_coin_list,"
+                       "upbit_secret_key, allowed_ip, balance_update_time, current_cash_balance,"
                        "write_post, view_post, like_post, dislike_post) "
-                       "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)")
+                       "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)")
 
             master_info=master.get_master_info()
 
@@ -78,3 +117,4 @@ def make_debug_CLI(app):
 def make_CLI(app):
     make_master_CLI(app) # master command
     make_debug_CLI(app)  # debug command
+    make_strategy_CLI(app)

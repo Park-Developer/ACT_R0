@@ -27,33 +27,17 @@
     </div>
   </section>
 
-
-  <section class="VIEW_POST_HITS">
-    <!-- (1) View Number-->
-    <label><i class="fa-solid fa-eye"></i></label> <span class="VIEW_POST_HITS__views">{{post['view_num']}}</span>
-
-    <!-- (2) Like Number-->
-    <label><i class="fa-solid fa-thumbs-up" style="color:blue" ></i></label> <span class="VIEW_POST_HITS__like">{{post['like_num']}}</span>
-
-    <!-- (3) Dislike Number-->
-    <label><i class="fa-solid fa-thumbs-down" style="color:red"></i></label> <span class="VIEW_POST_HITS__dislike">{{post['dislike_num']}}</span>
-  </section>
-
-
   <section class="VIEW_POST_CONTENTS">
     <h1 class="VIEW_POST_BODY__head">Content</h1>
 
     <div class="VIEW_POST_BODY__content">
-      <p>
-        {{post['body']}}
-      </p>
+      <p class="post_contents"> {{post['body']}} </p>
     </div>
   </section>
 
   <!--Button Part-->
   <section class="VIEW_POST_BUTTON">
     <div class="POST_BUTTON_LIKE">
-
       <!-- Button Property Setting according to userInfo -->
       {% if User_postInfo["is_likePost"] %}
           {% set like_btn_pty = "LIKE_Btn_property" %}
@@ -68,11 +52,28 @@
       {% endif %}
 
       <form class="VIEW_POST_BUTTON__form" id="post_likeform">
-        <div>
+        <div class="VIEW_POST_COMPONENT">
+          <!-- (1) View Part-->
+          <div class="VIEW_POST__view_part">
+            <label><i class="fa-solid fa-eye"></i></label> <span class="VIEW_POST_HITS__views"> : {{post['view_num']}}</span>
+          </div>
 
+          <!-- (2) Like Part-->
+          <div class="VIEW_POST__like_part">
+            <button form="post_likeform" class="VIEW_POST__like {{like_btn_pty}}" type="submit" formaction="./{{post['id']}}/like"><i class="fa-solid fa-thumbs-up"></i></button>
+            <span class="VIEW_POST_HITS__like"> : {{post['like_num']}}</span>
+          </div>
 
-          <button form="post_likeform" class="VIEW_POST__like {{like_btn_pty}}" type="submit" formaction="./{{post['id']}}/like"><i class="fa-solid fa-thumbs-up"></i></button>
-          <button form="post_likeform" class="VIEW_POST__dislike {{dislike_btn_pty}}" type="submit" formaction="./{{post['id']}}/dislike"><i class="fa-solid fa-thumbs-down"></i></button>
+          <!-- (3) Dislike Part -->
+          <div class="VIEW_POST__dislike_part">
+            <button form="post_likeform" class="VIEW_POST__dislike {{dislike_btn_pty}}" type="submit" formaction="./{{post['id']}}/dislike"><i class="fa-solid fa-thumbs-down"></i></button>
+            <span class="VIEW_POST_HITS__dislike"> : {{post['dislike_num']}}</span>
+          </div>
+
+          <!-- (4) Keep Part -->
+          <div class="VIEW_POST__keep_part">
+            <button form="post_likeform" class="VIEW_POST__keep" type="submit" formaction="./{{post['id']}}/keep"><i class="fa-solid fa-bookmark"></i></button>
+          </div>
         </div>
       </form>
     </div>
@@ -80,6 +81,7 @@
     <div class="POST_BUTTON_BACK">
       <button type="button" onclick="location.href='/'"><i class="fa-solid fa-arrow-left"></i> Back</button>
     </div>
+
   </section>
 
 

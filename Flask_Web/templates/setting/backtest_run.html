@@ -1,0 +1,152 @@
+{% extends 'base.html' %}
+
+{% block header %}
+    <h1><i class="fa-solid fa-laptop-code"></i> {% block title %}Backtest Simulation{% endblock %}
+      <button onclick="location.href='/backtest/target_{{target_coin_id}}/setting'" class="backtest_back__btn" type="button">Back</button>
+    </h1>
+
+{% endblock %}
+
+<!--[ BODY ]-->
+{% block content %}
+
+{# ---------------------- [1] BACKTESTING ENVIRONMENT ---------------------- #}
+<section>
+  <h1 class="section_header_style">Backtesting Setting</h1>
+
+  <div class="backtesting_setting_info">
+    {# ---------------------- [1-1] BACKTESTING DATA PART ---------------------- #}
+    <div class="backtesting_data_setting_part">
+      <h1><i class="fa-solid fa-square"></i> Data Inforamtion</h1>
+
+      <ul class="backtesting_data_setting_list">
+        <!-- (1) Market -->
+        <li>
+          <label class="backtest_market">Market : </label>
+          <span class="backtest_market__val">{{login_userDB["target_coin"+target_coin_id|string]["market"]}}</span>
+        </li>
+
+        <!-- (2) Data Unit -->
+        <li>
+          <label class="backtest_data_unit">Data Unit : </label>
+          <span class="backtest_data_unit__val">{{request_data["data_unit"]}}</span>
+        </li>
+
+        <!-- (3) Data Number -->
+        <li>
+          <label class="backtest_data_number">Data Number : </label>
+          <span class="backtest_data_number__val">{{request_data["data_number"]}}</span>
+        </li>
+
+        <!-- (4) Test Speed -->
+        <li>
+          <label class="backtest_speed">Backtest Speed : </label>
+          <span class="backtest_speed__val">{{request_data["test_speed"]}}</span>
+        </li>
+
+        <li>
+          <label class="backtest_maxPrice">Max Price : </label>
+          <span class="backtest_maxPrice__val"></span>
+        </li>
+        <!--(2) Min Price -->
+        <li>
+          <label class="backtest_minPrice">Min Price : </label>
+          <span class="backtest_minPrice__val"></span>
+        </li>
+        <!--(3) Average Price -->
+        <li>
+          <label class="backtest_averagePrice">Average Price : </label>
+          <span class="backtest_averagePrice__val"></span>
+        </li>
+      </ul>
+    </div>
+
+
+    {# ---------------------- [1-2] BACKTESTING STRATEGY PART ---------------------- #}
+    <div class="backtesting_data_setting_part">
+      <h1><i class="fa-solid fa-square"></i> Strategy Inforamtion</h1>
+
+      <ul class="backtesting_data_setting_list">
+        <li>
+          <label>asd</label><span></span>
+        </li>
+      </ul>
+    </div>
+
+
+    {# ---------------------- [1-3] USER SETTING PART ---------------------- #}
+    <div class="backtesting_user_setting_part">
+      <h1><i class="fa-solid fa-square"></i> User Setting</h1>
+
+      <ul class="backtesting_user_setting_list">
+        <li>
+          <label>asd</label><span></span>
+        </li>
+      </ul>
+    </div>
+
+
+    {# ------------------------------------------------------------------------------------ #}
+
+  </div>
+</section>
+
+{# ---------------------- [2] BACKTESTING MONITORING ---------------------- #}
+<section>
+  <h1 class="section_header_style">Backtesting Simulation</h1>
+  <div class="backtesting_simulation">
+    <div class="backtesting_sim_graph">
+      <h1><i class="fa-solid fa-square"></i> Trading Graph</h1>
+
+      <canvas class="backtest_Chart" id="backtest_Chart" width="400" height="400"></canvas>
+    </div>
+
+    <div class="backtesting_sim_status">
+      <h1><i class="fa-solid fa-square"></i> Trading Data</h1>
+
+      <ul class="backtesting_sim_status_list">
+        <li>
+          <label>Reference Price : </label>
+          <span></span>
+        </li>
+
+        <li>
+          <label>Max Bidding Price : </label>
+          <span></span>
+        </li>
+
+        <li>
+          <label>Bid Installment Count : </label>
+          <span></span>
+        </li>
+
+        <li>
+          <label>Min Asking Price : </label>
+          <span></span>
+        </li>
+
+        <li>
+          <label>Ask Installment Count : </label>
+          <span></span>
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+  <input type="range" min="1" max="100" value="50" class="slider" id="myRange">
+
+{# ---------------------- [3] BACKTESTING RESULT ---------------------- #}
+<section>
+  <h1 class="section_header_style">Backtesting Result</h1>
+</section>
+
+
+{# ---------------------- [4] BACKTESTING LOG ---------------------- #}
+<section>
+  <h1 class="section_header_style">Backtesting Log</h1>
+</section>
+
+<script src="{{url_for('static', filename='backtest_run.js')}}"></script>
+
+{% endblock %}

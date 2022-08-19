@@ -15,37 +15,9 @@
 
     <label for="type">Post Type</label>
       <select name="type" id="type">
-        <!--Option 1-->
-        {% if post['type']=="A" %}
-          <option selected value="A">A</option>
-          <option value="B">B</option>
-          <option value="C">C</option>
-          <option value="D">D</option>
-        {% endif %}
-
-        <!--Option 2-->
-        {% if post['type']=="B" %}
-          <option selected value="B">B</option>
-          <option value="A">A</option>
-          <option value="C">C</option>
-          <option value="D">D</option>
-        {% endif %}
-
-        <!--Option 3-->
-        {% if post['type']=="C" %}
-          <option selected value="C">C</option>
-          <option value="B">B</option>
-          <option value="A">A</option>
-          <option value="D">D</option>
-        {% endif %}
-
-        <!--Option 4-->
-        {% if post['type']=="D" %}
-          <option selected value="D">D</option>
-          <option value="B">B</option>
-          <option value="C">C</option>
-          <option value="A">A</option>
-        {% endif %}
+          <option selected value="시황">A</option>
+          <option value="종목토론">B</option>
+          <option value="기타">C</option>
       </select>
 
     <label for="body">Body</label>

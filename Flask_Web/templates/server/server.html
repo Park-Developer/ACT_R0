@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Server{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+
+  {% if login_userDB['username']=="master" %}
+    <section class="SERVER_PART">
+
+      <h1 class="section_header_style"><i class="fa-solid fa-server"></i> Server</h1>
+
+      <div>
+        <label class="SERVER_PART__label">Server Status</label> <span class="SERVER_PART__value"></span>
+      </div>
+
+      <div>
+        <form method=get>
+          <button type="button" onclick="location.href='manage'">Management</button>
+          <button type="button" onclick="location.href='statistics'">Statistics</button>
+        </form>
+      </div>
+    </section>
+  {% endif %}
+
+{% endblock %}

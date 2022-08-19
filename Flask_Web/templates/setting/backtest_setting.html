@@ -1,0 +1,222 @@
+{% extends 'base.html' %}
+
+{% block header %}
+    <h1><i class="fa-solid fa-gear"></i> {% block title %}Backtest Setting{% endblock %}</h1>
+{% endblock %}
+
+<!--[ BODY ]-->
+{% block content %}
+
+{# ---------------------- [1] BACKTESTING USER & STRATEGY SETTING STATE ---------------------- #}
+<section>
+  <h1 class="section_header_style"><i class="fa-solid fa-gear"></i> Target Setting State</h1>
+
+  <ul>
+    <!-- (1) Market -->
+    <li>
+      <label class="backtesting_market_label"> Market : </label> <!-- user_list db 에서 가져옴 -->
+      <span class="backtesting_market_val">{{login_userDB["target_coin"+(target_coin_id)|string]["market"]}}</span>
+    </li>
+
+    <!-- (2) Trading Period -->
+    <li>
+      <label class="backtesting_period_label">Trading Period : </label> <!-- user_list db 에서 가져옴 -->
+      <span class="backtesting_period_val">{{login_userDB["target_coin"+(target_coin_id)|string]["period"]}}</span>
+    </li>
+
+    <!-- (3) Monitoring Time -->
+    <li>
+      <label class="backtesting_monitoringtime_label">Monitoring Time(min) : </label> <!-- strategy db 에서 가져옴 -->
+      <span class="backtesting_monitoringtime_val">{{strategyDB["monitoring_time"]}}</span>
+    </li>
+
+    <!-- (4) Test Data Number -->
+    <li>
+      <label class="backtesting_dataNum_label">Backtesting Data Number : </label>
+      <span class="backtesting_dataNum_val"></span>
+    </li>
+  </ul>
+
+</section>
+
+
+{# ---------------------- [2] BACKTESTING SETTING ---------------------- #}
+<section>
+    <form action="/backtest/target_{{target_coin_id}}/run" method="post">
+      <h1 class="section_header_style"><i class="fa-solid fa-database"></i> Training Data Setting</h1>
+
+      <!-- (1) Training Data Unit -->
+      <label>Training Data Unit</label>
+      <select class="backtest_training_data_unit" name="training_data_unit" id="training_data_unit">
+           <option value="1Minute">1 Minute</option>
+           <option value="10Minute">10 Minute</option>
+           <option value="30Minute">30 Minute</option>
+           <option value="1Hour">1 Hour</option>
+           <option value="1Day">Day</option>
+           <option value="1Week">Week</option>
+           <option value="1Month">Month</option>
+      </select>
+
+      <!-- (2) Training Data Number -->
+      <label>Training Data Number</label>
+      <input class="backtest_training_data_number" required name="training_data_number" id="training_data_number" maxlength="7" size="7" placeholder="Max : 200">
+
+
+      <!-- (3) Backtest Time Setting -->
+      <article>
+        <h1 class="section_header_style"><i class="fa-solid fa-clock-rotate-left"></i> Backtesting Time Setting</h1>
+
+        <label><i class="fa-solid fa-square"></i> Backtest Start Time</label>
+
+        <div class="backtest_timesetting_div backtest_starttime_setting">
+          <!-- (3-1) backtest time : year -->
+          <div>
+            <label class="backtest_starttime_year_label">Year : </label>
+            <span class="backtest_starttime_year_val"></span>
+          </div>
+
+          <!-- (3-2) backtest time : month -->
+          <div>
+            <label class="backtest_starttime_month_label">Month : </label>
+
+            <select class="backtest_starttime_month_select" name="backtest_starttime_month" id="backtest_starttime_month">
+              <option selected value="backstart_month_None"> </option>
+
+            </select>
+          </div>
+
+          <!-- (3-3) backtest time : day -->
+          <div>
+            <label class="backtest_starttime_day_label">Day : </label>
+            <select class="backtest_starttime_day_select" name="backtest_starttime_day" id="backtest_starttime_day">
+              <option selected value="backstart_day_None"> </option>
+
+              <option value="backstart_day_1">1</option>
+              <option value="backstart_day_2">2</option>
+              <option value="backstart_day_3">3</option>
+              <option value="backstart_day_4">4</option>
+              <option value="backstart_day_5">5</option>
+              <option value="backstart_day_6">6</option>
+              <option value="backstart_day_7">7</option>
+              <option value="backstart_day_8">8</option>
+              <option value="backstart_day_9">9</option>
+              <option value="backstart_day_10">10</option>
+              <option value="backstart_day_11">11</option>
+              <option value="backstart_day_12">12</option>
+              <option value="backstart_day_13">13</option>
+              <option value="backstart_day_14">14</option>
+              <option value="backstart_day_15">15</option>
+              <option value="backstart_day_16">16</option>
+              <option value="backstart_day_17">17</option>
+              <option value="backstart_day_18">18</option>
+              <option value="backstart_day_19">19</option>
+              <option value="backstart_day_20">20</option>
+              <option value="backstart_day_21">21</option>
+              <option value="backstart_day_22">22</option>
+              <option value="backstart_day_23">23</option>
+              <option value="backstart_day_24">24</option>
+              <option value="backstart_day_25">25</option>
+              <option value="backstart_day_26">26</option>
+              <option value="backstart_day_27">27</option>
+              <option value="backstart_day_28">28</option>
+              <option value="backstart_day_29">29</option>
+              <option value="backstart_day_30">30</option>
+              <option value="backstart_day_31">31</option>
+            </select>
+          </div>
+
+          <!-- (3-4) backtest time : Hour -->
+          <div>
+            <label class="backtest_starttime_hour_label">Hour : </label>
+            <select class="backtest_starttime_hour_select" name="backtest_starttime_hour" id="backtest_starttime_hour">
+              <option selected value="backstart_hour_None"> </option> <!-- default option -->
+
+            </select>
+          </div>
+
+          <!-- (3-5) backtest time : Minute -->
+          <div>
+            <label class="backtest_starttime_minute_label">Minute : </label>
+            <select class="backtest_starttime_minute_select" name="backtest_starttime_minute" id="backtest_starttime_minute">
+              <option selected value="backstart_minute_None"> </option> <!-- default option -->
+
+            </select>
+          </div>
+
+          <!-- (3-6) backtest time : Second -->
+          <div>
+            <label class="backtest_starttime_second_label">Second : </label>
+            <span class="backtest_starttime_second_val">00</span>
+          </div>
+
+        </div>
+      </article>
+
+      <article>
+        <label><i class="fa-solid fa-square"></i> Backtest End Time</label>
+
+        <div class="backtest_timesetting_div backtest_endtime_setting">
+          <!-- (3-1) backtest time : year -->
+          <div>
+            <label class="backtest_endtime_year_label">Year : </label>
+            <span class="backtest_endtime_year_val"></span>
+          </div>
+
+          <!-- (3-2) backtest time : month -->
+          <div>
+            <label class="backtest_endtime_month_label">Month : </label>
+            <span class="backtest_endtime_month_val"></span>
+          </div>
+
+          <!-- (3-3) backtest time : day -->
+          <div>
+            <label class="backtest_endtime_day_label">Day : </label>
+            <span class="backtest_endtime_day_val"></span>
+          </div>
+
+          <!-- (3-4) backtest time : hour -->
+          <div>
+            <label class="backtest_endtime_hour_label">Hour : </label>
+            <span class="backtest_endtime_hour_val"></span>
+          </div>
+
+          <!-- (3-5) backtest time : minute -->
+          <div>
+            <label class="backtest_endtime_minute_label">Minute : </label>
+            <span class="backtest_endtime_minute_val"></span>
+          </div>
+
+          <!-- (3-6) backtest time : second -->
+          <div>
+            <label class="backtest_endtime_second_label">Second : </label>
+            <span class="backtest_endtime_second_val">00</span>
+          </div>
+
+        </div>
+      </article>
+
+      <!-- (4) Test Speed -->
+      <label><i class="fa-solid fa-square"></i> Backtest Speed</label>
+      <select class="backtest_speed" name="test_speed" id="test_speed">
+         <option value="1 Second">1 Second</option>
+         <option value="10 Second">10 Second</option>
+         <option value="30 Second">30 Second</option>
+         <option value="1 Minute">1 Minute</option>
+      </select>
+
+      <!-- (5) Run & Cancel Button -->
+      <div>
+        <button class="backtest_run__btn" type="submit">Backtest Start</button>
+        <button onclick="location.href='/backtest/target_{{target_coin_id}}/setting'" class="backtest_cancel__btn" type="button">Cancel</button>
+      </div>
+    </form>
+</section>
+
+{# ---------------------- [2] BACKTESTING INFO ---------------------- #}
+<section>
+</section>
+
+
+<script src="{{url_for('static', filename='backtest_setting.js')}}"></script>
+
+{% endblock %}

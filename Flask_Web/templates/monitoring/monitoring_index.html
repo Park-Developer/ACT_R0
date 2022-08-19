@@ -1,62 +1,165 @@
 {% extends 'base.html' %}
 
 {% block header %}
-    <h1>{% block title %}Monitoring{% endblock %}</h1>
+    <h1><i class="fa-solid fa-chart-line"></i> {% block title %}Monitoring{% endblock %}</h1>
 {% endblock %}
 
 <!--[ BODY ]-->
 {% block content %}
+<h1 class="m_test"></h1>
 
 <section>
    <div class="TARGET_LIST">
-       <h1 class="TARGET_LIST__header">Target Coin List</h1>
+       <h1 class="TARGET_LIST__header section_header_style USER__Header"><i class="fa-solid fa-list"></i> Target Coin List</h1>
 
-       {% set coin_number = namespace(value=0) %}               {# loop count #}
+       <!-- Variable Setting -->
+       {% set MAX_COIN_NUMBER=5 %}            {# config.json에서 5로 정의 #}
+       {% set coin_list_idx = namespace(value=0) %}
 
-       {% for coin_ticker in trading_info["UPBIT_PART"]["TARGET_COIN"] %}
-           <li class="{{coin_ticker}} coin_{{loop.index}}">
-               {{coin_ticker}}
-               <label class="{{coin_ticker}} coin_{{loop.index}}_state">Ready</label>
-               <button class="{{coin_ticker}} coin_{{loop.index}}_Btn">show</button>
-           </li>
-           {% set coin_number.value = coin_number.value + 1 %}  {# loop count++ #}
-       {% endfor %}
+
+       <ul class="coin_monitoring_list">
+         {% for coin_idx in range(MAX_COIN_NUMBER) %}
+          {% if login_userDB["target_coin"+loop.index|string] %}
+
+            <li class="coin_{{loop.index|string}}_selector">
+              {% if loop.index==target_coin_id %} <!-- 선택된 버튼인 경우 -->
+                <!--(1) Selected Button -->
+                <label class="coin_monitoring_{{loop.index|string}}_label" class>{{login_userDB["target_coin"+loop.index|string]["market"]}}</label>
+
+                <button class="clicked_btn_style {{login_userDB['target_coin'+loop.index|string]['market']}} coin_{{loop.index|string}}_Btn"
+                  type="button"
+                  onclick="location.href='./target_coin{{loop.index|string}}'">
+                  Show
+                </button>
+              {% else %}
+                <!--(2) Unselected Button -->
+                <label class="coin_monitoring_{{loop.index|string}}_label" class>{{login_userDB["target_coin"+loop.index|string]["market"]}}</label>
+                <span>{{login_userDB["target_coin"+loop.index|string]["state"]}}</span>
+
+                <button class="unclicked_btn_style {{login_userDB['target_coin'+loop.index|string]['market']}} coin_{{loop.index|string}}_Btn"
+                  type="button"
+                  onclick="location.href='./target_coin{{loop.index|string}}'">
+                  Show
+                </button>
+              {% endif %}
+            </li>
+          {% endif %}
+         {% endfor %}
+       </ul>
+
 
    </div>
 </section>
 
 <section>
    <div class="TARGET_MONITORING">
-     <h1 class="TARGET_MONITORING__header">Target Coin Realtime Graph</h1>
+     <h1 class="TARGET_MONITORING__header section_header_style USER__Header"> <i class="fa-solid fa-chart-line"></i> Target Coin Realtime Graph</h1>
 
      <div>
-       <label class="TARGET_MONITORING__time">모니터링 시간 : </label> <span class="TARGET_MONITORING__time__val"></span>
+       <label class="TARGET_MONITORING__time">모니터링 시간(개발필) : </label> <span class="TARGET_MONITORING__time__val"></span>
      </div>
 
-     <div>
-       <label class="TARGET_MONITORING__curPrice">현재 가격 : </label> <span class="TARGET_MONITORING__curPrice__val"></span>
-     </div>
-
-     <div>
-       <label class="TARGET_MONITORING__avgPrice">평균 가격 : </label> <span class="TARGET_MONITORING__avgPrice__val"></span>
-     </div>
-
-     <div>
-       <label class="TARGET_MONITORING__maxPrice">최고 가격: </label> <span class="TARGET_MONITORING__maxPrice__val"></span>
-     </div>
-
-     <div>
-       <label class="TARGET_MONITORING__minPrice">최저 가격: </label> <span class="TARGET_MONITORING__minPrice__val"></span>
-     </div>
      <!--  그래프 설정  -->
-     <canvas id="myChart" width="400" height="400"></canvas>
+
    </div>
+</section>
+
+
+{# --------------------- Monitoring Data Table --------------------- #}
+<section>
+  <div>
+    <label>Setting Data</label>
+    <ul>
+      <li>
+        <label class="monotirong_market_label">Monitoring Market : </label>
+        <span class="clicked_monitoring_market">{{login_userDB['target_coin'+target_coin_id|string]['market']}}</span>
+      </li>
+
+      <li>
+        <label class="monotirong_market_mode">Trading Mode : </label>
+        <span class="clicked_monitoring_mode">{{login_userDB['target_coin'+target_coin_id|string]['mode']}}</span>
+      </li>
+
+      <li>
+        <label class="monotirong_trading_state">Trading State : </label>
+        <span class="clicked_monitoring_state">{{login_userDB['target_coin'+target_coin_id|string]['state']}}</span>
+      </li>
+    </ul>
+  </div>
+  <!-- Market Data -->
+
+  <div>
+    <label>Market Data</label>
+
+    <ul>
+      <li><label class="TARGET_MONITORING__curPrice">Current Price : </label> <span class="TARGET_MONITORING__curPrice__val"></span></li>
+      <li><label class="TARGET_MONITORING__maxPrice">Max Price : </label> <span class="TARGET_MONITORING__maxPrice__val"></span></li>
+      <li><label class="TARGET_MONITORING__minPrice">Min Price : </label> <span class="TARGET_MONITORING__minPrice__val"></span></li>
+      <li><label class="TARGET_MONITORING__avgPrice">Average Price : </label> <span class="TARGET_MONITORING__avgPrice__val"></span></li>
+
+      <!-- Trading Start -->
+      <li>
+        <label class="TARGET_MONITORING__startTime">Trading Start : </label>
+        <!-- 날짜 표시 형식변경1 -->
+        {% set start_time_list=login_userDB['target_coin'+target_coin_id|string]['start_time'].split("-") %}
+
+         <span class="TARGET_MONITORING__startTime__val">{{start_time_list[0]}}-{{start_time_list[1]}}-{{start_time_list[2]}} {{start_time_list[3]}}:{{start_time_list[4]}}:{{start_time_list[5]}}</span>
+      </li>
+
+      <!-- Trading end -->
+      <li>
+        <label class="TARGET_MONITORING__endTime">Trading End : </label>
+        <!-- 날짜 표시 형식변경1 -->
+        {% set end_time_list=login_userDB['target_coin'+target_coin_id|string]['end_time'].split("-") %}
+
+         <span class="TARGET_MONITORING__endTime__val">
+           {{end_time_list[0]}}-{{end_time_list[1]}}-{{end_time_list[2]}} {{end_time_list[3]}}:{{end_time_list[4]}}:{{end_time_list[5]}}
+           ({{login_userDB['target_coin'+target_coin_id|string]['period']}})
+         </span>
+      </li>
+
+      <!-- Trading Remain -->
+      <li>
+        <label class="TARGET_MONITORING__remainTime">Trading Remain : </label>
+        <span class="TARGET_MONITORING__remainTime__val"></span>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Trading Data -->
+  <div>
+  <label>Trading Data</label>
+
+  <ul>
+    <li><label>KRW Balance : </label><span></span></li>
+    <li><label>Coin Balance : </label><span></span></li>
+    <li><label>Reference Price : </label><span></span></li>
+    <li><label>Max Bidding Price : </label><span></span></li>
+    <li><label>Min Asking Price : </label><span></span></li>
+    <li><label>Bid Installment Count : </label><span></span></li>
+    <li><label>Ask Installment Count : </label><span></span></li>
+  </ul>
+
+  </div>
+
+  <div class="Trading_log">
+    <label>Trading Log</label>
+    <textarea name="name" rows="8" cols="80">
+    </textarea>
+  </div>
+</section>
+
+{# --------------------- Monitoring Chart --------------------- #}
+<section>
+  <canvas id="myChart" width="400" height="400"></canvas>
+</section>
+
 
 </section>
     <!--  전역변수 설정  -->
     <script>
         $SCRIPT_ROOT = {{ request.script_root|tojson }}; <!--sets a global variable to the prefix to the root of the application.-->
-        let COIN_NUMBER="{{coin_number.value}}";
+
         let DEFAULT_TICKER="{{trading_info["UPBIT_PART"]["TARGET_COIN"][0]}}";   <!--default 선정기준 : 첫 번째 Target 코인 -->
 
     </script>

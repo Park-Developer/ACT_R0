@@ -22,7 +22,12 @@
       "ALLOWED_IP" : {"IP_1":"119.64.45.3",
                       "IP_2":"192.168.219.102",
                       "IP_3":"127.0.0.1"},
-      "TARGET_COIN" : ["KRW-ADA", "KRW-SOL", "KRW-XRP", "KRW-WAVES"]
+
+      "TARGET_COIN_1" : "",
+      "TARGET_COIN_2" : "",
+      "TARGET_COIN_3" : "",
+      "TARGET_COIN_4" : "",
+      "TARGET_COIN_5" : ""
 
     },
 
@@ -58,7 +63,12 @@
       "ALLOWED_IP" : {"IP_1":"119.64.45.3",
                       "IP_2":"192.168.219.102",
                       "IP_3":"127.0.0.1"},
-      "TARGET_COIN" : ["KRW-ADA", "KRW-SOL", "KRW-XRP", "KRW-WAVES"]
+
+      "TARGET_COIN_1" : "",
+      "TARGET_COIN_2" : "",
+      "TARGET_COIN_3" : "",
+      "TARGET_COIN_4" : "",
+      "TARGET_COIN_5" : ""
 
     },
     "WEB_PART": {

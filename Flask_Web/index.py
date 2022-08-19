@@ -10,6 +10,13 @@ from Flask_Web.db import get_db
 from Flask_Web import service
 from config import ACT_logger
 
+# websocket test
+import asyncio
+import datetime
+import random
+import websockets
+import json
+
 from . import login
 
 bp = Blueprint('index', __name__)  # /monitoring/ ~\
@@ -189,3 +196,5 @@ def delete(id):
     db.commit()
     return redirect(url_for('index.home'))
 
+
+# Websocket Test

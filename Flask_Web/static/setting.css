@@ -1,0 +1,22 @@
+.Coin_Trading_Setting_Table{
+  table-layout: flxed;
+  width:100%;
+}
+
+.setting_required_para{
+    color:red;
+}
+
+.coin_setting_value{
+    text-align: center;
+}
+
+
+.setting_input::placeholder {
+  color:red;
+}
+
+.disabled_strategy_link {
+  pointer-events: none;
+  color:gray;
+}

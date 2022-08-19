@@ -11,45 +11,20 @@ from werkzeug.security import generate_password_hash
 from config import ACT_logger
 from Flask_Web.db import get_db
 import template_tool
+from . import login
 
 bp = Blueprint('account', __name__, url_prefix='/account')
 
+@bp.route('/test', methods=('GET', 'POST'))
+def test():
+    return "TEST!-!"
 
 @bp.route('/', methods=('GET', 'POST'))
+@login.login_required
 def account_index():
-    ''' DB 관련 나줃에
-    if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-        db = get_db()
-        error = None
-        user = db.execute(
-            'SELECT * FROM user WHERE username = ?', (username,)
-        ).fetchone()
+    login_userDB = web_tool.get_login_UserInfo(user_table="user_list", session_var=service.session_variable)
 
-        if user is None:
-            error = 'Incorrect username.'
-        elif not check_password_hash(user['password'], password):
-            error = 'Incorrect password.'
-
-        if error is None:
-            session.clear()
-            session['user_id'] = user['id']
-            return redirect(url_for('index'))
-
-        flash(error)
-    '''
-
-    # SESSION GET
-
-    user_info = web_tool.session_get(session_var=service.session_variable)  # SESSION USER_ID {'access_code': '7U852X89', 'email': 'parkwonho94@gmail.com', 'password': 'wonho123', 'username': 'master'}
-
-    if user_info==None:
-        return render_template('auth/login.html') # user_id가 없는 경우 login.html retrun
-    else:
-        print("lgoing")
-        print(user_info)
-        return render_template('auth/account.html',user_info=user_info) # login 상태인 경우
+    return render_template('auth/account.html',login_userDB=login_userDB) # login 상태인 경우
 
 @bp.route('/login', methods=('GET', 'POST'))
 def account_login():
@@ -58,17 +33,18 @@ def account_login():
         input_info={
             "email" :request.form['email'],
             "password" : request.form['password'],
-            "access_code" : request.form['access_code'] # 일단 비교안함
         }
         # Account Check
         db = get_db()
         is_confirmed, user_db=web_tool.check_account("user_list",input_info,db) # user 확인 성공
         if is_confirmed==True:
-            user_info = template_tool.convert_DB_to_UserInfo(user_db)
-            web_tool.session_update(session_var=service.session_variable, session_data=user_info)
+            login_userInfo = template_tool.convert_DB_to_UserInfo(user_db)
+            web_tool.session_update(session_var=service.session_variable, session_data=login_userInfo)
 
-            print("USERER",user_info)
-            return render_template('auth/account.html', user_info=user_info)
+            login_userDB=web_tool.get_login_UserInfo(user_table="user_list", session_var=service.session_variable)
+
+            return render_template('auth/account.html', login_userDB=login_userDB)
+
         else:
             return render_template('auth/login.html')
 

@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+<!--[ --- HEADER --- ]-->
+{% block header %}
+    <h1>{% block title %}Strategy{{strategy_id}} Information{% endblock %}</h1>
+{% endblock %}
+
+<!--[ --- BODY --- ]-->
+{% block content %}
+
+{# ---------------------- [1] STRATEGY INTRODUCTION ---------------------- #}
+<section class="strategy_introduction">
+  <h1 class="section_header_style">Strategy{{strategy_id}} Introduction</h1>
+
+  <ul class="strategy_introduction__list">
+    <!-- (1) Name -->
+    <li>
+      <label>Name : </label>
+      <span>{{strategy_info["INTRODUCTION_PART"]["name"]}}</span>
+    </li>
+
+    <!-- (2) Version -->
+    <li>
+      <label>Version : </label>
+      <span>{{strategy_info["INTRODUCTION_PART"]["version"]}}</span>
+    </li>
+
+    <!-- (3) Developer -->
+    <li>
+      <label>Developer : </label>
+      <span>{{strategy_info["INTRODUCTION_PART"]["developer"]}}</span>
+    </li>
+
+    <!-- (4) Contributor -->
+    <li>
+      <label>Contributor : </label>
+      <span>{{strategy_info["INTRODUCTION_PART"]["contributor"]}}</span>
+    </li>
+
+    <!-- (5) Link -->
+    <li>
+      <label>Link : </label>
+      <span>{{strategy_info["INTRODUCTION_PART"]["link"]}}</span>
+    </li>
+
+    <!-- (6) Update Date -->
+    <li>
+      <label>Update Date : </label>
+      <span>{{strategy_info["INTRODUCTION_PART"]["update_date"]}}</span>
+    </li>
+  </ul>
+</section>
+
+{# ---------------------- [2] STRATEGY CODE ---------------------- #}
+<section class="strategy_code">
+  <h1 class="section_header_style">Strategy{{strategy_id}} Code</h1>
+
+  <textarea id="txtid" name="txtname" rows="4" cols="50" maxlength="200">
+  A nice day is a nice day.
+  Lao Tseu
+  </textarea>
+</section>
+
+{# ---------------------- [3] ETC ---------------------- #}
+<hr>
+
+<div>
+  <button type="submit"><i class="fa-solid fa-code-pull-request"></i> Request</button>
+  <button type="button" onclick="location.href='/setting'"><i class="fa-solid fa-arrow-left"></i> Back</button>
+</div>
+
+{% endblock %}

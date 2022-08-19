@@ -43,3 +43,46 @@ USER DEFINED COMMON STYLE
 .section_table_header_style{
   background-color: lightgreen;
 }
+
+.table_style{
+  border: 3px solid lightgreen;
+  width:70%;
+}
+
+.table_hearder_style{
+  background-color: gray;
+}
+
+.post_search_bar{
+  width:70%;
+  display: flex;
+
+}
+.post_search_bar_block{
+  width:100%;
+  display: flex;
+}
+.post_search_bar__input{
+  width:80%;
+}
+.post_search_bar__btn{
+  display: flex;
+  width:20%;
+}
+
+.post_find__input{
+  width:100%;
+  height:100%;
+  box-sizing: border-box;
+}
+.post_new__button{
+  width:50%;
+    height:100%;
+    box-sizing: border-box;
+}
+
+.post_find__button{
+  width:50%;
+    height:100%;
+    box-sizing: border-box;
+}

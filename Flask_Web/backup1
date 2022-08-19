@@ -1,0 +1,202 @@
+backtest_setting.html
+
+
+{% extends 'base.html' %}
+
+{% block header %}
+    <h1>{% block title %}Backtest Setting{% endblock %}</h1>
+{% endblock %}
+
+<!--[ BODY ]-->
+{% block content %}
+
+{# ---------------------- [1] BACKTESTING DATA SETTING ---------------------- #}
+<section>
+  <h1 class="section_header_style">Backtest Env Setting</h1>
+
+  {% if request_data %} <!-- parameter 설정을 한 경우 -->
+  <ul>
+    <!-- (1) Market -->
+    <li>
+      <label class="backtest_market">Market</label>
+      <span class="backtest_market__val">{{login_userDB["target_coin"+target_coin_id|string]["market"]}}</span>
+    </li>
+
+    <!-- (2) Data Unit -->
+    <li>
+      <label class="backtest_data_unit">Data Unit Setting</label>
+      <span class="backtest_data_unit__val">{{request_data["data_unit"]}}</span>
+    </li>
+
+    <!-- (3) Data Number -->
+    <li>
+      <label class="backtest_data_number">Data Number Setting</label>
+      <span class="backtest_data_number__val">{{request_data["data_number"]}}</span>
+    </li>
+
+    <!-- (4) Test Speed -->
+    <li>
+      <label class="backtest_speed">Backtest Speed</label>
+      <span class="backtest_speed__val">{{request_data["test_speed"]}}</span>
+    </li>
+  </ul>
+
+
+  <div>
+    <button onclick="location.href='/backtest/target_{{target_coin_id}}/run'" class="backtest_test_run__btn" type="button">Test Run</button>
+    <button onclick="location.href='/backtesttarget_{{target_coin_id}}/setting'" class="backtest_back__btn" type="button">Back</button>
+  </div>
+  {% else %} <!-- parameter 설정을 안한 경우 -->
+  <form action="/setting/coin/{{target_coin_id}}/backtest/save" method="post">
+      <!-- (1) Data Unit -->
+      <label>Data Unit Setting</label>
+      <select class="backtest_data_unit" name="data_unit" id="data_unit">
+           <option value="1Minute">1 Minute</option>
+           <option value="10Minute">10 Minute</option>
+           <option value="30Minute">30 Minute</option>
+           <option value="1Hour">1 Hour</option>
+           <option value="1Day">Day</option>
+           <option value="1Week">Week</option>
+           <option value="1Month">Month</option>
+      </select>
+
+      <!-- (2) Data Number -->
+      <label>Data Number Setting</label>
+      <input class="backtest_data_number" required name="data_number" id="data_number" maxlength="7" size="7" placeholder="Max : 200">
+
+      <!-- (3) Test Speed -->
+      <label>Backtest Speed</label>
+      <select class="backtest_speed" name="test_speed" id="test_speed">
+           <option value="1 Second">1 Second</option>
+           <option value="10 Second">10 Second</option>
+           <option value="30 Second">30 Second</option>
+           <option value="1 Minute">1 Minute</option>
+      </select>
+
+      <div>
+          <button class="backtest_save__btn" type="submit">Save</button>
+          <button onclick="location.href='/setting'" class="backtest_cancel__btn" type="button">Cancel</button>
+      </div>
+  </form>
+  {% endif %}
+</section>
+
+{# ---------------------- [2] BACKTESTING MONITORING ---------------------- #}
+<section>
+  <h1 class="section_header_style">Backtesting Monitoring</h1>
+
+  <label>Market Data</label>
+  <ul>
+    <!--(1) Max Price -->
+    <li>
+      <label class="backtest_maxPrice">Max Price : </label>
+      <span class="backtest_maxPrice__val"></span>
+    </li>
+    <!--(2) Min Price -->
+    <li>
+      <label class="backtest_minPrice">Min Price : </label>
+      <span class="backtest_minPrice__val"></span>
+    </li>
+    <!--(3) Average Price -->
+    <li>
+      <label class="backtest_averagePrice">Average Price : </label>
+      <span class="backtest_averagePrice__val"></span>
+    </li>
+  </ul>
+
+  <canvas class="backtest_Chart" id="backtest_Chart" width="400" height="400"></canvas>
+</section>
+
+{# ---------------------- [3] BACKTESTING Log ---------------------- #}
+<section>
+  <h1 class="section_header_style">Backtesting Log</h1>
+</section>
+
+<script src="{{url_for('static', filename='backtest.js')}}"></script>
+{% endblock %}
+
+//////////////
+
+setting
+
+{% extends 'base.html' %}
+
+{% block header %}
+    <h1>{% block title %}Backtest Setting{% endblock %}</h1>
+{% endblock %}
+
+<!--[ BODY ]-->
+{% block content %}
+
+{# ---------------------- [1] BACKTESTING DATA SETTING ---------------------- #}
+<section>
+  <h1 class="section_header_style">Backtest Env Setting</h1>
+
+  {% if request_data %} <!-- parameter 설정을 한 경우 -->
+    <ul>
+      <!-- (1) Market -->
+      <li>
+        <label class="backtest_market">Market</label>
+        <span class="backtest_market__val">{{login_userDB["target_coin"+target_coin_id|string]["market"]}}</span>
+      </li>
+
+      <!-- (2) Data Unit -->
+      <li>
+        <label class="backtest_data_unit">Data Unit Setting</label>
+        <span class="backtest_data_unit__val">{{request_data["data_unit"]}}</span>
+      </li>
+
+      <!-- (3) Data Number -->
+      <li>
+        <label class="backtest_data_number">Data Number Setting</label>
+        <span class="backtest_data_number__val">{{request_data["data_number"]}}</span>
+      </li>
+
+      <!-- (4) Test Speed -->
+      <li>
+        <label class="backtest_speed">Backtest Speed</label>
+        <span class="backtest_speed__val">{{request_data["test_speed"]}}</span>
+      </li>
+    </ul>
+
+    <div>
+      <button onclick="location.href='/backtest/target_{{target_coin_id}}/run'" class="backtest_test_run__btn" type="button">Test Run</button>
+      <button onclick="location.href='/backtest/target_{{target_coin_id}}/setting'" class="backtest_back__btn" type="button">Back</button>
+    </div>
+  {% else %} <!-- parameter 설정을 안한 경우 -->
+    <form action="/backtest/target_{{target_coin_id}}/save" method="post">
+        <!-- (1) Data Unit -->
+        <label>Data Unit Setting</label>
+        <select class="backtest_data_unit" name="data_unit" id="data_unit">
+             <option value="1Minute">1 Minute</option>
+             <option value="10Minute">10 Minute</option>
+             <option value="30Minute">30 Minute</option>
+             <option value="1Hour">1 Hour</option>
+             <option value="1Day">Day</option>
+             <option value="1Week">Week</option>
+             <option value="1Month">Month</option>
+        </select>
+
+        <!-- (2) Data Number -->
+        <label>Data Number Setting</label>
+        <input class="backtest_data_number" required name="data_number" id="data_number" maxlength="7" size="7" placeholder="Max : 200">
+
+        <!-- (3) Test Speed -->
+        <label>Backtest Speed</label>
+        <select class="backtest_speed" name="test_speed" id="test_speed">
+             <option value="1 Second">1 Second</option>
+             <option value="10 Second">10 Second</option>
+             <option value="30 Second">30 Second</option>
+             <option value="1 Minute">1 Minute</option>
+        </select>
+
+        <div>
+            <button class="backtest_save__btn" type="submit">Save</button>
+            <button onclick="location.href='/backtest/target_{{target_coin_id}}/setting'" class="backtest_cancel__btn" type="button">Cancel</button>
+        </div>
+    </form>
+  {% endif %}
+</section>
+
+
+{% endblock %}

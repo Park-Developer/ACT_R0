@@ -1,8 +1,161 @@
 import random
+
 import config
 import json
 import time
 import upbit_tool
+from datetime import datetime, timedelta
+import Upbit_Trade.Strategy1
+
+def is_trading_Timeover(end_time:str):
+    # (1) Calc End Time Timestamp
+    end_time = datetime.strptime(end_time, config.TIME_FORMAT)
+    end_time_timestamp = datetime.timestamp(end_time)
+
+    # (2) Calc Current Time Timestamp
+    cur_KST_time_str=get_current_kst_Time() # 문자열로 현재시간 받기
+    cur_time=datetime.strptime(cur_KST_time_str,config.TIME_FORMAT) # 계산을 위해 tim형e으로 변환
+    cur_time_timestamp=datetime.timestamp(cur_time)
+
+    if (end_time_timestamp-cur_time_timestamp)>0:
+        return False
+    else:
+        return True
+
+def get_trading_state(trading_mode:str,end_time:str,is_tradingStop:bool):
+    # trading state : Ready,Trading,Stop,Idle. End
+    # trading mode : Ready, Run, Simulation, Idle(설정안한 경우)
+    if trading_mode=="Ready":
+        return "Ready"
+    elif trading_mode=="Run" or trading_mode=="Simulation":
+        if is_tradingStop==True or is_tradingStop=="True":
+            return "Stop"
+        else:
+            if is_trading_Timeover(end_time) == False:
+                return "Trading"
+            else:
+                return "End"
+
+    elif trading_mode=="Idle":
+        return "Idle"
+
+
+def is_trading_run(mode_data):
+    if (mode_data == "Run") or (mode_data == "run") or (mode_data == "Simulation") or (mode_data == "simulation"):
+        return True
+    else:
+        return False
+
+def calc_timeDelta(reference_time: str, days:int, hours:int, minutes:int) -> str:
+    calced_time = datetime.strptime(reference_time, config.TIME_FORMAT) + timedelta(days=days,
+                                                                             minutes=minutes,
+                                                                             hours=hours)
+
+    return calced_time.strftime(config.TIME_FORMAT)
+
+def calc_timeGap(start_time: str, end_time: str) -> str:
+    time_1 = datetime.strptime(start_time, config.TIME_FORMAT)
+    time_2 = datetime.strptime(end_time, config.TIME_FORMAT)
+
+    time_interval = time_2 - time_1
+
+    hour_gap, min_gap = divmod(time_interval.seconds, 3600)
+
+    time_gap = {
+        "days": time_interval.days,
+        "hour": hour_gap,
+        "min": min_gap // 60
+    }
+
+    return time_gap
+
+def clean_strData(str_data: str):
+    v1 = str_data.replace('"', "")
+    v2 = v1.replace("'", "")
+    v3 = v2.replace(" ", "")
+
+    return v3
+
+def convert_MySQLjson_to_Dict(sql_data: str) -> dict:
+    # Convert Mysql JSON to Python Dict
+    v1 = sql_data.replace("{", "")
+    v2 = v1.replace("}", "")
+    v3 = v2.replace(" ", "")
+
+    return read_target_stringInfo(v3)
+
+
+def convert_dict_to_MySQLjson(dict_data:dict)->str:
+    data_list=[]
+    for key,value in dict_data.items():
+        store_form=f'"{key}" : "{value}"'
+        data_list.append(store_form)
+
+    result="'{"+f'{", ".join(data_list)}'+"}'"
+
+    return result
+
+def update_target_coin(origin_data:dict, update_data:dict)->dict:
+    try:
+        for key,value in update_data.items():
+            origin_data[key]=value
+
+    except KeyError:
+        print("update_target_coin klet eERror!")
+        return {}
+    else:
+        return origin_data
+
+def read_target_stringInfo(data: str) -> dict:
+    dict_converted = {}
+
+    if check_target_coin_data(data)==True:
+        data_list = data.split(",")
+
+        for data in data_list:
+            if data != "":
+                data_format = data.split(":")
+
+                dict_converted[clean_strData(data_format[0])] = clean_strData(data_format[1])
+
+    return dict_converted
+
+def update_stringInfo(origin_data: str, update_data: dict) -> str:
+    origin_dict = read_target_stringInfo(origin_data)
+
+    # Update Data
+    for key, update_value in update_data.items():
+        origin_dict[key] = update_value
+
+    # Convert to String
+    result = []
+
+    for key, value in origin_dict.items():
+        result.append(key + ":" + value)  # 연결자 => :
+
+    return ",".join(result)  # 연결자 => ,
+
+def check_target_coin_data(data:str)->bool:
+
+    if data=="1" or data==1:
+        return False
+
+    if data!="" and ":" in data:
+        return True
+    else:
+        return False
+
+def get_current_kst_Time():
+    now_time = datetime.now().strftime(config.TIME_FORMAT) # TIME_FORMAT="%Y-%m-%d %H:%M:%S"
+
+    # datetime 값으로 변환
+    utc_time_format = datetime.strptime(now_time,config.TIME_FORMAT)
+
+    # KST 시간을 구하기 위해 +9시간
+    kst_time_format = utc_time_format #+ timedelta(hours=9)
+
+    # 일자 + 시간 문자열로 변환
+    return kst_time_format.strftime(config.TIME_FORMAT)
 
 def is_timeOver(generation_time:str, code_lifetime:int)->bool:   # format : "2022-06-12 02:04:46"
     # [today time info]
@@ -33,15 +186,12 @@ def is_timeOver(generation_time:str, code_lifetime:int)->bool:   # format : "202
 
     # 시간이 다르면 Over로 판단
     if time_hour!=today_hour:
-        print("time_hour",time_hour)
-        print("today_hour",today_hour)
+
         return True
     else:
         record_info_SEC = (time_min*60) + (time_sec)
         today_info_SEC=(today_min*60) + (today_sec)
 
-        print("record_info_SEC",record_info_SEC)
-        print("today_info_SEC=",today_info_SEC)
         if (today_info_SEC-record_info_SEC)> code_lifetime:
             return True
         else:
@@ -158,10 +308,33 @@ def gen_loginCode(code_info: dict) -> str:
         pass  # 다른 방법
 
 
-
-if __name__ == '__main__':
-    code_info = {
-        "code_method": 0,
-        "code_length": 8
+def get_trading_strategy_Obj(target_coin_id:int, login_userDB):
+    # Get UPBIT API Info
+    upbit_apiInfo={
+        "upbit_access_key":login_userDB["upbit_access_key"],
+        "upbit_secret_key":login_userDB["upbit_secret_key"]
     }
 
+    # Get Target Coin Info
+    target_coinInfo=login_userDB[f"target_coin{target_coin_id}"]
+
+    # Create Trading_Config Class Obj
+    Trading_config=Upbit_Trade.Trading_Config()
+
+    # Crate UpbitTrade.Strategy Cls Obj
+    if target_coin_id==1:
+        strategy_obj =Upbit_Trade.Strategy1.Strategy()
+    else:
+        pass
+
+    # Load Data
+    strategy_obj.load_configData(upbit_apiInfo=upbit_apiInfo,
+                            target_coinInfo=target_coinInfo)
+
+
+    return strategy_obj
+
+
+
+if __name__ == '__main__':
+    pass

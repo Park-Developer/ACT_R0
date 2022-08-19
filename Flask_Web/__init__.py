@@ -1,10 +1,20 @@
 import os
-
+import sys
 from flask import Flask
+
+import os,sys,inspect
+currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+print("current dit",currentdir)
+parentdir = os.path.dirname(currentdir)
+print("paremt dit",parentdir)
+sys.path.insert(0,parentdir)
+
 import config
 
 master = config.Master()
 service= config.Service()
+
+
 
 def create_app(test_config=None):
     # create and configure the app
@@ -32,8 +42,7 @@ def create_app(test_config=None):
     def hello():
         return 'Hello, World!'
 
-
-
+    # blueprint Register
     from . import index
     app.register_blueprint(index.bp)
 
@@ -58,7 +67,14 @@ def create_app(test_config=None):
     from . import setting
     app.register_blueprint(setting.bp)
 
+    from . import server
+    app.register_blueprint(server.bp)
+
+    from . import backtest
+    app.register_blueprint(backtest.bp)
+
+    # CLI Register
     from . import cli
     cli.make_CLI(app) # CLI 생성
-    
+
     return app

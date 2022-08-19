@@ -67,6 +67,15 @@ background-color: lightblue;
 }
 
 /* [POST PART] */
+
+.VIEW_POST_COMPONENT{
+display:flex;
+}
+
+.POST_BUTTON_LIKE{
+justify-content: flex-end;
+}
+
 .NORMAL_Btn_property{
     background-color: yellow;
 }
@@ -77,4 +86,8 @@ background-color: lightblue;
 
 .DISLIKE_Btn_property{
     background-color: red;
+}
+
+.VIEW_POST__keep{
+    background-color:gray;
 }

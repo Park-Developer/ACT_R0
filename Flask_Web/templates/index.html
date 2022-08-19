@@ -2,7 +2,7 @@
 
 <!--[ --- HEADER --- ]-->
 {% block header %}
-    <h1>{% block title %}Home{% endblock %}</h1>
+    <h1><i class="fa-solid fa-house-chimney"></i> {% block title %}Home{% endblock %}</h1>
 
     {% if g.user %}
       <a class="action" href="{{ url_for('blog.create') }}">New</a>
@@ -24,10 +24,10 @@
 
 <!--[ --- RANKING PART --- ]-->
 <section class="Ranking">
-  <h1 class="section_header_style USER__Header">User List</h1>
+  <h1 class="section_header_style USER__Header"><i class="fa-solid fa-user"></i> User List</h1>
 
-  <table class="User_list__table ">
-    <tr class="User_table__header section_table_header_style">
+  <table class="User_list__table table_style">
+    <tr class="User_table__header section_table_header_style table_hearder_style">
       <th>Username</th>
       <th>Tier</th>
       <th>Performance</th>
@@ -52,49 +52,55 @@
 
 <!-- FORUM PART -->
   <section class="POST">
-    <h1 class="section_header_style FORUM__Header">Post Lists</h1>
+    <h1 class="section_header_style FORUM__Header"><i class="fa-solid fa-pencil"></i> Post Lists</h1>
 
-    <div class="POST_button" >
-        <form class="Post_button__search" method="post" >
-            <div style="display:flex">
-            <!-- (1) Filter -->
-            <select name="Post_Filter" id="Post_Filter">
-              <option value="date">Date</option>
-              <option value="type">Type</option>
-              <option value="popular">Popular</option>
-              <option value="review">Review</option>
-            </select>
 
-            <!-- (2) Find -->
-            <input name="Post_Filter_word" value="Search Title" class="post_find__input" type="text">
-            <button name="Post_Filter_btn" onclick="window.location.href='{{ url_for('post.find_post')}}';" type="submit" class="post_find__button">Find</button>
+        <form class="Post_button__search post_search_bar" method="post" >
+            <div class="post_search_bar_block">
+              <!-- [ TEXT INPUT ] -->
+              <div class="post_search_bar__input">
+                <input name="Post_Filter_word" placeholder="Search Title" class="post_find__input" type="text">
+              </div>
 
-            <!-- (3) New -->
-            <button type="button" onclick="location.href='new_post'">New</button>
+              <!-- [ NEW or Search BUTTON ] -->
+              <div class="post_search_bar__btn">
+                <button name="Post_Filter_btn" onclick="window.location.href='{{ url_for('post.find_post')}}';" type="submit" class="post_find__button"><i class="fa-solid fa-magnifying-glass"></i></button>
+                <button type="button" onclick="location.href='new_post'" class="post_new__button"><i class="fa-solid fa-plus"></i></button>
+              </div>
             </div>
         </form>
-    </div>
+
 
     <div class="POST_list">
       <hr> <!--구분선-->
 
-      <table class="POST_list__table">
+      <table class="POST_list__table table_style">
         <!-- table header -->
-        <tr class=list__table_header>
-          <th>Date</th>
-          <th>Type</th>
+        <tr class="list__table_header table_hearder_style">
+          <th>
+            <form>
+              <select name="Post_Filter" id="Post_Filter">
+                <option selected value="All">All</option>
+                <option value="market_condition">시황</option>
+                <option value="forum">종목토론</option>
+                <option value="etc">기타</option>
+              </select>
+            </form>
+          </th>
           <th>Title</th>
-          <th>Author</th>
-          <th>View</th>
-          <th>Like</th>
-          <th>Dislike</th>
+          <th><i class="fa-solid fa-user"></i></th>
+          <th>Date</th>
+          <th><i class="fa-solid fa-eye"></i></th>
+          <th><i class="fa-solid fa-thumbs-up" style="color:blue" ></i></th>
+          <th><i class="fa-solid fa-thumbs-down" style="color:red"></i></th>
+
         </tr>
 
         <!-- table body -->
         {% for post in posts %}
           <tr class="post_{{loop.index}}_row">
-              <td class="post_{{loop.index}}_row_date">{{post['created']}}</td>
-              <td class="post_{{loop.index}}_row_type">개발필</td>
+
+              <td class="post_{{loop.index}}_row_type">{{post['type']}}</td>
 
               <td class="post_{{loop.index}}_row_title">
                 <a href="view_post/{{loop.index}}">
@@ -102,17 +108,27 @@
                 </a> <!--post를 볼 수 있는 링크-->
               </td>
 
-              <td class="post_{{loop.index}}_row_author">{{post['author_id']}}</td>
-              <td class="post_{{loop.index}}_row_view">개발필</td>
-              <td class="post_{{loop.index}}_row_like">개발필</td>
-              <td class="post_{{loop.index}}_row_dislike">개발필</td>
+              <!-- authod_id를 통해 user table index 접근 -->
+              <td class="post_{{loop.index}}_row_author">{{users[post['author_id']-1]['username']}}</td>
+
+              <td class="post_{{loop.index}}_row_date">{{post['created']}}</td>
+              <td class="post_{{loop.index}}_row_view">{{post['view_num']}}</td>
+              <td class="post_{{loop.index}}_row_like">{{post['like_num']}}</td>
+              <td class="post_{{loop.index}}_row_dislike">{{post['dislike_num']}}</td>
+
           </tr>
         {% endfor %}
       </table>
     </div>
 
-
-
   </section>
+
+<!--                TEST               -->
+<section>
+<h1>TEST</h1>
+
+</section>
+
+<script src="{{url_for('static', filename='index.js')}}"></script>
 
 {% endblock %}

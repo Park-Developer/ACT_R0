@@ -1,31 +1,13 @@
 {% extends 'base.html' %}
 
 {% block header %}
-  <h1>{% block title %}Account{% endblock %}</h1>
+  <h1><i class="fa-solid fa-user"></i> {% block title %}Account{% endblock %}</h1>
 {% endblock %}
 
 {% block content %}
 
-{% if user_info['username']=="master" %}
-  <section class="SERVER_PART">
-
-    <h1 class="section_header_style">Server</h1>
-
-    <div>
-      <label>Server State</label> <span></span>
-    </div>
-
-    <div>
-      <form method=get>
-        <button type="button" onclick="location.href='manage'">Management</button>
-        <button type="button" onclick="location.href='statistics'">Statistics</button>
-      </form>
-    </div>
-  </section>
-{% endif %}
-
 <section class="PROFILE_PART">
-    <h1 class="section_header_style">Profile</h1>
+    <h1 class="section_header_style"><i class="fa-solid fa-user"></i> Profile</h1>
 
     <div class="PROFILE">
         <div class="PROFILE_IMG">
@@ -35,22 +17,22 @@
         <div class="PROFILE_PERSONAL">
             <!-- 1. Username -->
             <div>
-                <label class="PERSONAL__username">1. Username : </label> <span class="PERSONAL__username_data">{{user_info["username"]}}</span>
+                <label class="PERSONAL__username">1. Username : </label> <span class="PERSONAL__username_data">{{login_userDB["username"]}}</span>
             </div>
 
             <!-- 2. Email -->
             <div>
-                <label class="PERSONAL__email">2. E-mail : </label> <span class="PERSONAL__email_data">{{user_info["email"]}}</span>
+                <label class="PERSONAL__email">2. E-mail : </label> <span class="PERSONAL__email_data">{{login_userDB["email"]}}</span>
             </div>
 
             <!-- 3. Tier -->
             <div>
-                <label class="PERSONAL__tier">3. Tier : </label> <span class="PERSONAL__tier_data">{{user_info["tier"]}}</span>
+                <label class="PERSONAL__tier">3. Tier : </label> <span class="PERSONAL__tier_data">{{login_userDB["tier"]}}</span>
             </div>
 
-            <!-- 4. Reference -->
+            <!-- 4. Post -->
             <div>
-                <label class="PERSONAL__reference">4. Reference : </label> <span class="PERSONAL__reference_data">개발필</span>
+                <label class="PERSONAL__post">4. Post : </label> <span class="PERSONAL__post_data">개발필</span>
             </div>
         </div>
     </div>
@@ -62,61 +44,71 @@
 
 
 <section class="PERFORMANCE_PART">
-<h1 class="section_header_style">Performance</h1>
+<h1 class="section_header_style"><i class="fa-brands fa-btc"></i> Trading State</h1>
 
-    <h2>계좌 정보</h2>
-    <div class="ACCOUNT_DISPLAY">
-        <!-- Update 날짜 -->
-        <div>
-            <label>Update Time : </label>
+{% if login_userDB %} <!--User가 있는 경우-->
+  <table class="PERFORMANCE_trading_table table_style">
+    <!-- [ TABLE HEAD ] -->
+    <tr class="table_hearder_style">
+      <th>Coin</th>
+      <th>매매전략</th>
+      <th>원금</th>
+      <th>수익</th>
+      <th>수익률</th>
+      <th>오늘거래량</th>
+      <th>누적거래량</th>
+      <th>Trading Start</th>
+      <th>Trading End</th>
+      <th>Trading Remain</th>
+      <th>Mode</th>
+      <th>State</th>
+    </tr>
 
-            <span class="DISPLAY__updatetime_val">
+    <!-- [ TABLE BODY ] -->
+    {% set MAX_COIN_NUMBER=5 %}            {# config.json에서 5로 정의 #}
 
-            </span>
-        </div>
+    {% for coin_idx in range(MAX_COIN_NUMBER) %}
+      {% if login_userDB["target_coin"+loop.index|string] %}
+        <tr class="coin_setting_state_{{loop.index}}">
+          <td class="personal_TT__coin_{{loop.index}}">{{login_userDB["target_coin"+loop.index|string]["market"]}}</td>
+          <td class="personal_TT__trading_strategy_{{loop.index}}">{{login_userDB["target_coin"+loop.index|string]["strategy"]}}</td>
+          <td class="personal_TT__principal_{{loop.index}}">{{login_userDB["target_coin"+loop.index|string]["principal"]}}</td>
 
-        <!-- 보유 현금 -->
-        <div>
-            <label>현금 현황 : </label>
+          <td class="personal_TT__earnings_{{loop.index}}">{{login_userDB["target_coin"+loop.index|string]["earning"]}}</td>
+          <td class="personal_TT__earnings_rate_{{loop.index}}">{{login_userDB["target_coin"+loop.index|string]["earning_rate"]}}</td>
+          <td class="personal_TT__today_trading_val_{{loop.index}}">{{login_userDB["target_coin"+loop.index|string]["today_tradingNum"]}}</td>
+          <td class="personal_TT__accum_trading_val_{{loop.index}}">{{login_userDB["target_coin"+loop.index|string]["accum_tradingNum"]}}</td>
 
-            <span class="DISPLAY__cash_balance_val">
+          <!-- start time -->
+          {% set start_time_list=login_userDB['target_coin'+loop.index|string]['start_time'].split("-") %}
+          <td class="personal_TT__trading_start_{{loop.index}}">{{start_time_list[0]}}-{{start_time_list[1]}}-{{start_time_list[2]}} {{start_time_list[3]}}:{{start_time_list[4]}}:{{start_time_list[5]}}</td>
 
-            </span>
-        </div>
+          <!-- end time -->
+          {% set end_time_list=login_userDB['target_coin'+loop.index|string]['end_time'].split("-") %}
+          <td class="personal_TT__trading_end_{{loop.index}}">{{end_time_list[0]}}-{{end_time_list[1]}}-{{end_time_list[2]}} {{end_time_list[3]}}:{{end_time_list[4]}}:{{end_time_list[5]}}</td>
 
-        <!-- 보유 코인 -->
-        <div>
-            <label>코인 현황 : </label>
+          <!-- remain time -->
+          <td class="personal_TT__trading_remain_{{loop.index}}"></td>
 
-            <span class="DISPLAY__coin_balance_val">
+          <!-- trading mode -->
+          <td class="personal_TT__trading_mode_{{loop.index}}">{{login_userDB["target_coin"+loop.index|string]["mode"]}}</td>
 
-            </span>
-        </div>
+          <!-- trading state -->
+          <td class="personal_TT__trading_state_{{loop.index}}">{{login_userDB["target_coin"+loop.index|string]["state"]}}</td>
+        </tr>
+      {% endif %}
+    {% endfor %}
 
-        <!-- 원금 -->
-        <div>
-            <label>원금 : </label> <span class="DISPLAY__principal_val">개발필</span>
-        </div>
+  </table>
+{% endif %}
 
-    </div>
-
-    <h2>거래 실적</h2>
-    <div class="TRADING_DISPLAY">
-        <!-- 오늘 정보 -->
-        <div>
-            <label>Today : </label> <span>asdasd</span>
-        </div>
-
-        <!-- 지난 실적 -->
-        <div>
-            <label>History : </label> <span>asdasd</span>
-        </div>
-    </div>
 </section>
 
 
 <section class="LOG_PART">
-    <h1 class="section_header_style">Trading Log</h1>
+    <h1 class="section_header_style"><i class="fa-solid fa-file-lines"></i> Trading Log</h1>
     <P>: 최근 10개의 거래 기록</P>
 </section>
+
+<script src="{{url_for('static', filename='account.js')}}"></script>
 {% endblock %}

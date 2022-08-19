@@ -5,3 +5,12 @@ display:flex;
 .PROFILE_PERSONAL{
 
 }
+
+.personal_TT_updateTime{
+    float: right;
+}
+
+.coin_setting_state{
+
+      text-align: center;
+}
