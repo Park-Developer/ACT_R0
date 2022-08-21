@@ -10,128 +10,216 @@
 <!--[ BODY ]-->
 {% block content %}
 
-{# ---------------------- [1] BACKTESTING ENVIRONMENT ---------------------- #}
+{# ---------------------- [1] BACKTESTING DASHBOARD ---------------------- #}
 <section>
-  <h1 class="section_header_style">Backtesting Setting</h1>
-
-  <div class="backtesting_setting_info">
-    {# ---------------------- [1-1] BACKTESTING DATA PART ---------------------- #}
-    <div class="backtesting_data_setting_part">
-      <h1><i class="fa-solid fa-square"></i> Data Inforamtion</h1>
-
-      <ul class="backtesting_data_setting_list">
-        <!-- (1) Market -->
-        <li>
-          <label class="backtest_market">Market : </label>
-          <span class="backtest_market__val">{{login_userDB["target_coin"+target_coin_id|string]["market"]}}</span>
-        </li>
-
-        <!-- (2) Data Unit -->
-        <li>
-          <label class="backtest_data_unit">Data Unit : </label>
-          <span class="backtest_data_unit__val">{{request_data["data_unit"]}}</span>
-        </li>
-
-        <!-- (3) Data Number -->
-        <li>
-          <label class="backtest_data_number">Data Number : </label>
-          <span class="backtest_data_number__val">{{request_data["data_number"]}}</span>
-        </li>
-
-        <!-- (4) Test Speed -->
-        <li>
-          <label class="backtest_speed">Backtest Speed : </label>
-          <span class="backtest_speed__val">{{request_data["test_speed"]}}</span>
-        </li>
-
-        <li>
-          <label class="backtest_maxPrice">Max Price : </label>
-          <span class="backtest_maxPrice__val"></span>
-        </li>
-        <!--(2) Min Price -->
-        <li>
-          <label class="backtest_minPrice">Min Price : </label>
-          <span class="backtest_minPrice__val"></span>
-        </li>
-        <!--(3) Average Price -->
-        <li>
-          <label class="backtest_averagePrice">Average Price : </label>
-          <span class="backtest_averagePrice__val"></span>
-        </li>
-      </ul>
-    </div>
+<h1 class="section_header_style">Backtesting Dashboard</h1>
+</section>
 
 
-    {# ---------------------- [1-2] BACKTESTING STRATEGY PART ---------------------- #}
-    <div class="backtesting_data_setting_part">
-      <h1><i class="fa-solid fa-square"></i> Strategy Inforamtion</h1>
-
-      <ul class="backtesting_data_setting_list">
-        <li>
-          <label>asd</label><span></span>
-        </li>
-      </ul>
-    </div>
-
-
-    {# ---------------------- [1-3] USER SETTING PART ---------------------- #}
+<div class="backtesting_setting_info">
+  {# ---------------------- [1-1] USER SETTING PART ---------------------- #}
+  <section>
     <div class="backtesting_user_setting_part">
       <h1><i class="fa-solid fa-square"></i> User Setting</h1>
 
       <ul class="backtesting_user_setting_list">
+        <!-- (1) Market -->
         <li>
-          <label>asd</label><span></span>
+          <label class="backtest_usersetting_market">Market : </label>
+          <span class="backtest_usersetting__market__val">{{login_userDB["target_coin"+target_coin_id|string]["market"]}}</span>
+        </li>
+
+        <!-- (2) Data Unit -->
+        <li>
+          <label class="backtest_usersetting__unit">Data Unit : </label>
+          <span class="backtest_usersetting__unit__val">{{backtest_setting_data["training_data_unit"]}}</span>
+        </li>
+
+        <!-- (3) Period-->
+        <li>
+          <label class="backtesting_usersetting_peiod">Trading Period : </label>
+          <span class="backtesting_usersetting_period__val">{{login_userDB["target_coin"+target_coin_id|string]["period"]}}</span>
+        </li>
+
+        <!-- (4) Monitoring Time -->
+        <li>
+          <label class="backtesting_usersetting_monitoringtime">Monitoring Time : </label>
+          <span class="backtesting_usersetting_monitoringtime__val">{{backtest_setting_data["monitoring_time"]}}</span>
+        </li>
+
+        <!-- (5) Simulation Data Number-->
+        <li>
+          <label class="backtesting_usersetting_datanumber">Data Number : </label>
+          <span class="backtesting_usersetting_datanumber__val"></span> <!-- JS에서 계산 -->
         </li>
       </ul>
     </div>
+  </section>
 
 
-    {# ------------------------------------------------------------------------------------ #}
+  {# ---------------------- [1-2] TRAINING DATA ---------------------- #}
+  <section>
+    <div class="backtesting_trainingdata_part">
+      <h1><i class="fa-solid fa-square"></i> Training Data</h1>
 
-  </div>
-</section>
+      <ul class="backtesting_trainingdata_list">
+        <!-- (1) Simulation Start Time-->
+        <li>
+          <label class="backtest_trainingdata_starttime">Start Time : </label>
+          <span class="backtest_trainingdata_starttime__val">
+            <!-- Time Format : YYYY-MM-DD HH:MM:SS -->
+            {{backtest_setting_data["training_starttime_year"]}}-{{backtest_setting_data["training_starttime_month"]}}-{{backtest_setting_data["training_starttime_day"]}}
+
+            {{backtest_setting_data["training_starttime_hour"]}}:{{backtest_setting_data["training_starttime_minute"]}}:00
+          </span>
+        </li>
+
+        <!-- (2) Simulation End Time-->
+        <li>
+          <label class="backtest_trainingndata_endtime">End Time : </label>
+          <span class="backtest_trainingdata_endtime__val"></span>  <!-- JS에서 계산 -->
+        </li>
+
+
+        <!-- (5) Max Price -->
+        <li>
+          <label class="backtest_trainingdata_maxPrice">Max Price : </label>
+          <span class="backtest_trainingdata_maxPrice__val"></span>  <!-- backtest_run.js에서 계산 -->
+        </li>
+        <!-- (6) Min Price -->
+        <li>
+          <label class="backtest_trainingdata_minPrice">Min Price : </label>
+          <span class="backtest_trainingdata_minPrice__val"></span> <!-- backtest_run.js에서 계산 -->
+        </li>
+        <!-- (7) Average Price -->
+        <li>
+          <label class="backtest_trainingdata_averagePrice">Average Price : </label>
+          <span class="backtest_trainingdata_averagePrice__val"></span> <!-- backtest_run.js에서 계산 -->
+        </li>
+      </ul>
+    </div>
+  </section>
+
+
+  {# ---------------------- [1-3] BACKTESTING SIMULATION DATA ---------------------- #}
+  <section>
+    <div class="backtesting_simulationdata_part">
+      <h1><i class="fa-solid fa-square"></i> Backtesting Data</h1>
+
+      <ul class="backtesting_simulationdata_list">
+        <!-- (1) Simulation Start Time-->
+        <li>
+          <label class="backtest_simulationdata_starttime">Start Time : </label>
+          <span class="backtest_simulationdata_starttime__val">
+            <!-- Time Format : YYYY-MM-DD HH:MM:SS -->
+            {{backtest_setting_data["backtest_starttime_year"]}}-{{backtest_setting_data["backtest_starttime_month"]}}-{{backtest_setting_data["backtest_starttime_day"]}}
+
+            {{backtest_setting_data["backtest_starttime_hour"]}}:{{backtest_setting_data["backtest_starttime_minute"]}}:00
+          </span>
+        </li>
+
+        <!-- (2) Simulation End Time-->
+        <li>
+          <label class="backtest_simulationdata_endtime">End Time : </label>
+          <span class="backtest_simulationdata_endtime__val"></span>  <!-- JS에서 계산 -->
+        </li>
+
+        <!-- (5) Max Price -->
+        <li>
+          <label class="backtest_simulationdata_maxPrice">Max Price : </label>
+          <span class="backtest_simulationdata_maxPrice__val"></span>  <!-- backtest_run.js에서 계산 -->
+        </li>
+
+        <!-- (6) Min Price -->
+        <li>
+          <label class="backtest_simulationdata_minPrice">Min Price : </label>
+          <span class="backtest_simulationdata_minPrice__val"></span> <!-- backtest_run.js에서 계산 -->
+        </li>
+
+        <!-- (7) Average Price -->
+        <li>
+          <label class="backtest_simulationdata_averagePrice">Average Price : </label>
+          <span class="backtest_simulationdata_averagePrice__val"></span> <!-- backtest_run.js에서 계산 -->
+        </li>
+
+      </ul>
+    </div>
+  </section>
+
+  {# ------------------------------------------------------------------------------------- #}
+</div>
+
 
 {# ---------------------- [2] BACKTESTING MONITORING ---------------------- #}
 <section>
   <h1 class="section_header_style">Backtesting Simulation</h1>
-  <div class="backtesting_simulation">
-    <div class="backtesting_sim_graph">
-      <h1><i class="fa-solid fa-square"></i> Trading Graph</h1>
 
-      <canvas class="backtest_Chart" id="backtest_Chart" width="400" height="400"></canvas>
-    </div>
+  <div class="training_n_backtesting_monitoring">
+    <!-- < trading monitoring > -->
+    <article>
+      <div class="training_monitoring">
+        <h1><i class="fa-solid fa-square"></i> Trading Monitoring</h1>
 
-    <div class="backtesting_sim_status">
-      <h1><i class="fa-solid fa-square"></i> Trading Data</h1>
+        <canvas class="training_Chart" id="training_Chart" width="400" height="400"></canvas>
 
-      <ul class="backtesting_sim_status_list">
-        <li>
-          <label>Reference Price : </label>
-          <span></span>
-        </li>
+        <ul class="training_status_list">
+          <li>
+            <label>Reference Price : </label>
+            <span></span>
+          </li>
 
-        <li>
-          <label>Max Bidding Price : </label>
-          <span></span>
-        </li>
+          <li>
+            <label>Max Bidding Price : </label>
+            <span></span>
+          </li>
 
-        <li>
-          <label>Bid Installment Count : </label>
-          <span></span>
-        </li>
+          <li>
+            <label>Bid Installment Count : </label>
+            <span></span>
+          </li>
 
-        <li>
-          <label>Min Asking Price : </label>
-          <span></span>
-        </li>
+          <li>
+            <label>Min Asking Price : </label>
+            <span></span>
+          </li>
 
-        <li>
-          <label>Ask Installment Count : </label>
-          <span></span>
-        </li>
-      </ul>
-    </div>
+          <li>
+            <label>Ask Installment Count : </label>
+            <span></span>
+          </li>
+        </ul>
+
+      </div>
+    </article>
+
+    <!-- < backtesting monitoring > -->
+    <article>
+      <div class="backtesting_monitoring">
+        <h1><i class="fa-solid fa-square"></i> Backtesting Monitoring</h1>
+
+        <canvas class="backtest_Chart" id="backtest_Chart" width="400" height="400"></canvas>
+
+        <ul class="backtest_status_list">
+          <li>
+            <label>Earning : </label>
+            <span></span>
+          </li>
+
+          <li>
+            <label>Earning Rate : </label>
+            <span></span>
+          </li>
+
+          <li>
+            <label>Trading Number : </label>
+            <span></span>
+          </li>
+
+        </ul>
+      </div>
+    </article>
   </div>
+
 </section>
 
   <input type="range" min="1" max="100" value="50" class="slider" id="myRange">
@@ -147,6 +235,6 @@
   <h1 class="section_header_style">Backtesting Log</h1>
 </section>
 
-<script src="{{url_for('static', filename='backtest_run.js')}}"></script>
+<script src="{{url_for('static', filename='backtest/backtest_run.js')}}"></script>
 
 {% endblock %}

@@ -148,58 +148,71 @@ def get_API_expireDate(access_key,secret_key):
 
     return result[0]["expire_at"]
 
-def get_past_Minutes_coinData(market:str,count:int,minute_unit=1):
-    url = f"https://api.upbit.com/v1/candles/minutes/{minute_unit}?market={market}&count={count}"
+def get_past_Minutes_coinData(market:str,count:int,minute_unit=1,to:str=""):
+    if to=="":
+        url = f"https://api.upbit.com/v1/candles/minutes/{minute_unit}?market={market}&count={count}"
+    else:
+        url = f"https://api.upbit.com/v1/candles/minutes/{minute_unit}?market={market}&to={to}&count={count}"
+
     headers = {"Accept": "application/json"}
     response = requests.get(url, headers=headers)
     res_data=response.json()
 
     return res_data
 
-def get_past_Days_coinData(market:str,count:int):
-    url = f"https://api.upbit.com/v1/candles/days?market={market}&count={count}"
+def get_past_Days_coinData(market:str,count:int,to:str=""):
+    if to=="":
+        url = f"https://api.upbit.com/v1/candles/days?market={market}&count={count}"
+    else:
+        url = f"https://api.upbit.com/v1/candles/days?market={market}&to={to}&count={count}"
     headers = {"Accept": "application/json"}
     response = requests.get(url, headers=headers)
     res_data=response.json()
 
     return res_data
 
-def get_past_Week_coinData(market:str,count:int):
-    url = f"https://api.upbit.com/v1/candles/weeks?market={market}&count={count}"
+def get_past_Week_coinData(market:str,count:int,to:str=""):
+    if to=="":
+        url = f"https://api.upbit.com/v1/candles/weeks?market={market}&count={count}"
+    else:
+        url = f"https://api.upbit.com/v1/candles/weeks?market={market}&to={to}&count={count}"
     headers = {"Accept": "application/json"}
     response = requests.get(url, headers=headers)
     res_data=response.json()
 
     return res_data
 
-def get_past_Month_coinData(market:str,count:int):
-    url = f"https://api.upbit.com/v1/candles/months?market={market}&count={count}"
+def get_past_Month_coinData(market:str,count:int,to:str=""):
+    if to=="":
+        url = f"https://api.upbit.com/v1/candles/months?market={market}&count={count}"
+    else:
+        url = f"https://api.upbit.com/v1/candles/months?market={market}&to={to}&count={count}"
     headers = {"Accept": "application/json"}
     response = requests.get(url, headers=headers)
     res_data=response.json()
 
     return res_data
 
-def get_past_coinData(market:str,count:int,data_unit:str):
+def get_past_coinData(market:str,count:int,data_unit:str,to:str=""):
     if "Minute" in data_unit:
         minute_unit=int(data_unit.replace("Minute","").strip())
-        past_data=get_past_Minutes_coinData(market,count,minute_unit=minute_unit)
+        past_data=get_past_Minutes_coinData(market,count,minute_unit=minute_unit,to=to)
 
     elif "Hour" in data_unit:
-        past_data =get_past_Minutes_coinData(market,count,minute_unit=60)
+        past_data =get_past_Minutes_coinData(market,count,minute_unit=60,to=to)
 
     elif "Day" in data_unit:
-        past_data =get_past_Days_coinData(market,count)
+        past_data =get_past_Days_coinData(market,count,to=to)
 
     elif "Week" in data_unit:
-        past_data =get_past_Week_coinData(market,count)
+        past_data =get_past_Week_coinData(market,count,to=to)
 
     elif "Month" in data_unit:
-        past_data =get_past_Month_coinData(market,count)
+        past_data =get_past_Month_coinData(market,count,to=to)
 
     return past_data
 
-def convert_pastData_to_Dict(market:str,count:int,data_unit:str)->dict:
+def convert_pastData_to_Dict(market:str,count:int,data_unit:str,to:str="")->dict:
     past_data=get_past_coinData(market,count,data_unit) # list
 
     opening_price=[]

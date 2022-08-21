@@ -1,11 +1,9 @@
 import logging
-import logging
-from telegram import Update,Bot
+from telegram import Update
 from telegram.ext import ApplicationBuilder, CallbackContext, CommandHandler
 # This part is for setting up logging module
 import bot_cmd
 import config
-import web_tool
 import basic_tool
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -29,7 +27,7 @@ USER-DEFINE COMMAND
 ----------------------------------------------------------'''
 # ACT_Check
 async def ACT_Check(update: Update, context: CallbackContext.DEFAULT_TYPE):
-    target_coinInfo, user_tradeInfo=bot_cmd.ACT_Check(config.BOT_INFO)
+    target_coinInfo, user_tradeInfo= bot_cmd.ACT_Check(config.BOT_INFO)
 
     # [1] Message Line about ticker Info
     ticker_info_ln0 = '*[Target Coin List & Current Price(KRW)]*'  # Any characters between ** will be send in bold format.
@@ -66,7 +64,7 @@ async def ACT_Web_Login(update: Update, context: CallbackContext.DEFAULT_TYPE): 
         user_email = context.args[0] # input user email
 
         # Access Code 생성
-        is_accessible, code, user_name=bot_cmd.ACT_Web_Login(user_email)
+        is_accessible, code, user_name= bot_cmd.ACT_Web_Login(user_email)
 
         if is_accessible == True:
             user_list_addr=config.ACCOUNT_CHECK_METHOD["USER_LIST_ADDRESS"]

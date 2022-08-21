@@ -16,8 +16,6 @@ import web_tool
 app = Flask(__name__)
 bp = Blueprint('monitoring', __name__, url_prefix='/monitoring')  # /monitoring/ ~\
 
-trading_info=config.BOT_INFO # JSON Format
-
 # test
 @bp.route('/test')
 def test():

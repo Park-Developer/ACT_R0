@@ -9,3 +9,12 @@
 .backtest_timesetting_div{
     display:flex;
 }
+
+.training_timesetting_div{
+  display:flex;
+}
+
+
+.training_n_backtesting_monitoring{
+  display:flex;
+}
