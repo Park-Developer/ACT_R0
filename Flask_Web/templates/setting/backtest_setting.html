@@ -42,19 +42,58 @@
 {# ---------------------- [2] Training & Backtesting Time Setting ---------------------- #}
 <section>
     <form action="/backtest/target_{{target_coin_id}}/run" method="post">
+      <!-- [2-1] Training Data Setting -->
       <article>
         <h1 class="section_header_style"><i class="fa-solid fa-database"></i> Training Data Setting</h1>
 
+        <!-- < Training Periond > -->
+        <div class="training_periodsetting_div">
+          <label><i class="fa-solid fa-square"></i> Training Period</label>
+
+          <select class="training_period_select" name="training_period_select" id="training_period_select">
+            <option selected value="Required">Required</option>
+
+            <option value="1 Hour">1 Hour</option>
+            <option value="10 Hour">10 Hour</option>
+            <option value="1 Day">1 Day</option>
+            <option value="1 Week">1 Week</option>
+          </select>
+        </div>
+
+        <!-- < Training Data Unit > -->
+        <div class="training_dataunitsetting_div">
+          <label><i class="fa-solid fa-square"></i> Training Data Unit</label>
+
+          <select class="training_dataunit_select" name="training_dataunit_select" id="training_dataunit_select">
+            <option selected value="Required">Required</option>
+
+            <option value="Minute">Minute</option>
+            <option value="Day">Dayr</option>
+            <option value="Week">Week</option>
+            <option value="Month">Month</option>
+          </select>
+        </div>
+
+        <!-- < Training Data Number > -->
+        <div class="training_datanumber_div">
+          <label class="training_datanumber_label"><i class="fa-solid fa-square"></i> Data Number : </label>
+          <span class="training_datanumber_label_val"></span>
+        </div>
+      </article>
+
+
+      <!-- [2-2] Training Start Time > -->
+      <article>
         <label><i class="fa-solid fa-square"></i> Training Start Time</label>
 
         <div class="training_timesetting_div training_starttime_setting">
-          <!-- (2-1) training time : year -->
+          <!-- (1) training time : year -->
           <div>
             <label class="training_starttime_year_label">Year : </label>
             <span class="training_starttime_year_val"></span>
           </div>
 
-          <!-- (2-2) backtest time : month -->
+          <!-- (2) backtest time : month -->
           <div>
             <label class="training_starttime_month_label">Month : </label>
 
@@ -64,7 +103,7 @@
             </select>
           </div>
 
-          <!-- (2-3) backtest time : day -->
+          <!-- (3) Training time : day -->
           <div>
             <label class="training_starttime_day_label">Day : </label>
             <select class="training_starttime_day_select" name="training_starttime_day" id="training_starttime_day">
@@ -73,7 +112,7 @@
             </select>
           </div>
 
-          <!-- (2-4) backtest time : Hour -->
+          <!-- (4) Training  time : Hour -->
           <div>
             <label class="training_starttime_hour_label">Hour : </label>
             <select class="training_starttime_hour_select" name="training_starttime_hour" id="training_starttime_hour">
@@ -82,7 +121,7 @@
             </select>
           </div>
 
-          <!-- (2-5) backtest time : Minute -->
+          <!-- (5) Training time : Minute -->
           <div>
             <label class="training_starttime_minute_label">Minute : </label>
             <select class="training_starttime_minute_select" name="training_starttime_minute" id="training_starttime_minute">
@@ -91,7 +130,7 @@
             </select>
           </div>
 
-          <!-- (2-6) backtest time : Second -->
+          <!-- (6) Training time : Second -->
           <div>
             <label class="training_starttime_second_label">Second : </label>
             <span class="training_starttime_second_val">00</span>
@@ -100,7 +139,9 @@
         </div>
       </article>
 
-      <!-- (4) Backtest End Time Setting -->
+      <hr>
+
+      <!-- [2-3] Training End Time Setting -->
       <article>
         <label><i class="fa-solid fa-square"></i> Training End Time</label>
 
@@ -144,7 +185,8 @@
         </div>
       </article>
 
-      <!-- (3) Backtest Start Time Setting -->
+
+      <!-- [2-4] Backtest Start Time Setting -->
       <article>
         <h1 class="section_header_style"><i class="fa-solid fa-clock-rotate-left"></i> Backtesting Time Setting</h1>
 
@@ -203,7 +245,8 @@
         </div>
       </article>
 
-      <!-- (4) Backtest End Time Setting -->
+
+      <!-- [2-5] Backtest End Time Setting -->
       <article>
         <label><i class="fa-solid fa-square"></i> Backtest End Time</label>
 
@@ -246,6 +289,7 @@
 
         </div>
       </article>
+
 
       <!-- (5) Test Speed -->
       <article>

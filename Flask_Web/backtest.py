@@ -57,10 +57,10 @@ def backtest_run(target_coin_id):
         backtest_starttime_hour =extract_NumberData_fromForm(request.form["backtest_starttime_hour"])       # origin form : backstart_hour_3
         backtest_starttime_minute = extract_NumberData_fromForm(request.form["backtest_starttime_minute"])  # origin form : backstart_minute_4
 
-        training_starttime_month =extract_NumberData_fromForm(request.form["training_starttime_month"])     # origin form : backstart_month_2
-        training_starttime_day =extract_NumberData_fromForm(request.form["training_starttime_day"])         # origin form : backstart_day_5
-        training_starttime_hour =extract_NumberData_fromForm(request.form["training_starttime_hour"])       # origin form : backstart_hour_3
-        training_starttime_minute = extract_NumberData_fromForm(request.form["training_starttime_minute"])  # origin form : backstart_minute_4
+        training_starttime_month =extract_NumberData_fromForm(request.form["training_starttime_month"])     # origin form : training_month_2
+        training_starttime_day =extract_NumberData_fromForm(request.form["training_starttime_day"])         # origin form : training_day_5
+        training_starttime_hour =extract_NumberData_fromForm(request.form["training_starttime_hour"])       # origin form : training_hour_3
+        training_starttime_minute = extract_NumberData_fromForm(request.form["training_starttime_minute"])  # origin form : training_minute_4
 
         # Get Strategy Info
         strategyDB = web_tool.get_strategyInfo(strategy_name="테스트용")
