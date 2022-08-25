@@ -44,7 +44,7 @@
         <!-- (4) Monitoring Time -->
         <li>
           <label class="backtesting_usersetting_monitoringtime">Monitoring Time : </label>
-          <span class="backtesting_usersetting_monitoringtime__val">{{backtest_setting_data["monitoring_time"]}}</span>
+          <span class="backtesting_usersetting_monitoringtime__val">{{strategyDB["monitoring_time"]}}</span>
         </li>
 
         <!-- (5) Simulation Data Number-->
@@ -63,7 +63,25 @@
       <h1><i class="fa-solid fa-square"></i> Training Data</h1>
 
       <ul class="backtesting_trainingdata_list">
-        <!-- (1) Simulation Start Time-->
+        <!-- (1) Training Period -->
+        <li>
+          <label class="backtest_trainingdata_period">Training Period : </label>
+          <span class="backtest_trainingdata_period__val">{{backtest_setting_data["training_peiod"]}}</span>
+        </li>
+
+        <!-- (2) Training Data Unit -->
+        <li>
+          <label class="backtest_trainingdata_dataUnit">Data Unit : </label>
+          <span class="backtest_trainingdata_dataUnit__val">{{backtest_setting_data["training_data_unit"]}}</span>
+        </li>
+
+        <!-- (3) Training Data Number -->
+        <li>
+          <label class="backtest_trainingdata_dataNumber">Data Number : </label>
+          <span class="backtest_trainingdata_dataNumber_val"></span>
+        </li>
+
+        <!-- (4) Training Start Time-->
         <li>
           <label class="backtest_trainingdata_starttime">Start Time : </label>
           <span class="backtest_trainingdata_starttime__val">
@@ -74,24 +92,25 @@
           </span>
         </li>
 
-        <!-- (2) Simulation End Time-->
+        <!-- (5) Training End Time-->
         <li>
           <label class="backtest_trainingndata_endtime">End Time : </label>
           <span class="backtest_trainingdata_endtime__val"></span>  <!-- JS에서 계산 -->
         </li>
 
-
-        <!-- (5) Max Price -->
+        <!-- (6) Max Price -->
         <li>
           <label class="backtest_trainingdata_maxPrice">Max Price : </label>
           <span class="backtest_trainingdata_maxPrice__val"></span>  <!-- backtest_run.js에서 계산 -->
         </li>
-        <!-- (6) Min Price -->
+
+        <!-- (7) Min Price -->
         <li>
           <label class="backtest_trainingdata_minPrice">Min Price : </label>
           <span class="backtest_trainingdata_minPrice__val"></span> <!-- backtest_run.js에서 계산 -->
         </li>
-        <!-- (7) Average Price -->
+
+        <!-- (8) Average Price -->
         <li>
           <label class="backtest_trainingdata_averagePrice">Average Price : </label>
           <span class="backtest_trainingdata_averagePrice__val"></span> <!-- backtest_run.js에서 계산 -->
@@ -106,8 +125,27 @@
     <div class="backtesting_simulationdata_part">
       <h1><i class="fa-solid fa-square"></i> Backtesting Data</h1>
 
+
       <ul class="backtesting_simulationdata_list">
-        <!-- (1) Simulation Start Time-->
+        <!-- (1) Simulation Period -->
+        <li>
+          <label class="backtest_simulationdata_period">Simulation Period : </label>
+          <span class="backtest_simulationdata_period__val"></span>  <!-- JS에서 계산 -->
+        </li>
+
+        <!-- (1) Simulation Data Unit -->
+        <li>
+          <label class="backtest_simulationdata_dataUnit">Data Unit : </label>
+          <span class="backtest_simulationdata_dataUnit__val"></span>  <!-- JS에서 계산 -->
+        </li>
+
+        <!-- (3) Simulation Data Number -->
+        <li>
+          <label class="backtest_simulationdata_dataNumber">Data Number : </label>
+          <span class="backtest_simulationdata_dataNumber__val"></span>  <!-- JS에서 계산 -->
+        </li>
+
+        <!-- (4) Simulation Start Time-->
         <li>
           <label class="backtest_simulationdata_starttime">Start Time : </label>
           <span class="backtest_simulationdata_starttime__val">
@@ -118,25 +156,25 @@
           </span>
         </li>
 
-        <!-- (2) Simulation End Time-->
+        <!-- (5) Simulation End Time-->
         <li>
           <label class="backtest_simulationdata_endtime">End Time : </label>
           <span class="backtest_simulationdata_endtime__val"></span>  <!-- JS에서 계산 -->
         </li>
 
-        <!-- (5) Max Price -->
+        <!-- (6) Max Price -->
         <li>
           <label class="backtest_simulationdata_maxPrice">Max Price : </label>
           <span class="backtest_simulationdata_maxPrice__val"></span>  <!-- backtest_run.js에서 계산 -->
         </li>
 
-        <!-- (6) Min Price -->
+        <!-- (7) Min Price -->
         <li>
           <label class="backtest_simulationdata_minPrice">Min Price : </label>
           <span class="backtest_simulationdata_minPrice__val"></span> <!-- backtest_run.js에서 계산 -->
         </li>
 
-        <!-- (7) Average Price -->
+        <!-- (8) Average Price -->
         <li>
           <label class="backtest_simulationdata_averagePrice">Average Price : </label>
           <span class="backtest_simulationdata_averagePrice__val"></span> <!-- backtest_run.js에서 계산 -->

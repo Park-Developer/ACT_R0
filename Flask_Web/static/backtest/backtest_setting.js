@@ -4,7 +4,7 @@ let usersetting_period_val_DOM=document.querySelector(".usersetting_period_val")
 let usersetting_monitoringtime_val_DOM=document.querySelector(".usersetting_monitoringtime_val");
 let usersetting_dataNum_val_DOM=document.querySelector(".usersetting_dataNum_val");
 
-// (2) Training Start Time Setting
+// (2) Training Setting
 let training_starttime_year_val_DOM=document.querySelector(".training_starttime_year_val");
 let training_starttime_month_select_DOM=document.querySelector(".training_starttime_month_select");
 let training_starttime_day_select_DOM=document.querySelector(".training_starttime_day_select");
@@ -12,7 +12,7 @@ let training_starttime_day_select_DOM=document.querySelector(".training_starttim
 let training_starttime_hour_select_DOM=document.querySelector(".training_starttime_hour_select");
 let training_starttime_minute_select_DOM=document.querySelector(".training_starttime_minute_select");
 
-// (3) Training End Time Setting
+
 let training_endtime_year_val_DOM=document.querySelector(".training_endtime_year_val");
 let training_endtime_month_val_DOM=document.querySelector(".training_endtime_month_val");
 let training_endtime_day_val_DOM=document.querySelector(".training_endtime_day_val");
@@ -20,7 +20,14 @@ let training_endtime_day_val_DOM=document.querySelector(".training_endtime_day_v
 let training_endtime_hour_val_DOM=document.querySelector(".training_endtime_hour_val");
 let training_endtime_minute_val_DOM=document.querySelector(".training_endtime_minute_val");
 
-// (4) Backtesting Start Time Setting
+
+let training_period_select_DOM=document.querySelector(".training_period_select");
+let training_dataunit_select_DOM=document.querySelector(".training_dataunit_select");
+
+let training_datanumber_val_DOM=document.querySelector(".training_datanumber_val");
+
+
+// (3) Backtesting Setting
 let backtest_starttime_year_val_DOM=document.querySelector(".backtest_starttime_year_val");
 let backtest_starttime_month_select_DOM=document.querySelector(".backtest_starttime_month_select");
 let backtest_starttime_day_select_DOM=document.querySelector(".backtest_starttime_day_select");
@@ -38,19 +45,22 @@ let backtest_endtime_minute_val_DOM=document.querySelector(".backtest_endtime_mi
 
 
 // ___________[ Global Variable Setting ]___________
-let back_starttime_input={
+let back_starttime_input={ // for .addEventListener("change", select_changeEvent);
   "input_month":0,
   "input_day":0,
   "input_hour":0,
   "input_minute":0
-}
+};
 
-let train_starttime_input={
+let train_starttime_input={ // for .addEventListener("change", select_changeEvent);
   "input_month":0,
   "input_day":0,
   "input_hour":0,
   "input_minute":0
-}
+};
+
+let train_period="";
+let train_dataunit="";
 
 // ___________[ Definition Function]___________
 function check_starttime_dateinput(input_month, input_day){
@@ -76,7 +86,7 @@ function init(){
   backtest_starttime_year_val_DOM.innerText=today.getFullYear();
   training_starttime_year_val_DOM.innerText=today.getFullYear();
 
-  // (2-1) Create Select Month Ootions : a
+  // (2-1) Create Select Month Ootions : Training, Backtest
   for(let month=1;month<=today.getMonth()+1;month++){
     // <Create Training Month Selector>
     let month_tr_option=document.createElement("option");
@@ -95,7 +105,7 @@ function init(){
     backtest_starttime_month_select_DOM.append(month_bt_option);
   }
 
-  // (2-2) Create Select Day Ootions
+  // (2-2) Create Select Day Ootions : Training, Backtest
   for(let day=1; day<=31; day++){
     // <Create Training Month Selector>
     let day_tr_option=document.createElement("option");
@@ -115,7 +125,7 @@ function init(){
     backtest_starttime_day_select_DOM.append(day_bt_option);
   }
 
-  // (2-3) Create Select Hour Ootions
+  // (2-3) Create Select Hour Ootions : Training, Backtest
   for(let hour=0; hour<=23; hour++){
     // <Create Training Month Selector>
     let hour_tr_option=document.createElement("option");
@@ -135,7 +145,7 @@ function init(){
 
   }
 
-  // (2-4) Create Select Minute Ootions
+  // (2-4) Create Select Minute Ootions : Training, Backtest
   for(let minute=0; minute<=59; minute++){
     // <Create Training Month Selector>
     let minute_tr_option=document.createElement("option");
@@ -154,9 +164,12 @@ function init(){
     backtest_starttime_minute_select_DOM.append(minute_bt_option);
   }
 
+
   // (3) Calculate Backtesting Data Number
   usersetting_dataNum_val_DOM.innerText=calc_dataNumber(trading_period=usersetting_period_val_DOM.innerText,
                                                         monitoring_time=usersetting_monitoringtime_val_DOM.innerText);
+
+
 
 }
 
@@ -256,6 +269,42 @@ backtest_starttime_month_select_DOM.addEventListener("change", select_changeEven
 backtest_starttime_day_select_DOM.addEventListener("change", select_changeEvent);
 backtest_starttime_minute_select_DOM.addEventListener("change", select_changeEvent);
 backtest_starttime_hour_select_DOM.addEventListener("change", select_changeEvent);
+
+
+
+function calc_training_dataNum(){
+  if(event.target.name.indexOf("period")!==-1){
+    if(event.target.value==="Required"){
+      train_period="";
+    }else{
+      train_period=training_period_select_DOM.value;
+    }
+
+  }else if(event.target.name.indexOf("dataunit")!==-1){
+    if(event.target.value==="Required"){
+      train_dataunit="";
+    }else{
+      train_dataunit=training_dataunit_select_DOM.value;
+    }
+  }
+  console.log("sexS");
+  // (3) Calculate Training Data Number
+  if(train_dataunit!=="" && train_period!==""){
+       // (3) Calculate Training Data Number
+       if (check_timeSize(train_period, train_dataunit)==true){
+         training_datanumber_val_DOM.innerText=calc_dataNumber(trading_period=training_period_select_DOM.value,
+                                                               monitoring_time=training_dataunit_select_DOM.value);
+       }else{
+         alert("유효하지 않은 시간설정입니다!");
+       }
+
+  }
+
+
+}
+
+training_period_select_DOM.addEventListener("change", calc_training_dataNum);
+training_dataunit_select_DOM.addEventListener("change", calc_training_dataNum);
 
 // ___________[ Function Execution ]___________
 init();

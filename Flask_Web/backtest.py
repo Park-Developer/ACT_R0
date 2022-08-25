@@ -5,6 +5,7 @@ from flask import (
     Blueprint, flash, g, redirect, render_template, request, url_for, jsonify
 )
 from Flask_Web import service
+import re
 
 from werkzeug.security import generate_password_hash
 
@@ -50,17 +51,41 @@ def backtest_run(target_coin_id):
             return number_Data
 
 
+    def extract_MinuteTime(data_type:str, time_data:str)->int:
+
+        if ("Minute" in time_data) or ("minute" in time_data):
+            time_unit=1
+        elif ("Hour" in time_data) or ("hour" in time_data):
+            time_unit=60
+        elif ("Day" in time_data) or ("day" in time_data):
+            time_unit = 60*24
+        elif ("Week" in time_data) or ("week" in time_data):
+            time_unit = 60*24*7
+
+        if data_type=="period" or data_type=="Period":
+            period=int(re.sub(r'[^0-9]','',time_data))
+
+            return period*time_unit
+        elif data_type=="dataunit" or data_type=="Dataunit":
+            return time_unit
+
     if request.method == "POST":
         # Extract Integer Data from Request Form
+
+        # (1) Training Data Setting
+        training_peiod=extract_MinuteTime(data_type="period", time_data=request.form["training_period_select"])
+        training_data_unit=extract_MinuteTime(data_type="dataunit", time_data=request.form["training_dataunit_select"])
+
+        training_starttime_month = extract_NumberData_fromForm(request.form["training_starttime_month"])  # origin form : btraining_month_2
+        training_starttime_day = extract_NumberData_fromForm(request.form["training_starttime_day"])  # origin form : btraining_day_5
+        training_starttime_hour = extract_NumberData_fromForm(request.form["training_starttime_hour"])  # origin form : btraining_hour_3
+        training_starttime_minute = extract_NumberData_fromForm(request.form["training_starttime_minute"])  # origin form : btraining_minute_4
+
+        # (2) Backtesting Time Setting
         backtest_starttime_month =extract_NumberData_fromForm(request.form["backtest_starttime_month"])     # origin form : backstart_month_2
         backtest_starttime_day =extract_NumberData_fromForm(request.form["backtest_starttime_day"])         # origin form : backstart_day_5
         backtest_starttime_hour =extract_NumberData_fromForm(request.form["backtest_starttime_hour"])       # origin form : backstart_hour_3
         backtest_starttime_minute = extract_NumberData_fromForm(request.form["backtest_starttime_minute"])  # origin form : backstart_minute_4
-
-        training_starttime_month =extract_NumberData_fromForm(request.form["training_starttime_month"])     # origin form : training_month_2
-        training_starttime_day =extract_NumberData_fromForm(request.form["training_starttime_day"])         # origin form : training_day_5
-        training_starttime_hour =extract_NumberData_fromForm(request.form["training_starttime_hour"])       # origin form : training_hour_3
-        training_starttime_minute = extract_NumberData_fromForm(request.form["training_starttime_minute"])  # origin form : training_minute_4
 
         # Get Strategy Info
         strategyDB = web_tool.get_strategyInfo(strategy_name="테스트용")
@@ -68,6 +93,8 @@ def backtest_run(target_coin_id):
         # Create Backesting Setting Data
         backtest_setting_data={
             # (1) tradining data
+            "training_peiod":training_peiod,
+            "training_data_unit":training_data_unit,
 
             # (2) simulation start time
             "backtest_starttime_year": datetime.datetime.now().date().strftime("%Y"),
@@ -90,9 +117,13 @@ def backtest_run(target_coin_id):
             "test_speed" : request.form["test_speed"]
         }
 
+        # Get Strategy Info
+        strategyDB = web_tool.get_strategyInfo(strategy_name="테스트용")
+
         return render_template('setting/backtest_run.html', login_userDB=login_userDB,
                                                             target_coin_id=target_coin_id,
-                                                            backtest_setting_data=backtest_setting_data)
+                                                            backtest_setting_data=backtest_setting_data,
+                                                            strategyDB=strategyDB)
 
 
 @bp.route('/get_backtestData', methods=('GET','POST'))
@@ -115,7 +146,6 @@ def get_backtestData(): # btn_type : stop, restart
     training_data=Upbit_Trade.upbit_tool.convert_pastData_to_Dict(market=market,
                                                          count=count,
                                                          data_unit=data_unit,to=training_end_time)
-
 
     # (3) Create Trading Data
     backtest_data = Upbit_Trade.upbit_tool.convert_pastData_to_Dict(market=market,

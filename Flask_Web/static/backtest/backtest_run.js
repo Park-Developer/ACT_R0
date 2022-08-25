@@ -27,6 +27,10 @@ let backtest_usersetting_monitoringtime__val_DOM=document.querySelector(".backte
 let backtest_usersetting_datanumber__val_DOM=document.querySelector(".backtesting_usersetting_datanumber__val");
 
 // (2) Training Data DOM
+let backtest_trainingdata_period__val =document.querySelector(".backtest_trainingdata_period__val");
+let backtest_trainingdata_dataUnit__val=document.querySelector(".backtest_trainingdata_dataUnit__val");
+let backtest_trainingdata_dataNumber_val=document.querySelector(".backtest_trainingdata_dataNumber_val");
+
 let training_starttime__val=document.querySelector(".backtest_trainingdata_starttime__val");
 let training_endtime__val=document.querySelector(".backtest_trainingdata_endtime__val");
 
@@ -224,23 +228,33 @@ function calc_Simul_endTime(start_time, period_setting,endtime_DOM){ // start_ti
 
 
 function init_backRun(){
-  // (1) Calc Simulation Data Number
-  user_Setting_period=backtest_usersetting_period__val_DOM.innerText;
-  monitoring_time=backtest_usersetting_monitoringtime__val_DOM.innerText
+  // [1] Calc Data Number
+
+  // (1-1) Calc User Setting Data Number
+  let user_Setting_period=backtest_usersetting_period__val_DOM.innerText;
+  let monitoring_time=backtest_usersetting_monitoringtime__val_DOM.innerText
 
   let simul_dataNum=calc_dataNumber(user_Setting_period, monitoring_time);
 
   backtest_usersetting_datanumber__val_DOM.innerText=simul_dataNum;
 
+  // (1-2)
+  let training_period= backtest_trainingdata_period__val.innerText;
+  let training_dataUnit=backtest_trainingdata_dataUnit__val.innerText;
+  console.log("calc_dataNumbe",training_period, training_dataUnit);
+  let training_dataNum=calc_dataNumber(training_period, training_dataUnit);
 
-  // (2) Calc Training End time
+  backtest_trainingdata_dataNumber_val.innerText=training_dataNum;
+
+
+  // [2] Calc Training End time
   let training_start_time=training_starttime__val.innerText;
   let training_period_setting=backtest_usersetting_period__val_DOM.innerText;
 
   calc_Simul_endTime(start_time=training_start_time, period_setting= training_period_setting,endtime_DOM=training_endtime__val);
 
 
-  // (3) Calc Simulation End time
+  // [3] Calc Simulation End time
   let simulation_start_time=simulation_starttime__val.innerText;
   let simulation_period_setting=backtest_usersetting_period__val_DOM.innerText;
 

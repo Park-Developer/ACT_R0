@@ -91,34 +91,128 @@ function calc_endtime(start_time_obj, period_setting){
   return end_time_obj;
 }
 
-
-function calc_dataNumber(period, monitoring_time){
-  // (1) Get Trading Period (Unit : Minute)
+function convert_minute_Number(time){ // form : ~ Minute, ~ Hour, ~ Day, ~ Week, ~ Month
   let regex=/[^0-9]/g;
 
-  if (period.indexOf("Minute")!== -1){ // Training Data Unit : Minute
-      period_time_Minute=parseInt(period.replace(regex,""));
+  if (time.indexOf("Minute")!== -1){ // Training Data Unit : Minute
+      minute_unit=parseInt(time.replace(regex,""));
 
-  }else if(period.indexOf("Hour")!== -1){  // Training Data Unit : Hour
-      period_time_Minute=parseInt(period.replace(regex,""))*60;
+  }else if(time.indexOf("Hour")!== -1){  // Training Data Unit : Hour
+      minute_unit=parseInt(time.replace(regex,""))*60;
 
-  }else if(period.indexOf("Day")!== -1){  // Training Data Unit : Day
-      period_time_Minute=parseInt(period.replace(regex,""))*60*24;
+  }else if(time.indexOf("Day")!== -1){  // Training Data Unit : Day
+    minute_unit=parseInt(time.replace(regex,""))*60*24;
 
-  }else if(period.indexOf("Week")!== -1){  // Training Data Unit : Week
-      period_time_Minute=parseInt(period.replace(regex,""))*60*24*7;
+  }else if(time.indexOf("Week")!== -1){  // Training Data Unit : Week
+      minute_unit=parseInt(time.replace(regex,""))*60*24*7;
 
-  }else if(period.indexOf("Month")!== -1){  // Training Data Unit : Month
-      period_time_Minute=parseInt(period.replace(regex,""))*60*24*30;;
-
+  }else if(time.indexOf("Month")!== -1){  // Training Data Unit : Month
+      minute_unit=parseInt(time.replace(regex,""))*60*24*30;;
   }
 
+  return minute_unit;
+}
+
+function convert_period_To_minute(time){ // form : ~ Minute, ~ Hour, ~ Day, ~ Week, ~ Month
+  let regex=/[^0-9]/g;
+  let minute_unit=0;
+  
+  if (time.indexOf("Minute")!== -1){ // Training Data Unit : Minute
+      minute_unit=parseInt(time.replace(regex,""));
+
+  }else if(time.indexOf("Hour")!== -1){  // Training Data Unit : Hour
+      minute_unit=parseInt(time.replace(regex,""))*60;
+
+  }else if(time.indexOf("Day")!== -1){  // Training Data Unit : Day
+    minute_unit=parseInt(time.replace(regex,""))*60*24;
+
+  }else if(time.indexOf("Week")!== -1){  // Training Data Unit : Week
+      minute_unit=parseInt(time.replace(regex,""))*60*24*7;
+
+  }else if(time.indexOf("Month")!== -1){  // Training Data Unit : Month
+      minute_unit=parseInt(time.replace(regex,""))*60*24*30;;
+  }
+
+  return minute_unit;
+}
+
+function convert_dataUnit_To_minute(time){ // form : ~ Minute, ~ Hour, ~ Day, ~ Week, ~ Month
+  let regex=/[^0-9]/g;
+  let minute_unit=0;
+
+  if (time.indexOf("Minute")!== -1){ // Training Data Unit : Minute
+      minute_unit=1
+
+  }else if(time.indexOf("Hour")!== -1){  // Training Data Unit : Hour
+      minute_unit=60
+
+  }else if(time.indexOf("Day")!== -1){  // Training Data Unit : Day
+    minute_unit=60*24;
+
+  }else if(time.indexOf("Week")!== -1){  // Training Data Unit : Week
+      minute_unit=60*24*7;
+
+  }else if(time.indexOf("Month")!== -1){  // Training Data Unit : Month
+      minute_unit=60*24*30;
+  }
+
+  return minute_unit;
+}
+
+function calc_dataNumber(period, monitoring_time){
+  // 분단위로 데이터 개수 계산
+  console.log("period, monitoring_time");
+  // (1) Get Trading Period (Unit : Minute)
+  let period_time_Minute=0;
+
+  if(isNaN(period)==false){ // 숫자형 문자열인 경우
+    period_time_Minute=parseInt(period);
+  }
+  else{  // 숫자형 문자열이 아닌 경우
+    period_time_Minute=convert_period_To_minute(period);
+  }
+
+
+  let monitoring_time_Minute=0;
   // (2) Get Monotiroing Time (Unit : Minute)
-  monitoring_time_Minute=parseInt(monitoring_time);
+  if(isNaN(monitoring_time)==false){ // 숫자형 문자열인 경우
+    monitoring_time_Minute=parseInt(monitoring_time);
+  }
+  else{  // 숫자형 문자열이 아닌 경우
+    monitoring_time_Minute=convert_dataUnit_To_minute(monitoring_time);
+  }
 
+  console.log("period_time_Minute",period_time_Minute);
+  console.log("  monitoring_time_Minute",  monitoring_time_Minute);
 
-  // return
-  return (period_time_Minute*monitoring_time_Minute);
+  return (period_time_Minute/monitoring_time_Minute);
+}
+
+function check_timeSize(period_time, data_unit){
+  // define func
+  function get_timeSize(time){
+    if (time.indexOf("Minute")!== -1){ //  Minute Time Size : 1
+      return 1;
+    }else if(time.indexOf("Hour")!== -1){  // Hour Time Size : 2
+      return 2;
+    }else if(time.indexOf("Day")!== -1){  // Day Time Size : 3
+      return 3;
+    }else if(time.indexOf("Week")!== -1){  // Week Time Size : 4
+      return 4;
+    }else if(time.indexOf("Month")!== -1){  // Month Time Size : 5
+      return 5;
+    }
+  }
+
+  period_size=get_timeSize(period_time);
+  unit_size=get_timeSize(data_unit);
+
+  if (period_size>=unit_size){
+    return true;
+  }else {
+    return false;
+  }
+
 }
 
 function adjust_digit(time_info){
