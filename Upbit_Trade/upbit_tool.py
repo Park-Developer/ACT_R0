@@ -193,27 +193,22 @@ def get_past_Month_coinData(market:str,count:int,to:str=""):
 
     return res_data
 
-def get_past_coinData(market:str,count:int,data_unit:str,to:str=""):
-    if "Minute" in data_unit:
-        minute_unit=int(data_unit.replace("Minute","").strip())
-        past_data=get_past_Minutes_coinData(market,count,minute_unit=minute_unit,to=to)
+def get_past_coinData(market:str,count:int,data_unit:int,to:str=""):
 
-    elif "Hour" in data_unit:
-        past_data =get_past_Minutes_coinData(market,count,minute_unit=60,to=to)
 
-    elif "Day" in data_unit:
-        past_data =get_past_Days_coinData(market,count,to=to)
-
-    elif "Week" in data_unit:
-        past_data =get_past_Week_coinData(market,count,to=to)
-
-    elif "Month" in data_unit:
-        past_data =get_past_Month_coinData(market,count,to=to)
+    if data_unit >= 60*24*7*30: # Unit : Month
+        past_data = get_past_Month_coinData(market=market, count=count, to=to)
+    elif data_unit >= 60*24*7: # Unit : Week
+        past_data = get_past_Week_coinData(market=market, count=count, to=to)
+    elif data_unit >= 60*24: # Unit : Day
+        past_data = get_past_Days_coinData(market=market, count=count, to=to)
+    else:
+        past_data = get_past_Minutes_coinData(market, count, minute_unit=data_unit, to=to)
 
     return past_data
 
 def convert_pastData_to_Dict(market:str,count:int,data_unit:str,to:str="")->dict:
-    past_data=get_past_coinData(market,count,data_unit) # list
+    past_data=get_past_coinData(market,count,data_unit,to) # list
 
     opening_price=[]
     high_price=[]

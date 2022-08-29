@@ -116,7 +116,7 @@ function convert_minute_Number(time){ // form : ~ Minute, ~ Hour, ~ Day, ~ Week,
 function convert_period_To_minute(time){ // form : ~ Minute, ~ Hour, ~ Day, ~ Week, ~ Month
   let regex=/[^0-9]/g;
   let minute_unit=0;
-  
+
   if (time.indexOf("Minute")!== -1){ // Training Data Unit : Minute
       minute_unit=parseInt(time.replace(regex,""));
 
@@ -161,7 +161,7 @@ function convert_dataUnit_To_minute(time){ // form : ~ Minute, ~ Hour, ~ Day, ~ 
 
 function calc_dataNumber(period, monitoring_time){
   // 분단위로 데이터 개수 계산
-  console.log("period, monitoring_time");
+
   // (1) Get Trading Period (Unit : Minute)
   let period_time_Minute=0;
 
@@ -182,8 +182,6 @@ function calc_dataNumber(period, monitoring_time){
     monitoring_time_Minute=convert_dataUnit_To_minute(monitoring_time);
   }
 
-  console.log("period_time_Minute",period_time_Minute);
-  console.log("  monitoring_time_Minute",  monitoring_time_Minute);
 
   return (period_time_Minute/monitoring_time_Minute);
 }

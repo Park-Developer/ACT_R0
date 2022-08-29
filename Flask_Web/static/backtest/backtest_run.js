@@ -13,7 +13,13 @@ let training_chartInfo={
   "high_price":[],
   "opening_price":[],
   "timestamp":[],
-  "trade_price":[]
+  "trade_price":[],
+  "ref_price":0,
+  "bid_maxPrice":0,
+  "ask_minPrice":0,
+  "ref_price_data":[],
+  "bid_maxPrice_data":[],
+  "ask_minPrice_data":[],
 };
 
 /* ___________[ DOM SETTING ]___________ */
@@ -21,26 +27,34 @@ let backtest_run__btn_DOM=document.querySelector(".backtest_test_run__btn");
 
 // (1) User Setting DOM
 let backtest_usersetting__market__val_DOM=document.querySelector(".backtest_usersetting__market__val");
-let backtest_usersetting_unit__val_DOM=document.querySelector(".backtest_usersetting__unit__val");
 let backtest_usersetting_period__val_DOM=document.querySelector(".backtesting_usersetting_period__val");
 let backtest_usersetting_monitoringtime__val_DOM=document.querySelector(".backtesting_usersetting_monitoringtime__val");
 let backtest_usersetting_datanumber__val_DOM=document.querySelector(".backtesting_usersetting_datanumber__val");
 
 // (2) Training Data DOM
-let backtest_trainingdata_period__val =document.querySelector(".backtest_trainingdata_period__val");
-let backtest_trainingdata_dataUnit__val=document.querySelector(".backtest_trainingdata_dataUnit__val");
-let backtest_trainingdata_dataNumber_val=document.querySelector(".backtest_trainingdata_dataNumber_val");
+let backtest_trainingdata_period__val_DOM =document.querySelector(".backtest_trainingdata_period__val");
+let backtest_trainingdata_dataUnit__val_DOM=document.querySelector(".backtest_trainingdata_dataUnit__val");
+let backtest_trainingdata_dataNumber_val_DOM=document.querySelector(".backtest_trainingdata_dataNumber_val");
 
-let training_starttime__val=document.querySelector(".backtest_trainingdata_starttime__val");
-let training_endtime__val=document.querySelector(".backtest_trainingdata_endtime__val");
+let training_starttime__val_DOM=document.querySelector(".backtest_trainingdata_starttime__val");
+let training_endtime__val_DOM=document.querySelector(".backtest_trainingdata_endtime__val");
 
 let training_maxPrice__val_DOM=document.querySelector(".backtest_trainingdata_maxPrice__val");
 let training_minPrice__val_DOM=document.querySelector(".backtest_trainingdata_minPrice__val");
 let training_avgPrice__val_DOM=document.querySelector(".backtest_trainingdata_averagePrice__val");
 
+let training_status__referencePrice_val_DOM=document.querySelector(".training_status__referencePrice_val");
+let training_status__maxBiddingPrice_val_DOM=document.querySelector(".training_status__maxBiddingPrice_val");
+let training_status__minAskingPrice_val_DOM=document.querySelector(".training_status__minAskingPrice_val");
+
+
 // (3) Simulation Data DOM
-let simulation_starttime__val=document.querySelector(".backtest_simulationdata_starttime__val");
-let simulation_endtime__val=document.querySelector(".backtest_simulationdata_endtime__val");
+let backtest_simulationdata_period__val_DOM =document.querySelector(".backtest_simulationdata_period__val");
+let backtest_simulationdata_dataUnit__val_DOM=document.querySelector(".backtest_simulationdata_dataUnit__val");
+let backtest_simulationdata_dataNumber_val_DOM=document.querySelector(".backtest_simulationdata_dataNumber__val");
+
+let simulation_starttime__val_DOM=document.querySelector(".backtest_simulationdata_starttime__val");
+let simulation_endtime__val_DOM=document.querySelector(".backtest_simulationdata_endtime__val");
 
 let simulation_maxPrice__val_DOM=document.querySelector(".backtest_simulationdata_maxPrice__val");
 let simulation_minPrice__val_DOM=document.querySelector(".backtest_simulationdata_minPrice__val");
@@ -101,7 +115,28 @@ const trainingChart = new Chart(training_chart_dom, {
             fill: false,
             borderColor: CHART_INFO.graph_line_color[0],//'rgb(75, 192, 192)',
             tension: 0.1
-            }
+          },
+          {
+            label: "Ref Price",
+            data: training_chartInfo["ref_price"], // Y axis data1
+            fill: false,
+            borderColor: CHART_INFO.graph_line_color[1],//
+            tension: 0.1
+          },
+          {
+            label: "Max Bidding",
+            data: training_chartInfo["bid_maxPrice_data"], // Y axis data1
+            fill: false,
+            borderColor: CHART_INFO.graph_line_color[2],//
+            tension: 0.1
+          },
+          {
+            label: "Min Asking",
+            data: training_chartInfo["ask_minPrice_data"], // Y axis data1
+            fill: false,
+            borderColor: CHART_INFO.graph_line_color[3],//
+            tension: 0.1
+          },
         ]
     },
     options: {
@@ -130,21 +165,30 @@ const trainingChart = new Chart(training_chart_dom, {
 function simulate_backtest(){
   $.getJSON(
     // (1) Request URL
-    get_backtestData_URL,
+    get_backtestData_URL, // "http://127.0.0.1:5000/backtest/get_backtestData"
     // (2) Request Parameter
     {
       target_coin_id:get_targetID_from_CurURL(), // 현재 URL로부터 Target id 추출
       market:backtest_usersetting__market__val_DOM.innerText,
-      data_unit:backtest_usersetting_unit__val_DOM.innerText,
-      data_number:backtest_usersetting_datanumber__val_DOM.innerText,
+      trading_period:backtest_usersetting_period__val_DOM.innerText,
+      trading_dataNumber:backtest_usersetting_datanumber__val_DOM.innerText,
       monitoring_time:backtest_usersetting_monitoringtime__val_DOM.innerText,
-      training_end_time:training_endtime__val.innerText,
-      simulation_end_time:simulation_endtime__val.innerText
+
+      training_end_time:training_endtime__val_DOM.innerText,
+      training_unit:backtest_trainingdata_dataUnit__val_DOM.innerText,
+      training_dataNumber:backtest_trainingdata_dataNumber_val_DOM.innerText,
+
+      simulation_end_time:simulation_endtime__val_DOM.innerText,
+      simulation_unit: backtest_usersetting_monitoringtime__val_DOM.innerText,
+      simulation_dataNumber:backtest_usersetting_datanumber__val_DOM.innerText,
+
+
     },
     // (3) Data Handling Function
     function(data){
-      /* < BACKTEST CHART UPDATE > */
+      /* ___< BACKTEST CHART UPDATE >___ */
       // 1. Receive Data from python view function(backtest.get_backtestData()) responnd
+
       backtest_chartInfo["candletimeKST"]=data["backtest_data"]["candle_date_time_kst"];
       backtest_chartInfo["high_price"]=data["backtest_data"]["high_price"];
       backtest_chartInfo["low_price"]=data["backtest_data"]["low_price"];
@@ -166,8 +210,8 @@ function simulate_backtest(){
       simulation_minPrice__val_DOM.innerText=Math.min(...backtest_chartInfo["trade_price"]);
       simulation_avgPrice__val_DOM.innerText=get_AVG(backtest_chartInfo["trade_price"]);
 
-      /* < TRAINING CHART UPDATE > */
-      // 1. Receive Data from python view function(backtest.get_backtestData()) responnd
+      /* ___< TRAINING CHART UPDATE >___ */
+      // (1) Receive Data from python view function(backtest.get_backtestData()) responnd
       training_chartInfo["candletimeKST"]=data["training_data"]["candle_date_time_kst"];
       training_chartInfo["high_price"]=data["training_data"]["high_price"];
       training_chartInfo["low_price"]=data["training_data"]["low_price"];
@@ -175,19 +219,38 @@ function simulate_backtest(){
       training_chartInfo["timestamp"]=data["training_data"]["timestamp"];
       training_chartInfo["trade_price"]=data["training_data"]["trade_price"];
 
-      // 2. Updaye Chart Data
+      training_chartInfo["ref_price_data"]=data["ref_price_data"];
+      training_chartInfo["bid_maxPrice_data"]=data["bid_maxPrice_data"];
+      training_chartInfo["ask_minPrice_data"]=data["ask_minPrice_data"];
+
+      // (2) Update Chart Data
       trainingChart["data"]["labels"]=training_chartInfo["candletimeKST"];
 
-      // 1st data updayr => chart_index : 0
+      // - 1st data update => chart_index : 0 -
       trainingChart["data"]["datasets"][0]["data"]=training_chartInfo["trade_price"];
+
+      // - 2nd data update => chart_index : 1 -
+      trainingChart["data"]["datasets"][1]["data"]=training_chartInfo["ref_price_data"];
+
+      // - 3rd data update => chart_index : 2 -
+      trainingChart["data"]["datasets"][2]["data"]=training_chartInfo["bid_maxPrice_data"];
+
+      // - 4th data update => chart_index : 3 -
+      trainingChart["data"]["datasets"][3]["data"]=training_chartInfo["ask_minPrice_data"];
 
       // update chart UI
       trainingChart.update();
 
-      // 3. Update Monitoring Data
+      // (3) Update Monitoring Data
       training_maxPrice__val_DOM.innerText=Math.max(...training_chartInfo["trade_price"]);
       training_minPrice__val_DOM.innerText=Math.min(...training_chartInfo["trade_price"]);
       training_avgPrice__val_DOM.innerText=get_AVG(training_chartInfo["trade_price"]);
+
+      // (4) Update Reference Price / Max Bidding Price / Min Asking Price
+      training_status__referencePrice_val_DOM.innerText=data["ref_price"];
+      training_status__maxBiddingPrice_val_DOM.innerText=data["bid_maxPrice"];
+      training_status__minAskingPrice_val_DOM.innerText=data["ask_minPrice"];
+
     }
   )
 
@@ -230,35 +293,41 @@ function calc_Simul_endTime(start_time, period_setting,endtime_DOM){ // start_ti
 function init_backRun(){
   // [1] Calc Data Number
 
-  // (1-1) Calc User Setting Data Number
+  // (1-1) Calc User Setting & Backtesting Data Number
+
+  /*
+  User setting을 기반으로 Backtest를 진행함
+  => period, data unit, data number가 동일
+  */
   let user_Setting_period=backtest_usersetting_period__val_DOM.innerText;
   let monitoring_time=backtest_usersetting_monitoringtime__val_DOM.innerText
 
   let simul_dataNum=calc_dataNumber(user_Setting_period, monitoring_time);
 
   backtest_usersetting_datanumber__val_DOM.innerText=simul_dataNum;
+  backtest_simulationdata_dataNumber_val_DOM.innerText=simul_dataNum;
 
-  // (1-2)
-  let training_period= backtest_trainingdata_period__val.innerText;
-  let training_dataUnit=backtest_trainingdata_dataUnit__val.innerText;
-  console.log("calc_dataNumbe",training_period, training_dataUnit);
+  // (1-2) Calc Training Data Number
+  let training_period= backtest_trainingdata_period__val_DOM.innerText;
+  let training_dataUnit=backtest_trainingdata_dataUnit__val_DOM.innerText;
+
   let training_dataNum=calc_dataNumber(training_period, training_dataUnit);
 
-  backtest_trainingdata_dataNumber_val.innerText=training_dataNum;
+  backtest_trainingdata_dataNumber_val_DOM.innerText=training_dataNum;
 
 
   // [2] Calc Training End time
-  let training_start_time=training_starttime__val.innerText;
+  let training_start_time=training_starttime__val_DOM.innerText;
   let training_period_setting=backtest_usersetting_period__val_DOM.innerText;
 
-  calc_Simul_endTime(start_time=training_start_time, period_setting= training_period_setting,endtime_DOM=training_endtime__val);
+  calc_Simul_endTime(start_time=training_start_time, period_setting= training_period_setting,endtime_DOM=training_endtime__val_DOM);
 
 
   // [3] Calc Simulation End time
-  let simulation_start_time=simulation_starttime__val.innerText;
+  let simulation_start_time=simulation_starttime__val_DOM.innerText;
   let simulation_period_setting=backtest_usersetting_period__val_DOM.innerText;
 
-  calc_Simul_endTime(start_time=simulation_start_time, period_setting=simulation_period_setting, endtime_DOM=simulation_endtime__val);
+  calc_Simul_endTime(start_time=simulation_start_time, period_setting=simulation_period_setting, endtime_DOM=simulation_endtime__val_DOM);
 }
 
 

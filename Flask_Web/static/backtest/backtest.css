@@ -18,3 +18,9 @@
 .training_n_backtesting_monitoring{
   display:flex;
 }
+
+
+.user_setting__name{
+  color:orange;
+  font-weight: bold;
+}

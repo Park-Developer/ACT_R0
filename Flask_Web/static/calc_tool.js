@@ -7,7 +7,7 @@ function get_AVG(array){ // 평균 계산 함수
     0);
 
   result=result/(array.length);
-  return result.toFixed(2); // 소수점 자릿수 지정
+  return result.toFixed(1); // 소수점 자릿수 지정
 }
 
 
@@ -32,6 +32,6 @@ function get_targetID_from_CurURL(){
     }
   } //for loop
 
-  console.log("get_targetID_from_CurURL Error!!");
+
   return -1;
 }

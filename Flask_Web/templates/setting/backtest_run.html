@@ -12,7 +12,7 @@
 
 {# ---------------------- [1] BACKTESTING DASHBOARD ---------------------- #}
 <section>
-<h1 class="section_header_style">Backtesting Dashboard</h1>
+<h1 class="section_header_style"><i class="fa-solid fa-list-ul"></i> Backtesting Dashboard</h1>
 </section>
 
 
@@ -26,31 +26,31 @@
         <!-- (1) Market -->
         <li>
           <label class="backtest_usersetting_market">Market : </label>
-          <span class="backtest_usersetting__market__val">{{login_userDB["target_coin"+target_coin_id|string]["market"]}}</span>
+          <span class="backtest_usersetting__market__val user_setting__name">{{login_userDB["target_coin"+target_coin_id|string]["market"]}}</span>
         </li>
 
-        <!-- (2) Data Unit -->
-        <li>
-          <label class="backtest_usersetting__unit">Data Unit : </label>
-          <span class="backtest_usersetting__unit__val">{{backtest_setting_data["training_data_unit"]}}</span>
-        </li>
-
-        <!-- (3) Period-->
+        <!-- (2) Period-->
         <li>
           <label class="backtesting_usersetting_peiod">Trading Period : </label>
           <span class="backtesting_usersetting_period__val">{{login_userDB["target_coin"+target_coin_id|string]["period"]}}</span>
         </li>
 
-        <!-- (4) Monitoring Time -->
+        <!-- (3) Monitoring Time -->
         <li>
           <label class="backtesting_usersetting_monitoringtime">Monitoring Time : </label>
           <span class="backtesting_usersetting_monitoringtime__val">{{strategyDB["monitoring_time"]}}</span>
         </li>
 
-        <!-- (5) Simulation Data Number-->
+        <!-- (4) Simulation Data Number-->
         <li>
           <label class="backtesting_usersetting_datanumber">Data Number : </label>
           <span class="backtesting_usersetting_datanumber__val"></span> <!-- JS에서 계산 -->
+        </li>
+
+        <!-- (5) Strategy -->
+        <li>
+          <label class="backtesting_strategy_info">Strategy : </label>
+          <span class="backtesting_strategy_info__val">{{strategyDB["name"]}} V{{strategyDB["version"]}}</span> <!-- JS에서 계산 -->
         </li>
       </ul>
     </div>
@@ -130,13 +130,13 @@
         <!-- (1) Simulation Period -->
         <li>
           <label class="backtest_simulationdata_period">Simulation Period : </label>
-          <span class="backtest_simulationdata_period__val"></span>  <!-- JS에서 계산 -->
+          <span class="backtest_simulationdata_period__val">{{login_userDB["target_coin"+target_coin_id|string]["period"]}}</span>  <!-- JS에서 계산 -->
         </li>
 
         <!-- (1) Simulation Data Unit -->
         <li>
           <label class="backtest_simulationdata_dataUnit">Data Unit : </label>
-          <span class="backtest_simulationdata_dataUnit__val"></span>  <!-- JS에서 계산 -->
+          <span class="backtest_simulationdata_dataUnit__val">{{strategyDB["monitoring_time"]}}</span>  <!-- JS에서 계산 -->
         </li>
 
         <!-- (3) Simulation Data Number -->
@@ -190,7 +190,7 @@
 
 {# ---------------------- [2] BACKTESTING MONITORING ---------------------- #}
 <section>
-  <h1 class="section_header_style">Backtesting Simulation</h1>
+  <h1 class="section_header_style"><i class="fa-solid fa-tv"></i> Backtesting Simulation</h1>
 
   <div class="training_n_backtesting_monitoring">
     <!-- < trading monitoring > -->
@@ -202,29 +202,20 @@
 
         <ul class="training_status_list">
           <li>
-            <label>Reference Price : </label>
-            <span></span>
+            <label class="training_status__referencePrice">Reference Price : </label>
+            <span class="training_status__referencePrice_val"></span>
           </li>
 
           <li>
-            <label>Max Bidding Price : </label>
-            <span></span>
+            <label class="training_status__maxBiddingPrice">Max Bidding Price : </label>
+            <span class="training_status__maxBiddingPrice_val"></span>
           </li>
 
           <li>
-            <label>Bid Installment Count : </label>
-            <span></span>
+            <label class="training_status__minAskingPrice">Min Asking Price : </label>
+            <span class="training_status__minAskingPrice_val"></span>
           </li>
 
-          <li>
-            <label>Min Asking Price : </label>
-            <span></span>
-          </li>
-
-          <li>
-            <label>Ask Installment Count : </label>
-            <span></span>
-          </li>
         </ul>
 
       </div>
@@ -238,6 +229,16 @@
         <canvas class="backtest_Chart" id="backtest_Chart" width="400" height="400"></canvas>
 
         <ul class="backtest_status_list">
+          <li>
+            <label>Bid Installment Count : </label>
+            <span></span>
+          </li>
+
+          <li>
+            <label>Ask Installment Count : </label>
+            <span></span>
+          </li>
+
           <li>
             <label>Earning : </label>
             <span></span>

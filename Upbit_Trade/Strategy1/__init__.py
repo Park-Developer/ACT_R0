@@ -72,11 +72,12 @@ class Strategy(Trading_Config):
         if self.para_reference["dynamic_ref"]==False:
             try:
                 self.ref_price = Upbit_Trade.calc_tool.calc_avg(self.trading_data["opening_price"])
+
             except KeyError as e:
                 print(" calc_ref_price(self): ERROR!",e)
 
 
-            return self.ref_price # default : None
+        return self.ref_price # default : None
 
 
     def calc_Bid_max_Price(self): # ok

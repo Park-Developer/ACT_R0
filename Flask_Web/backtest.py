@@ -103,7 +103,7 @@ def backtest_run(target_coin_id):
             "backtest_starttime_hour": backtest_starttime_hour,
             "backtest_starttime_minute":  backtest_starttime_minute,
 
-            # (2) simulation start time
+            # (2) training start time
             "training_starttime_year": datetime.datetime.now().date().strftime("%Y"),
             "training_starttime_month": training_starttime_month,
             "training_starttime_day": training_starttime_day,
@@ -112,9 +112,7 @@ def backtest_run(target_coin_id):
 
             # (4) Strategy Data
             "monitoring_time": strategyDB["monitoring_time"],
-            
-            # (5) test env
-            "test_speed" : request.form["test_speed"]
+    
         }
 
         # Get Strategy Info
@@ -132,31 +130,95 @@ def get_backtestData(): # btn_type : stop, restart
     login_userDB = web_tool.get_login_UserInfo(user_table="user_list",
                                                session_var=config.SESSION_VARIABLE)
 
-    # (2) Get Request Data From JS
+    # (2) Get Request Data From JS(static/backtest/backtest_run.js simulate_backtest())
+    # <User Setting Data>
     target_coin_id = request.args.get('target_coin_id', 0, type=int)
-    market=request.args.get('market', 0, type=str)
-    count=request.args.get('data_number', 0, type=int)
-    data_unit=request.args.get('data_unit', 0, type=str)
-    monitoring_time=request.args.get('monitoring_time', 0, type=str)
-    training_end_time=request.args.get('training_end_time', 0, type=str)
-    simulation_end_time=request.args.get('simulation_end_time', 0, type=str)
+    market = request.args.get('market', 0, type=str)
+    trading_period = request.args.get('trading_period', 0, type=str)
+    trading_dataNumber = request.args.get('trading_dataNumber', 0, type=str)
+    monitoring_time = request.args.get('monitoring_time', 0, type=str)
 
-    print("count",count,"  data_unit",  data_unit)
-    # (3) Create Trading Data
+    # <Training Data>
+    training_end_time= request.args.get('training_end_time', 0, type=str)
+    training_unit= request.args.get('training_unit', 0, type=str)
+    training_dataNumber= request.args.get('training_dataNumber', 0, type=str)
+
+    # <Backtesting Data>
+    simulation_end_time= request.args.get('simulation_end_time', 0, type=str)
+    simulation_unit= request.args.get('simulation_unit', 0, type=str)
+    simulation_dataNumber= request.args.get('simulation_dataNumber', 0, type=str)
+
+
+    # (3) Create Training Data
     training_data=Upbit_Trade.upbit_tool.convert_pastData_to_Dict(market=market,
-                                                         count=count,
-                                                         data_unit=data_unit,to=training_end_time)
+                                                         count=int(training_dataNumber),
+                                                         data_unit=int(training_unit),to=training_end_time)
 
-    # (3) Create Trading Data
+    # (4) Create Simulation Data
     backtest_data = Upbit_Trade.upbit_tool.convert_pastData_to_Dict(market=market,
-                                                                    count=count,
-                                                                    data_unit=data_unit, to=simulation_end_time)
+                                                                    count=int(simulation_dataNumber),
+                                                                    data_unit=int(simulation_unit),to=simulation_end_time)
+
+    # (5) Analysis Training Data
+    upbit_apiInfo, target_coinInfo=basic_tool.get_strategy_configData(target_coin_id, login_userDB)
+
+    strategy_obj=basic_tool.get_strategy_clsObj(target_coinInfo)
+    strategy_obj.load_configData(upbit_apiInfo=upbit_apiInfo,target_coinInfo=target_coinInfo)
+
+    # backtest ON
+    strategy_obj.backtest_modeON()
+
+    # load training data to trading data
+    strategy_obj.load_tradingData(training_data)
+    strategy_obj.calc_ref_price()
+    #print("strategy_obj.trading_data",strategy_obj.trading_data)
+    print("ref price",strategy_obj.ref_price)
+    strategy_obj.calc_Bid_max_Price()
+    strategy_obj.calc_Ask_min_Price()
+    print("self.bid_maxPrice",strategy_obj.bid_maxPrice)
+    print("self.ask_minPrice",strategy_obj.ask_minPrice)
+
+
+
+    # (6) Evaluate Simulation Data
+    #print("------------------------RESPOND")
+    #print(training_data)
+    #print(backtest_data)
+    #print("------------------------RESPOND")
+    ref_data=[]
+    bid_Maxdata=[]
+    ask_Mindata=[]
+
+    ref_dataNum=len(training_data["opening_price"])
+    if strategy_obj.para_reference["dynamic_ref"]==False:
+        ref_data=[strategy_obj.ref_price for i in range(ref_dataNum)]
+    else:
+        pass
+
+    if strategy_obj.para_reference["dynamic_bid"] == False:
+        bid_Maxdata=[strategy_obj.bid_maxPrice for i in range(ref_dataNum)]
+    else:
+        pass
+
+    if strategy_obj.para_reference["dynamic_ask"] == False:
+        ask_Mindata=[strategy_obj.ask_minPrice for i in range(ref_dataNum)]
+    else:
+        pass
 
     respond={
         "training_data":training_data,
-        "backtest_data":backtest_data
+        "backtest_data":backtest_data,
+
+        "ref_price":strategy_obj.ref_price,
+        "ref_price_data":ref_data,
+
+        "bid_maxPrice":strategy_obj.bid_maxPrice,
+        "bid_maxPrice_data":bid_Maxdata,
+
+        "ask_minPrice":strategy_obj.ask_minPrice,
+        "ask_minPrice_data":ask_Mindata
     }
-    print( respond)
+
     # (4) Load Trading Data
 
     return jsonify(respond)

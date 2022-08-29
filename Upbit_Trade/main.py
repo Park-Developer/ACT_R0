@@ -46,8 +46,6 @@ if __name__=="__main__":
         "remain_time":"Days--1-Hours-23-Minutes-32"
     }
 
-    test_cls=Upbit_Trade.config.Trading_Strategy(upbit_apiInfo,target_coinInfo)
-
     strgy_cls=Upbit_Trade.Strategy1.strategy1.Strategy(test_cls)
 
     print("Current Price : ", Upbit_Trade.upbit_tool.get_current_price(strgy_cls.coin_info.market))

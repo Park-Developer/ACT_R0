@@ -34,7 +34,7 @@ class Trading_Config(): # SUPER CLASS
         self.state=None
 
         # [5] Trading Data
-        self.trading_data=[] # trading에 필요한 데이터
+        self.trading_data={} # trading에 필요한 데이터
 
         self.KRW_balance=self.principal # 초기화 : 코인예산, 코인을 구매할 수 있는 KRW 잔고
         self.coin_balance=0 # 매수 수량

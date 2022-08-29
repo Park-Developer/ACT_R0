@@ -308,6 +308,27 @@ def gen_loginCode(code_info: dict) -> str:
         pass  # 다른 방법
 
 
+def get_strategy_configData(target_coin_id:int, login_userDB):
+    # Get UPBIT API Info
+    upbit_apiInfo = {
+        "upbit_access_key": login_userDB["upbit_access_key"],
+        "upbit_secret_key": login_userDB["upbit_secret_key"]
+    }
+
+    # Get Target Coin Info
+    target_coinInfo=login_userDB[f"target_coin{target_coin_id}"]
+
+    return upbit_apiInfo, target_coinInfo
+
+def get_strategy_clsObj(target_coinInfo):
+    if target_coinInfo["strategy"] == "Strategy1":
+        strategy_obj = Upbit_Trade.Strategy1.Strategy()
+    else:
+        pass
+
+    return strategy_obj
+
+# 이거 지워도 될듯?
 def get_trading_strategy_Obj(target_coin_id:int, login_userDB):
     # Get UPBIT API Info
     upbit_apiInfo={
